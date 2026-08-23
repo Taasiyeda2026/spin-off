@@ -1,0 +1,239 @@
+:root {
+  --site-max: 1600px;
+  --content-max: 1100px;
+  --space-bg: #020713;
+  --neon-cyan: #16ecff;
+  --neon-cyan-soft: rgba(22, 236, 255, 0.55);
+  --neon-blue: #006fea;
+  --neon-violet: rgba(103, 45, 255, 0.72);
+  --text-light: #ecfeff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--space-bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: Arial, "Heebo", sans-serif;
+  background: var(--space-bg);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+/*
+  דף הבית נשמר בתוך מסגרת מקסימלית ולא נמתח בלי סוף במסכים רחבים.
+  יחס 16:9 שומר על תמונת הרקע ללא עיוות בדסקטופ.
+*/
+.home-page {
+  display: grid;
+  place-items: center;
+}
+
+.home-stage {
+  position: relative;
+  width: min(100vw, var(--site-max));
+  aspect-ratio: 16 / 9;
+  max-height: 100dvh;
+  overflow: hidden;
+  background-color: var(--space-bg);
+  background-image: url("images/home-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  box-shadow: 0 0 60px rgba(0, 22, 80, 0.45);
+}
+
+/* ניווט קומפקטי: 3×2 בדסקטופ, לא כפתורים מקצה לקצה */
+.home-nav {
+  position: absolute;
+  left: 10.5%;
+  top: 34%;
+  width: min(31%, 480px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(74px, 1fr));
+  gap: clamp(14px, 1.7vw, 28px);
+  direction: ltr;
+}
+
+.nav-card {
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 122px;
+  aspect-ratio: 1 / 1;
+  padding: 10px;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 13px;
+  background:
+    linear-gradient(180deg, rgba(0, 131, 239, 0.96), rgba(0, 72, 201, 0.98));
+  color: #55f7ff;
+  text-decoration: none;
+  text-align: center;
+  font-size: clamp(0.9rem, 1.15vw, 1.18rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 0 0 1px rgba(73, 44, 255, 0.55),
+    0 0 8px rgba(22, 236, 255, 0.95),
+    0 0 19px var(--neon-violet),
+    0 0 30px rgba(0, 105, 255, 0.35),
+    inset 0 0 14px rgba(94, 246, 255, 0.18);
+  text-shadow: 0 0 8px rgba(62, 244, 255, 0.55);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-card:not(.is-coming):hover,
+.nav-card:not(.is-coming):focus-visible {
+  transform: translateY(-3px) scale(1.025);
+  filter: brightness(1.08);
+  outline: none;
+  box-shadow:
+    0 0 0 1px rgba(73, 44, 255, 0.65),
+    0 0 11px rgba(22, 236, 255, 1),
+    0 0 24px rgba(103, 45, 255, 0.9),
+    0 0 38px rgba(0, 105, 255, 0.45),
+    inset 0 0 16px rgba(94, 246, 255, 0.22);
+}
+
+.nav-card:not(.is-coming):active {
+  transform: scale(0.98);
+}
+
+.nav-card.is-coming {
+  cursor: default;
+  pointer-events: none;
+}
+
+/*
+  מעטפת תוכן לעמודים שיתווספו בהמשך.
+  היא מונעת מהתוכן "להימרח" מצד לצד במסכים רחבים.
+*/
+.content-shell {
+  width: min(calc(100% - 32px), var(--content-max));
+  margin-inline: auto;
+}
+
+/*
+  בסיס לעמודי תוכן שמיועדים גם להפקת PDF אמיתי בגודל A4.
+  התוכן נשאר HTML חי: טקסט, טבלאות ואלמנטים — לא תמונת מסך.
+*/
+.a4-page {
+  width: min(100%, 210mm);
+  min-height: 297mm;
+  margin-inline: auto;
+  padding: 14mm;
+  background: #ffffff;
+  color: #111111;
+}
+
+/* טאבלט ומובייל: תמונת הרקע נשמרת ביחס המקורי בחלק העליון, ללא מתיחה */
+@media (max-width: 900px) {
+  .home-page {
+    display: block;
+  }
+
+  .home-stage {
+    width: 100%;
+    min-height: 100dvh;
+    max-height: none;
+    aspect-ratio: auto;
+    padding-top: calc(56.25vw + 26px);
+    padding-bottom: 34px;
+    background-size: 100% auto;
+    background-position: top center;
+    box-shadow: none;
+  }
+
+  .home-nav {
+    position: static;
+    width: min(calc(100% - 40px), 430px);
+    margin-inline: auto;
+    grid-template-columns: repeat(3, minmax(82px, 112px));
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .nav-card {
+    width: 100%;
+    max-width: 112px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .home-stage {
+    padding-top: calc(56.25vw + 20px);
+    padding-bottom: 28px;
+  }
+
+  .home-nav {
+    width: min(calc(100% - 36px), 300px);
+    grid-template-columns: repeat(2, minmax(96px, 112px));
+    gap: 17px 20px;
+  }
+
+  .nav-card {
+    max-width: 108px;
+    border-radius: 12px;
+    font-size: 0.98rem;
+  }
+
+  .content-shell {
+    width: min(calc(100% - 24px), var(--content-max));
+  }
+}
+
+/* הדפסה עתידית ל-PDF אמיתי בגודל A4 */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 14mm;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .a4-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .print-break {
+    break-before: page;
+    page-break-before: always;
+  }
+}
