@@ -12,19 +12,35 @@
   <main class="home-stage" aria-label="SPIN-OFF — אתר הקורס טכנולוגיות החלל">
     <!--
       ניווט ראשי:
-      כדי להפעיל כפתור בהמשך:
-      1. מחליפים את המילה "בקרוב" בשם העמוד.
-      2. מעדכנים href, לדוגמה: pages/lesson-01.html
-      3. מסירים את המחלקה is-coming ואת aria-disabled.
+      כרגע כל הכפתורים הם מצייני מקום "בקרוב" אך הם לחיצים ונותנים משוב.
+      כשעמוד יהיה מוכן, מחליפים href לנתיב האמיתי ומסירים data-coming-soon.
     -->
     <nav class="home-nav" aria-label="ניווט ראשי בקורס">
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
-      <a class="nav-card is-coming" href="#" aria-disabled="true" tabindex="-1"><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
     </nav>
   </main>
+
+  <div class="status-toast" id="status-toast" role="status" aria-live="polite">העמוד ייפתח בקרוב</div>
+
+  <script>
+    (() => {
+      const toast = document.getElementById('status-toast');
+      let timer;
+
+      document.querySelectorAll('[data-coming-soon]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          clearTimeout(timer);
+          toast.classList.add('is-visible');
+          timer = setTimeout(() => toast.classList.remove('is-visible'), 1400);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
