@@ -33,41 +33,47 @@ a {
 }
 
 /*
-  דף הבית נשמר ביחס המקורי של תמונת הרקע ובתוך רוחב מקסימלי.
-  אין max-height כדי לא לשבור את יחס התמונה ולא להזיז את הכפתורים.
+  דף הבית בדסקטופ נכנס כולו בתוך חלון הדפדפן ללא גלילה.
+  תמונת 16:9 נשמרת ביחס המקורי ולא נמתחת לפי רוחב המסך.
 */
 .home-page {
+  height: 100vh;
+  height: 100dvh;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
+  overflow: hidden;
 }
 
 .home-stage {
   position: relative;
-  width: min(100%, var(--site-max));
+  height: min(100dvh, 56.25vw, 900px);
+  width: auto;
+  max-width: var(--site-max);
   aspect-ratio: 16 / 9;
   flex: 0 0 auto;
   overflow: hidden;
   background-color: var(--space-bg);
   background-image: url("images/home-bg.png");
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  box-shadow: 0 0 60px rgba(0, 22, 80, 0.45);
+  background-size: 100% 100%;
+  background-position: center;
+  box-shadow: 0 0 55px rgba(0, 22, 80, 0.42);
 }
 
 /*
-  מיקום לפי ההדמיה המאושרת:
-  3×2, כפתורים קטנים, עם הרבה אוויר ביניהם.
+  ה-SPIN-OFF נמצא נמוך יותר בקובץ home-bg.png לעומת סקיצת הייחוס.
+  לכן הניווט ממוקם מתחת לכותרת בפועל ולא לפי הקואורדינטות של הסקיצה.
+  הכפתורים נשארים קטנים וקומפקטיים: 3×2.
 */
 .home-nav {
   position: absolute;
-  left: 14.4%;
-  top: 34.1%;
-  width: 30.1%;
-  height: 34.6%;
+  left: 14.2%;
+  top: 42.5%;
+  width: 30%;
+  height: 30%;
   display: grid;
-  grid-template-columns: repeat(3, 23.7%);
+  grid-template-columns: repeat(3, 20%);
   grid-template-rows: repeat(2, auto);
   justify-content: space-between;
   align-content: space-between;
@@ -80,24 +86,24 @@ a {
   place-items: center;
   width: 100%;
   aspect-ratio: 1 / 1;
-  padding: 8px;
+  padding: 7px;
   border: 1.5px solid var(--neon-cyan);
   border-radius: 14%;
   background: linear-gradient(180deg, rgba(0, 144, 243, 0.96), rgba(0, 72, 201, 0.98));
   color: #58f7ff;
   text-decoration: none;
   text-align: center;
-  font-size: clamp(0.78rem, 1.15vw, 1.05rem);
+  font-size: clamp(0.72rem, 0.9vw, 0.92rem);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: 0.01em;
   cursor: pointer;
   box-shadow:
     0 0 0 1px rgba(73, 44, 255, 0.55),
-    0 0 7px rgba(22, 236, 255, 0.95),
-    0 0 16px var(--neon-violet),
-    0 0 25px rgba(0, 105, 255, 0.32),
-    inset 0 0 12px rgba(94, 246, 255, 0.16);
+    0 0 6px rgba(22, 236, 255, 0.95),
+    0 0 14px var(--neon-violet),
+    0 0 21px rgba(0, 105, 255, 0.30),
+    inset 0 0 10px rgba(94, 246, 255, 0.16);
   text-shadow: 0 0 7px rgba(62, 244, 255, 0.55);
   transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
   -webkit-tap-highlight-color: transparent;
@@ -110,17 +116,16 @@ a {
   outline: none;
   box-shadow:
     0 0 0 1px rgba(73, 44, 255, 0.65),
-    0 0 10px rgba(22, 236, 255, 1),
-    0 0 22px rgba(103, 45, 255, 0.9),
-    0 0 32px rgba(0, 105, 255, 0.42),
-    inset 0 0 14px rgba(94, 246, 255, 0.22);
+    0 0 9px rgba(22, 236, 255, 1),
+    0 0 19px rgba(103, 45, 255, 0.88),
+    0 0 28px rgba(0, 105, 255, 0.40),
+    inset 0 0 13px rgba(94, 246, 255, 0.22);
 }
 
 .nav-card:active {
   transform: scale(0.96);
 }
 
-/* הודעת "בקרוב" קטנה במקום כפתור שנראה מת אבל לא מגיב */
 .status-toast {
   position: fixed;
   z-index: 50;
@@ -160,15 +165,23 @@ a {
   color: #111111;
 }
 
-/* טאבלט: תמונת הפתיחה למעלה והניווט הקומפקטי מתחתיה */
+/*
+  טאבלט ומובייל: אין ניסיון לדחוס את כל מסך הדסקטופ לתוך טלפון.
+  תמונת הפתיחה נשמרת למעלה והניווט עובר מתחתיה בצורה קומפקטית.
+*/
 @media (max-width: 900px) {
   .home-page {
+    height: auto;
+    min-height: 100dvh;
     display: block;
+    overflow-y: auto;
   }
 
   .home-stage {
     width: 100%;
+    height: auto;
     min-height: 100dvh;
+    max-width: none;
     aspect-ratio: auto;
     padding-top: calc(56.25vw + 24px);
     padding-bottom: 34px;
@@ -179,24 +192,24 @@ a {
 
   .home-nav {
     position: static;
-    width: min(calc(100% - 40px), 360px);
+    width: min(calc(100% - 40px), 330px);
     height: auto;
     margin-inline: auto;
     display: grid;
-    grid-template-columns: repeat(3, 82px);
+    grid-template-columns: repeat(3, 74px);
     grid-template-rows: none;
     justify-content: center;
     align-content: initial;
-    gap: 18px 20px;
+    gap: 17px 20px;
   }
 
   .nav-card {
-    width: 82px;
-    font-size: 0.88rem;
+    width: 74px;
+    font-size: 0.8rem;
   }
 }
 
-/* מובייל: 2×3, עדיין קומפקטי ולא מקצה לקצה */
+/* מובייל: 2×3, קומפקטי ולא מקצה לקצה */
 @media (max-width: 560px) {
   .home-stage {
     padding-top: calc(56.25vw + 18px);
@@ -204,14 +217,14 @@ a {
   }
 
   .home-nav {
-    width: min(calc(100% - 32px), 230px);
-    grid-template-columns: repeat(2, 82px);
-    gap: 16px 22px;
+    width: min(calc(100% - 32px), 210px);
+    grid-template-columns: repeat(2, 74px);
+    gap: 15px 22px;
   }
 
   .nav-card {
-    width: 82px;
-    font-size: 0.86rem;
+    width: 74px;
+    font-size: 0.78rem;
   }
 
   .content-shell {
