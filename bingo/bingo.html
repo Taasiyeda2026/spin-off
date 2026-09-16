@@ -19,11 +19,11 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .spaceFog::before{width:36vw;height:36vw;min-width:320px;min-height:320px;left:8%;top:22%;background:radial-gradient(circle,rgba(0,219,255,.20),rgba(0,88,255,.06) 48%,transparent 72%)}
 .spaceFog::after{width:42vw;height:42vw;min-width:360px;min-height:360px;right:2%;bottom:-8%;background:radial-gradient(circle,rgba(117,53,255,.20),rgba(0,112,255,.07) 48%,transparent 72%)}
 @keyframes nebulaMove{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,1%,0) scale(1.04)}}
-.header{text-align:center;padding:16px 20px 0;position:relative;z-index:20}
+.header{text-align:center;padding:12px 20px 0;position:relative;z-index:20}
 .header h1{margin:0;font-size:clamp(38px,5vw,74px);font-weight:900;letter-spacing:4px;direction:ltr;color:#efffff;text-shadow:0 0 4px #fff,0 0 10px #fff,0 0 18px var(--cyan),0 0 34px var(--blue),0 0 62px rgba(0,104,255,.95),0 0 92px rgba(122,56,255,.42);animation:titleGlow 2.6s ease-in-out infinite alternate}
-.header .subtitle{margin-top:4px;color:#8ef5ff;font-size:18px;letter-spacing:1px;text-shadow:0 0 7px rgba(255,255,255,.45),0 0 14px rgba(0,234,255,.85),0 0 26px rgba(0,128,255,.55)}
+.header .subtitle{margin-top:2px;color:#8ef5ff;font-size:18px;letter-spacing:1px;text-shadow:0 0 7px rgba(255,255,255,.45),0 0 14px rgba(0,234,255,.85),0 0 26px rgba(0,128,255,.55)}
 @keyframes titleGlow{from{filter:brightness(.94)}to{filter:brightness(1.16)}}
-.app{width:min(1500px,97vw);margin:4px auto 30px;display:grid;grid-template-columns:minmax(700px,1fr) 300px;gap:20px;align-items:center}
+.app{width:min(1500px,97vw);margin:0 auto 24px;display:grid;grid-template-columns:minmax(700px,1fr) 300px;gap:20px;align-items:center}
 .wheelArea{position:relative;height:790px;min-height:0;display:flex;align-items:center;justify-content:center;overflow:visible;isolation:isolate}
 .wheelArea::before{content:"";position:absolute;width:min(820px,78vw);aspect-ratio:1;border-radius:50%;border:1px solid rgba(0,234,255,.22);box-shadow:0 0 22px rgba(0,234,255,.14),0 0 65px rgba(0,98,255,.11),inset 0 0 44px rgba(122,56,255,.06);transform:rotateX(68deg) rotateZ(-12deg);z-index:-1;animation:orbitGlow 5s ease-in-out infinite alternate}
 .wheelArea::after{content:"";position:absolute;width:min(760px,73vw);aspect-ratio:1;border-radius:50%;border:1px solid rgba(140,97,255,.16);transform:rotateX(72deg) rotateZ(24deg);z-index:-1;box-shadow:0 0 36px rgba(122,56,255,.09)}
@@ -39,8 +39,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 @keyframes ringGlow{from{filter:brightness(.92) saturate(1.05)}to{filter:brightness(1.34) saturate(1.35)}}
 #wheel{position:absolute;width:650px;height:650px;border-radius:50%;overflow:hidden;border:3px solid rgba(201,253,255,.98);background:radial-gradient(circle at 50% 48%,rgba(0,234,255,.10) 0 18%,transparent 47%),repeating-conic-gradient(from -11.25deg,rgba(0,149,255,.86) 0deg 11.25deg,rgba(18,20,75,.98) 11.25deg 22.5deg);box-shadow:0 0 12px #fff,0 0 30px #00eaff,0 0 58px rgba(0,115,255,.62),0 0 88px rgba(113,52,255,.26),inset 0 0 60px rgba(0,18,54,.95),inset 0 0 120px rgba(0,88,255,.14);transform:rotate(0deg);transition:transform 8s cubic-bezier(.08,.64,.07,1)}
 .segmentLine{position:absolute;width:2px;height:50%;left:50%;top:0;transform-origin:50% 100%;background:linear-gradient(to top,rgba(190,255,255,1),rgba(0,234,255,.90) 30%,rgba(107,74,255,.18));box-shadow:0 0 6px #fff,0 0 11px #00eaff,0 0 18px rgba(0,132,255,.62)}
-.wheelItem{position:absolute;width:92px;height:92px;margin-left:-46px;margin-top:-46px;border-radius:18px;background:linear-gradient(145deg,#fff,#effcff);border:2px solid #9ffaff;box-shadow:0 0 5px #fff,0 0 11px #00eaff,0 0 22px rgba(0,174,255,.80),0 0 30px rgba(121,56,255,.20);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.wheelItem img{width:90%;height:90%;object-fit:contain}
+.wheelItem{display:none}
 .centerCore{position:absolute;width:205px;height:205px;border-radius:50%;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,#1a5d9b 0%,#092a5b 28%,#07152f 58%,#01050d 100%);border:4px solid #a6fcff;box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32),inset 0 0 50px rgba(0,112,255,.24)}
 .centerCore::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(0,234,255,.42);box-shadow:0 0 15px rgba(0,234,255,.45),0 0 28px rgba(122,56,255,.24);animation:corePulse 1.8s ease-in-out infinite alternate}
 .centerCore::after{content:"";position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(180,151,255,.28);pointer-events:none}
@@ -49,7 +48,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .centerCore .subText{color:#6ef8ff;font-size:17px;margin-top:4px;font-weight:700;text-shadow:0 0 10px #00bfff}
 .pointer{position:absolute;top:-22px;left:50%;transform:translateX(-50%);z-index:100;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-top:65px solid #efffff;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #00eaff) drop-shadow(0 0 34px #008cff) drop-shadow(0 0 48px #7138ff)}
 .pointer::after{content:"";position:absolute;left:-25px;top:-64px;border-left:25px solid transparent;border-right:25px solid transparent;border-top:48px solid #00e5ff;filter:drop-shadow(0 0 10px #00eaff)}
-.controls{position:absolute;bottom:5px;display:flex;gap:18px;z-index:100;max-width:96vw}
+.controls{position:absolute;bottom:0;display:flex;gap:18px;z-index:100;max-width:96vw}
 .button{min-width:205px;padding:16px 30px;border-radius:17px;border:1px solid #9dfaff;cursor:pointer;font-size:22px;font-weight:900;color:white;background:linear-gradient(180deg,#18e8ff 0%,#0088ff 48%,#4c38e8 100%);box-shadow:0 0 6px #fff,0 0 14px #00eaff,0 0 30px rgba(0,125,255,.92),0 0 46px rgba(107,55,255,.32),inset 0 0 18px rgba(255,255,255,.30);text-shadow:0 0 8px rgba(255,255,255,.72);transition:transform .15s,box-shadow .2s,filter .2s,opacity .2s}
 .button:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.12);box-shadow:0 0 10px #fff,0 0 22px #73f7ff,0 0 44px rgba(0,125,255,1),0 0 62px rgba(121,56,255,.40)}
 .button:active{transform:scale(.96)}
@@ -68,7 +67,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .popupTopText{font-size:16px;color:#9aeaff;margin-bottom:6px}#popupTitle{margin:5px 0 16px;font-size:34px;color:#a3fbff;text-shadow:0 0 5px #fff,0 0 15px #00eaff,0 0 28px #008cff}.imageWrap{width:290px;height:290px;margin:0 auto 18px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff,#eafcff);border:2px solid #78f4ff;box-shadow:0 0 7px #fff,0 0 24px rgba(0,234,255,.70),0 0 42px rgba(92,55,255,.22)}#popupImage{width:90%;height:90%;object-fit:contain}.popupInstruction{color:white;font-size:20px;line-height:1.5;margin:4px 0}.popupInstruction strong{color:#66f6ff;text-shadow:0 0 11px #00bfff}#popupClose{position:absolute;top:13px;left:14px;width:40px;height:40px;border-radius:50%;border:1px solid #79f6ff;background:rgba(3,18,40,.95);color:white;font-size:24px;cursor:pointer;box-shadow:0 0 13px rgba(0,234,255,.42)}
 .flash{position:fixed;inset:0;z-index:8500;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(255,255,255,.32) 0 6%,rgba(0,234,255,.50) 13%,rgba(0,119,255,.25) 32%,rgba(117,52,255,.16) 50%,transparent 67%)}.flash.active{animation:flashAnim .9s ease}@keyframes flashAnim{0%{opacity:0}28%{opacity:1}52%{opacity:.58}100%{opacity:0}}
 @media(max-width:1150px){.app{display:block}.wheelArea{height:750px}.drawPanel{width:min(720px,95vw);min-height:auto;margin:20px auto}#drawList{max-height:280px}}
-@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:5px;gap:10px}.header .subtitle{display:none}.button{min-width:0;width:min(42vw,175px);padding:14px 16px;font-size:18px}}
+@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:10px}.header .subtitle{display:none}.button{min-width:0;width:min(42vw,175px);padding:14px 16px;font-size:18px}}
 </style>
 </head>
 <body>
@@ -110,30 +109,28 @@ const BASE_GLOW_SIZE=760;
 let resizeFrame=0;
 function fitWheelToViewport(){
     const viewportHeight=window.innerHeight||document.documentElement.clientHeight;
-    const headerBottom=header.getBoundingClientRect().bottom;
     const areaWidth=Math.max(280,wheelArea.clientWidth||window.innerWidth);
     const controlsHeight=Math.max(54,controls.getBoundingClientRect().height||54);
-    const controlsReserve=controlsHeight+26;
-    const availableHeight=Math.max(210,viewportHeight-headerBottom-controlsReserve-12);
-    const availableWidth=Math.max(210,areaWidth-24);
-    const targetSize=Math.min(BASE_SHELL_SIZE,availableHeight,availableWidth);
-    const scale=Math.max(.28,Math.min(1,targetSize/BASE_SHELL_SIZE));
+    const availableWidth=Math.max(280,areaWidth-20);
+    const desktopTarget=viewportHeight*0.78;
+    const mobileTarget=viewportHeight*0.68;
+    const heightTarget=window.innerWidth<=760?mobileTarget:desktopTarget;
+    const targetSize=Math.min(BASE_SHELL_SIZE,availableWidth*0.94,heightTarget);
+    const scale=Math.max(.48,Math.min(1,targetSize/BASE_SHELL_SIZE));
     const visualSize=BASE_SHELL_SIZE*scale;
-    const upwardShift=Math.min(34,controlsHeight*.45);
+    const upwardShift=Math.min(22,controlsHeight*.28);
     wheelShell.style.transform=`translateY(-${upwardShift}px) scale(${scale})`;
     wheelShell.style.transformOrigin="center center";
-    wheelArea.style.height=`${Math.ceil(visualSize+controlsReserve)}px`;
+    wheelArea.style.height=`${Math.ceil(visualSize+controlsHeight+34)}px`;
     wheelArea.style.minHeight="0";
     const glowSize=Math.min(BASE_GLOW_SIZE*scale,availableWidth);
-    bigGlow.style.width=`${Math.max(220,glowSize)}px`;
-    bigGlow.style.height=`${Math.max(220,glowSize)}px`;
+    bigGlow.style.width=`${Math.max(300,glowSize)}px`;
+    bigGlow.style.height=`${Math.max(300,glowSize)}px`;
 }
 function scheduleWheelFit(){cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(fitWheelToViewport)}
 window.addEventListener("resize",scheduleWheelFit,{passive:true});
 window.addEventListener("orientationchange",scheduleWheelFit,{passive:true});
 for(let i=0;i<ITEM_COUNT;i++){const line=document.createElement("div");line.className="segmentLine";line.style.transform=`rotate(${i*anglePerItem}deg)`;wheel.appendChild(line)}
-const centerX=325,centerY=325,iconRadius=260;
-for(let i=0;i<ITEM_COUNT;i++){const angle=i*anglePerItem;const rad=angle*Math.PI/180;const x=centerX+Math.sin(rad)*iconRadius;const y=centerY-Math.cos(rad)*iconRadius;const item=document.createElement("div");item.className="wheelItem";item.style.left=x+"px";item.style.top=y+"px";const image=document.createElement("img");image.src="images/"+(i+1)+".png";image.alt=itemNames[i];item.appendChild(image);wheel.appendChild(item)}
 scheduleWheelFit();
 let remaining=[...Array(ITEM_COUNT).keys()].map(i=>i+1);let spinning=false;let currentRotation=0;let drawCount=0;
 function showPopup(){popup.style.display="block";popupOverlay.style.display="block";requestAnimationFrame(()=>popup.classList.add("popupShow"))}
