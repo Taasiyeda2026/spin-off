@@ -40,7 +40,9 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 #wheel{position:absolute;width:650px;height:650px;border-radius:50%;overflow:hidden;border:3px solid rgba(201,253,255,.98);background:radial-gradient(circle at 50% 48%,rgba(0,234,255,.10) 0 18%,transparent 47%),repeating-conic-gradient(from -11.25deg,rgba(0,149,255,.86) 0deg 11.25deg,rgba(18,20,75,.98) 11.25deg 22.5deg);box-shadow:0 0 12px #fff,0 0 30px #00eaff,0 0 58px rgba(0,115,255,.62),0 0 88px rgba(113,52,255,.26),inset 0 0 60px rgba(0,18,54,.95),inset 0 0 120px rgba(0,88,255,.14);transform:rotate(0deg);transition:transform 8.8s cubic-bezier(.06,.72,.025,1)}
 .segmentLine{position:absolute;width:2px;height:50%;left:50%;top:0;transform-origin:50% 100%;background:linear-gradient(to top,rgba(190,255,255,1),rgba(0,234,255,.90) 30%,rgba(107,74,255,.18));box-shadow:0 0 6px #fff,0 0 11px #00eaff,0 0 18px rgba(0,132,255,.62)}
 .wheelItem{display:none}
-.centerCore{position:absolute;width:205px;height:205px;border-radius:50%;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,#1a5d9b 0%,#092a5b 28%,#07152f 58%,#01050d 100%);border:4px solid #a6fcff;box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32),inset 0 0 50px rgba(0,112,255,.24)}
+.centerCore{position:absolute;width:205px;height:205px;border-radius:50%;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,#1a5d9b 0%,#092a5b 28%,#07152f 58%,#01050d 100%);border:4px solid #a6fcff;box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32),inset 0 0 50px rgba(0,112,255,.24);cursor:pointer;user-select:none;transition:filter .18s,box-shadow .18s}
+.centerCore:hover{filter:brightness(1.16);box-shadow:0 0 10px #fff,0 0 29px var(--cyan),0 0 58px var(--blue),0 0 95px rgba(111,53,255,.48),inset 0 0 30px rgba(0,234,255,.40)}
+.centerCore:focus-visible{outline:3px solid #fff;outline-offset:7px}
 .centerCore::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(0,234,255,.42);box-shadow:0 0 15px rgba(0,234,255,.45),0 0 28px rgba(122,56,255,.24);animation:corePulse 1.8s ease-in-out infinite alternate}
 .centerCore::after{content:"";position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(180,151,255,.28);pointer-events:none}
 @keyframes corePulse{from{transform:scale(.97);opacity:.65}to{transform:scale(1.05);opacity:1}}
@@ -74,8 +76,24 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 @keyframes spinCore{from{box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32)}to{box-shadow:0 0 12px #fff,0 0 36px var(--cyan),0 0 70px var(--blue),0 0 110px rgba(111,53,255,.48),inset 0 0 42px rgba(0,234,255,.42)}}
 .energyParticle{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;pointer-events:none;z-index:140;background:#eaffff;box-shadow:0 0 7px #fff,0 0 14px #00eaff,0 0 24px #6b4cff;animation:energyBurst .95s cubic-bezier(.12,.65,.28,1) forwards}
 @keyframes energyBurst{0%{transform:translate(0,0) scale(.5);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+.spaceBingoCelebration{position:fixed;inset:0;z-index:15000;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(0,234,255,.22) 0 8%,rgba(0,85,255,.16) 24%,rgba(112,45,255,.12) 44%,transparent 69%);animation:bingoScreen 3.4s ease forwards}
+.spaceBingoMessage{position:relative;z-index:3;text-align:center;direction:rtl;padding:28px 48px;border-radius:32px;border:2px solid rgba(178,255,255,.92);background:radial-gradient(circle at 50% 0%,rgba(0,211,255,.22),transparent 42%),rgba(1,8,27,.80);box-shadow:0 0 12px #fff,0 0 34px #00eaff,0 0 80px #008cff,0 0 130px rgba(122,56,255,.62),inset 0 0 35px rgba(0,234,255,.18);animation:bingoMessagePop 3.4s cubic-bezier(.16,.75,.24,1) forwards}
+.spaceBingoTitle{font-size:clamp(54px,9vw,128px);font-weight:1000;line-height:.95;color:#f4ffff;white-space:nowrap;text-shadow:0 0 5px #fff,0 0 14px #fff,0 0 28px #00eaff,0 0 58px #008cff,0 0 95px #7138ff}
+.spaceBingoSub{margin-top:10px;font-size:clamp(20px,2.7vw,38px);font-weight:900;letter-spacing:3px;direction:ltr;color:#82f8ff;text-shadow:0 0 13px #00cfff,0 0 28px #6850ff}
+.spaceConfetti{position:absolute;left:50%;top:50%;width:var(--w);height:var(--h);border-radius:2px;opacity:0;box-shadow:0 0 8px currentColor;animation:confettiBlast var(--dur) cubic-bezier(.08,.58,.16,1) var(--delay) forwards}
+.spaceConfetti.round{border-radius:50%}
+.spaceConfetti.star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%)}
+.wheelArea.bingo-celebrate .outerRing{animation:bingoRingBurst .42s ease-in-out 6 alternate}
+.wheelArea.bingo-celebrate .centerCore{animation:bingoCoreBurst .38s ease-in-out 7 alternate}
+.wheelArea.bingo-celebrate .bigGlow{animation:bingoGlowBurst .45s ease-in-out 6 alternate}
+@keyframes bingoScreen{0%{opacity:0}8%{opacity:1}76%{opacity:1}100%{opacity:0}}
+@keyframes bingoMessagePop{0%{opacity:0;transform:scale(.35) rotate(-3deg)}12%{opacity:1;transform:scale(1.09) rotate(1deg)}22%{transform:scale(1) rotate(0)}78%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
+@keyframes confettiBlast{0%{transform:translate(-50%,-50%) scale(.25) rotate(0);opacity:0}9%{opacity:1}58%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(var(--r1));opacity:1}100%{transform:translate(calc(-50% + var(--dx2)),calc(-50% + var(--fall))) scale(.75) rotate(var(--r2));opacity:0}}
+@keyframes bingoRingBurst{from{filter:brightness(1.1) saturate(1.2);box-shadow:0 0 12px #fff,0 0 25px #00eaff,0 0 55px #0098ff,0 0 90px rgba(122,56,255,.45)}to{filter:brightness(1.9) saturate(1.8);box-shadow:0 0 18px #fff,0 0 48px #00eaff,0 0 95px #008cff,0 0 150px rgba(122,56,255,.75)}}
+@keyframes bingoCoreBurst{from{filter:brightness(1)}to{filter:brightness(1.65)}}
+@keyframes bingoGlowBurst{from{transform:scale(.95);opacity:.68}to{transform:scale(1.14);opacity:1}}
 @media(max-width:1150px){.app{display:block}.wheelArea{height:750px}.drawPanel{width:min(720px,95vw);min-height:auto;margin:20px auto}#drawList{max-height:280px}}
-@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:7px}.header .subtitle{display:none}.button{min-width:100px;width:auto;padding:7px 10px;font-size:14px}}
+@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:7px}.header .subtitle{display:none}.button{min-width:100px;width:auto;padding:7px 10px;font-size:14px}.spaceBingoMessage{padding:22px 24px}.spaceBingoTitle{white-space:normal}}
 </style>
 </head>
 <body>
@@ -101,6 +119,7 @@ const wheel=document.getElementById("wheel");
 const wheelArea=document.querySelector(".wheelArea");
 const wheelShell=document.querySelector(".wheelShell");
 const bigGlow=document.querySelector(".bigGlow");
+const centerCore=document.querySelector(".centerCore");
 const controls=document.querySelector(".controls");
 const spinButton=document.getElementById("spinButton");
 const newGame=document.getElementById("newGame");
@@ -117,6 +136,7 @@ const BASE_GLOW_SIZE=760;
 let resizeFrame=0;
 let audioCtx=null;
 let tickTimer=null;
+let bingoCelebrating=false;
 
 function fitWheelToViewport(){
     const viewportHeight=window.innerHeight||document.documentElement.clientHeight;
@@ -169,42 +189,66 @@ function playSpinStart(){
     gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.035);gain.gain.exponentialRampToValueAtTime(.0001,now+.34);
     osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+.36);
 }
-function playTick(progress){
-    const freq=980-progress*300;
-    const volume=.035-progress*.012;
-    playTone(freq,.035,Math.max(.016,volume),"triangle");
+function playTick(progress){const freq=980-progress*300;const volume=.035-progress*.012;playTone(freq,.035,Math.max(.016,volume),"triangle")}
+function startSpinTicks(duration){clearTimeout(tickTimer);const started=performance.now();const next=()=>{const progress=Math.min(1,(performance.now()-started)/duration);if(progress>=.985)return;playTick(progress);const interval=55+Math.pow(progress,3.4)*390;tickTimer=setTimeout(next,interval)};next()}
+function playWinnerSound(){playTone(523.25,.22,.055,"sine",0);playTone(659.25,.24,.05,"sine",.10);playTone(783.99,.34,.06,"sine",.20);playTone(1174.66,.28,.032,"triangle",.29)}
+function playBingoFanfare(){
+    getAudio();
+    playTone(392,.16,.05,"triangle",0);
+    playTone(523.25,.18,.06,"sine",.08);
+    playTone(659.25,.22,.065,"sine",.17);
+    playTone(783.99,.30,.07,"sine",.28);
+    playTone(1046.5,.44,.075,"triangle",.42);
+    playTone(1318.5,.55,.045,"sine",.56);
 }
-function startSpinTicks(duration){
-    clearTimeout(tickTimer);
-    const started=performance.now();
-    const next=()=>{
-        const progress=Math.min(1,(performance.now()-started)/duration);
-        if(progress>=.985)return;
-        playTick(progress);
-        const interval=55+Math.pow(progress,3.4)*390;
-        tickTimer=setTimeout(next,interval);
-    };
-    next();
-}
-function playWinnerSound(){
-    playTone(523.25,.22,.055,"sine",0);
-    playTone(659.25,.24,.05,"sine",.10);
-    playTone(783.99,.34,.06,"sine",.20);
-    playTone(1174.66,.28,.032,"triangle",.29);
-}
-function createEnergyBurst(){
-    const count=20;
-    for(let i=0;i<count;i++){
-        const p=document.createElement("span");p.className="energyParticle";
-        const a=(Math.PI*2*i/count)+(Math.random()*.22-.11);
-        const d=130+Math.random()*145;
-        p.style.setProperty("--dx",`${Math.cos(a)*d}px`);
-        p.style.setProperty("--dy",`${Math.sin(a)*d}px`);
-        p.style.animationDelay=`${Math.random()*.08}s`;
-        wheelArea.appendChild(p);
-        setTimeout(()=>p.remove(),1200);
+function createEnergyBurst(){const count=20;for(let i=0;i<count;i++){const p=document.createElement("span");p.className="energyParticle";const a=(Math.PI*2*i/count)+(Math.random()*.22-.11);const d=130+Math.random()*145;p.style.setProperty("--dx",`${Math.cos(a)*d}px`);p.style.setProperty("--dy",`${Math.sin(a)*d}px`);p.style.animationDelay=`${Math.random()*.08}s`;wheelArea.appendChild(p);setTimeout(()=>p.remove(),1200)}}
+
+function triggerSpaceBingo(){
+    if(bingoCelebrating)return;
+    bingoCelebrating=true;
+    playBingoFanfare();
+    createFlash();
+    setTimeout(createFlash,360);
+    wheelArea.classList.add("bingo-celebrate");
+
+    const celebration=document.createElement("div");
+    celebration.className="spaceBingoCelebration";
+    celebration.innerHTML='<div class="spaceBingoMessage"><div class="spaceBingoTitle">בינגו בחלל!</div><div class="spaceBingoSub">SPACE BINGO</div></div>';
+    const colors=["#ffffff","#00eaff","#37a8ff","#8a5cff","#d073ff","#5effd0","#ffd85c"];
+    const pieces=120;
+    for(let i=0;i<pieces;i++){
+        const c=document.createElement("span");
+        const shape=i%11===0?" star":i%5===0?" round":"";
+        c.className="spaceConfetti"+shape;
+        const angle=Math.random()*Math.PI*2;
+        const distance=140+Math.random()*Math.max(window.innerWidth,window.innerHeight)*.62;
+        const dx=Math.cos(angle)*distance;
+        const dy=Math.sin(angle)*distance*.62-80;
+        const dx2=dx+(Math.random()-.5)*180;
+        const fall=Math.max(window.innerHeight*.58,dy+window.innerHeight*.72);
+        c.style.setProperty("--dx",`${dx}px`);
+        c.style.setProperty("--dy",`${dy}px`);
+        c.style.setProperty("--dx2",`${dx2}px`);
+        c.style.setProperty("--fall",`${fall}px`);
+        c.style.setProperty("--r1",`${(Math.random()-.5)*900}deg`);
+        c.style.setProperty("--r2",`${(Math.random()-.5)*1800}deg`);
+        c.style.setProperty("--delay",`${Math.random()*.32}s`);
+        c.style.setProperty("--dur",`${2.0+Math.random()*1.25}s`);
+        c.style.setProperty("--w",`${5+Math.random()*9}px`);
+        c.style.setProperty("--h",`${8+Math.random()*16}px`);
+        const color=colors[Math.floor(Math.random()*colors.length)];
+        c.style.background=color;c.style.color=color;
+        celebration.appendChild(c);
     }
+    document.body.appendChild(celebration);
+    setTimeout(()=>{wheelArea.classList.remove("bingo-celebrate");celebration.remove();bingoCelebrating=false},3600);
 }
+
+centerCore.tabIndex=0;
+centerCore.setAttribute("role","button");
+centerCore.setAttribute("aria-label","הפעל חגיגת בינגו בחלל");
+centerCore.addEventListener("click",triggerSpaceBingo);
+centerCore.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();triggerSpaceBingo()}});
 
 let remaining=[...Array(ITEM_COUNT).keys()].map(i=>i+1);
 let spinning=false;
