@@ -37,7 +37,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 @keyframes innerOrbit{to{transform:rotate(360deg)}}
 .outerRing{position:absolute;inset:1px;border-radius:50%;border:5px solid #86fbff;background:radial-gradient(circle at 50% 50%,transparent 73%,rgba(0,234,255,.045) 74%,rgba(122,56,255,.08) 82%,transparent 88%);box-shadow:0 0 8px #fff,0 0 18px #00eaff,0 0 38px #0098ff,0 0 78px rgba(0,92,255,.82),0 0 120px rgba(122,56,255,.28),inset 0 0 32px rgba(0,234,255,.55),inset 0 0 66px rgba(82,51,255,.15);animation:ringGlow 1.55s ease-in-out infinite alternate}
 @keyframes ringGlow{from{filter:brightness(.92) saturate(1.05)}to{filter:brightness(1.34) saturate(1.35)}}
-#wheel{position:absolute;width:650px;height:650px;border-radius:50%;overflow:hidden;border:3px solid rgba(201,253,255,.98);background:radial-gradient(circle at 50% 48%,rgba(0,234,255,.10) 0 18%,transparent 47%),repeating-conic-gradient(from -11.25deg,rgba(0,149,255,.86) 0deg 11.25deg,rgba(18,20,75,.98) 11.25deg 22.5deg);box-shadow:0 0 12px #fff,0 0 30px #00eaff,0 0 58px rgba(0,115,255,.62),0 0 88px rgba(113,52,255,.26),inset 0 0 60px rgba(0,18,54,.95),inset 0 0 120px rgba(0,88,255,.14);transform:rotate(0deg);transition:transform 8s cubic-bezier(.08,.64,.07,1)}
+#wheel{position:absolute;width:650px;height:650px;border-radius:50%;overflow:hidden;border:3px solid rgba(201,253,255,.98);background:radial-gradient(circle at 50% 48%,rgba(0,234,255,.10) 0 18%,transparent 47%),repeating-conic-gradient(from -11.25deg,rgba(0,149,255,.86) 0deg 11.25deg,rgba(18,20,75,.98) 11.25deg 22.5deg);box-shadow:0 0 12px #fff,0 0 30px #00eaff,0 0 58px rgba(0,115,255,.62),0 0 88px rgba(113,52,255,.26),inset 0 0 60px rgba(0,18,54,.95),inset 0 0 120px rgba(0,88,255,.14);transform:rotate(0deg);transition:transform 8.8s cubic-bezier(.06,.72,.025,1)}
 .segmentLine{position:absolute;width:2px;height:50%;left:50%;top:0;transform-origin:50% 100%;background:linear-gradient(to top,rgba(190,255,255,1),rgba(0,234,255,.90) 30%,rgba(107,74,255,.18));box-shadow:0 0 6px #fff,0 0 11px #00eaff,0 0 18px rgba(0,132,255,.62)}
 .wheelItem{display:none}
 .centerCore{position:absolute;width:205px;height:205px;border-radius:50%;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,#1a5d9b 0%,#092a5b 28%,#07152f 58%,#01050d 100%);border:4px solid #a6fcff;box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32),inset 0 0 50px rgba(0,112,255,.24)}
@@ -66,6 +66,14 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 #popup.popupShow{display:block;opacity:1;transform:translate(-50%,-50%) scale(1)}
 .popupTopText{font-size:16px;color:#9aeaff;margin-bottom:6px}#popupTitle{margin:5px 0 16px;font-size:34px;color:#a3fbff;text-shadow:0 0 5px #fff,0 0 15px #00eaff,0 0 28px #008cff}.imageWrap{width:290px;height:290px;margin:0 auto 18px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff,#eafcff);border:2px solid #78f4ff;box-shadow:0 0 7px #fff,0 0 24px rgba(0,234,255,.70),0 0 42px rgba(92,55,255,.22)}#popupImage{width:90%;height:90%;object-fit:contain}.popupInstruction{color:white;font-size:20px;line-height:1.5;margin:4px 0}.popupInstruction strong{color:#66f6ff;text-shadow:0 0 11px #00bfff}#popupClose{position:absolute;top:13px;left:14px;width:40px;height:40px;border-radius:50%;border:1px solid #79f6ff;background:rgba(3,18,40,.95);color:white;font-size:24px;cursor:pointer;box-shadow:0 0 13px rgba(0,234,255,.42)}
 .flash{position:fixed;inset:0;z-index:8500;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(255,255,255,.32) 0 6%,rgba(0,234,255,.50) 13%,rgba(0,119,255,.25) 32%,rgba(117,52,255,.16) 50%,transparent 67%)}.flash.active{animation:flashAnim .9s ease}@keyframes flashAnim{0%{opacity:0}28%{opacity:1}52%{opacity:.58}100%{opacity:0}}
+.wheelArea.spin-active .bigGlow{animation:spinGlow .7s ease-in-out infinite alternate;box-shadow:0 0 120px rgba(0,234,255,.30),0 0 190px rgba(84,50,255,.22)}
+.wheelArea.spin-active .outerRing{animation:spinRing .42s ease-in-out infinite alternate}
+.wheelArea.spin-active .centerCore{animation:spinCore .58s ease-in-out infinite alternate}
+@keyframes spinGlow{from{transform:scale(.94);opacity:.75;filter:blur(18px)}to{transform:scale(1.09);opacity:1;filter:blur(24px)}}
+@keyframes spinRing{from{filter:brightness(1) saturate(1.1)}to{filter:brightness(1.55) saturate(1.55)}}
+@keyframes spinCore{from{box-shadow:0 0 8px #fff,0 0 20px var(--cyan),0 0 44px var(--blue),0 0 75px rgba(111,53,255,.36),inset 0 0 24px rgba(0,234,255,.32)}to{box-shadow:0 0 12px #fff,0 0 36px var(--cyan),0 0 70px var(--blue),0 0 110px rgba(111,53,255,.48),inset 0 0 42px rgba(0,234,255,.42)}}
+.energyParticle{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;pointer-events:none;z-index:140;background:#eaffff;box-shadow:0 0 7px #fff,0 0 14px #00eaff,0 0 24px #6b4cff;animation:energyBurst .95s cubic-bezier(.12,.65,.28,1) forwards}
+@keyframes energyBurst{0%{transform:translate(0,0) scale(.5);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 @media(max-width:1150px){.app{display:block}.wheelArea{height:750px}.drawPanel{width:min(720px,95vw);min-height:auto;margin:20px auto}#drawList{max-height:280px}}
 @media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:7px}.header .subtitle{display:none}.button{min-width:100px;width:auto;padding:7px 10px;font-size:14px}}
 </style>
@@ -88,6 +96,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 const itemNames=["קנקן סינון מים","מקדחה אלחוטית","שמיכת חירום תרמית","גלגל אופניים","כרית ויסקו","מדחום אוזן","פאנל סולארי","מערכת נשימה לצלילה","תרכובת מזון לתינוקות","משקפי ראייה","נעלי ספורט","מנה חמה","ג׳ויסטיק","חולצת ספורט","קסדת אופניים","שואב אבק אלחוטי"];
 const ITEM_COUNT=itemNames.length;
 const anglePerItem=360/ITEM_COUNT;
+const SPIN_DURATION=8800;
 const wheel=document.getElementById("wheel");
 const wheelArea=document.querySelector(".wheelArea");
 const wheelShell=document.querySelector(".wheelShell");
@@ -106,15 +115,18 @@ const flash=document.getElementById("flash");
 const BASE_SHELL_SIZE=700;
 const BASE_GLOW_SIZE=760;
 let resizeFrame=0;
+let audioCtx=null;
+let tickTimer=null;
+
 function fitWheelToViewport(){
     const viewportHeight=window.innerHeight||document.documentElement.clientHeight;
     const areaWidth=Math.max(280,wheelArea.clientWidth||window.innerWidth);
     const controlsHeight=Math.max(34,controls.getBoundingClientRect().height||34);
     const availableWidth=Math.max(280,areaWidth-20);
-    const desktopTarget=viewportHeight*0.78;
-    const mobileTarget=viewportHeight*0.68;
+    const desktopTarget=viewportHeight*.78;
+    const mobileTarget=viewportHeight*.68;
     const heightTarget=window.innerWidth<=760?mobileTarget:desktopTarget;
-    const targetSize=Math.min(BASE_SHELL_SIZE,availableWidth*0.94,heightTarget);
+    const targetSize=Math.min(BASE_SHELL_SIZE,availableWidth*.94,heightTarget);
     const scale=Math.max(.48,Math.min(1,targetSize/BASE_SHELL_SIZE));
     const visualSize=BASE_SHELL_SIZE*scale;
     const upwardShift=Math.min(14,controlsHeight*.24);
@@ -131,14 +143,99 @@ window.addEventListener("resize",scheduleWheelFit,{passive:true});
 window.addEventListener("orientationchange",scheduleWheelFit,{passive:true});
 for(let i=0;i<ITEM_COUNT;i++){const line=document.createElement("div");line.className="segmentLine";line.style.transform=`rotate(${i*anglePerItem}deg)`;wheel.appendChild(line)}
 scheduleWheelFit();
-let remaining=[...Array(ITEM_COUNT).keys()].map(i=>i+1);let spinning=false;let currentRotation=0;let drawCount=0;
+
+function getAudio(){
+    try{
+        if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;audioCtx=new AC()}
+        if(audioCtx.state==="suspended")audioCtx.resume();
+        return audioCtx;
+    }catch(e){return null}
+}
+function playTone(freq,duration=.06,volume=.045,type="sine",delay=0){
+    const ctx=getAudio();if(!ctx)return;
+    const start=ctx.currentTime+delay;
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type=type;osc.frequency.setValueAtTime(freq,start);
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),start+.008);
+    gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+    osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.03);
+}
+function playSpinStart(){
+    const ctx=getAudio();if(!ctx)return;
+    const osc=ctx.createOscillator();const gain=ctx.createGain();
+    const now=ctx.currentTime;osc.type="sawtooth";osc.frequency.setValueAtTime(110,now);osc.frequency.exponentialRampToValueAtTime(520,now+.32);
+    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.035);gain.gain.exponentialRampToValueAtTime(.0001,now+.34);
+    osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+.36);
+}
+function playTick(progress){
+    const freq=980-progress*300;
+    const volume=.035-progress*.012;
+    playTone(freq,.035,Math.max(.016,volume),"triangle");
+}
+function startSpinTicks(duration){
+    clearTimeout(tickTimer);
+    const started=performance.now();
+    const next=()=>{
+        const progress=Math.min(1,(performance.now()-started)/duration);
+        if(progress>=.985)return;
+        playTick(progress);
+        const interval=55+Math.pow(progress,3.4)*390;
+        tickTimer=setTimeout(next,interval);
+    };
+    next();
+}
+function playWinnerSound(){
+    playTone(523.25,.22,.055,"sine",0);
+    playTone(659.25,.24,.05,"sine",.10);
+    playTone(783.99,.34,.06,"sine",.20);
+    playTone(1174.66,.28,.032,"triangle",.29);
+}
+function createEnergyBurst(){
+    const count=20;
+    for(let i=0;i<count;i++){
+        const p=document.createElement("span");p.className="energyParticle";
+        const a=(Math.PI*2*i/count)+(Math.random()*.22-.11);
+        const d=130+Math.random()*145;
+        p.style.setProperty("--dx",`${Math.cos(a)*d}px`);
+        p.style.setProperty("--dy",`${Math.sin(a)*d}px`);
+        p.style.animationDelay=`${Math.random()*.08}s`;
+        wheelArea.appendChild(p);
+        setTimeout(()=>p.remove(),1200);
+    }
+}
+
+let remaining=[...Array(ITEM_COUNT).keys()].map(i=>i+1);
+let spinning=false;
+let currentRotation=0;
+let drawCount=0;
 function showPopup(){popup.style.display="block";popupOverlay.style.display="block";requestAnimationFrame(()=>popup.classList.add("popupShow"))}
 function hidePopup(){popup.classList.remove("popupShow");popupOverlay.style.display="none";setTimeout(()=>{popup.style.display="none"},350)}
 popupClose.onclick=hidePopup;popupOverlay.onclick=hidePopup;
 function createFlash(){flash.classList.remove("active");void flash.offsetWidth;flash.classList.add("active")}
 function updateCounter(){counter.innerText=drawCount+" מתוך "+ITEM_COUNT+" הוגרלו"}
 function addToHistory(pick){const row=document.createElement("div");row.className="drawRow";const number=document.createElement("div");number.className="drawNumber";number.innerText=drawCount;const image=document.createElement("img");image.src="images/"+pick+".png";const text=document.createElement("span");text.innerText=itemNames[pick-1];row.appendChild(number);row.appendChild(image);row.appendChild(text);drawList.prepend(row)}
-spinButton.onclick=function(){if(spinning)return;if(remaining.length===0){alert("כל 16 הפריטים כבר הוגרלו!");return}spinning=true;spinButton.disabled=true;hidePopup();const randomIndex=Math.floor(Math.random()*remaining.length);const pick=remaining[randomIndex];const selectedAngle=(pick-1)*anglePerItem;const currentMod=((currentRotation%360)+360)%360;const targetMod=(360-selectedAngle)%360;let delta=targetMod-currentMod;if(delta<0)delta+=360;delta+=360*8;currentRotation+=delta;wheel.style.transform="rotate("+currentRotation+"deg)";setTimeout(()=>{createFlash();popupTitle.innerText=itemNames[pick-1];popupImage.src="images/"+pick+".png";showPopup();remaining=remaining.filter(value=>value!==pick);drawCount++;addToHistory(pick);updateCounter();spinning=false;spinButton.disabled=false},8200)};
+
+spinButton.onclick=function(){
+    if(spinning)return;
+    if(remaining.length===0){alert("כל 16 הפריטים כבר הוגרלו!");return}
+    spinning=true;spinButton.disabled=true;hidePopup();
+    playSpinStart();startSpinTicks(SPIN_DURATION);wheelArea.classList.add("spin-active");
+    const randomIndex=Math.floor(Math.random()*remaining.length);
+    const pick=remaining[randomIndex];
+    const selectedAngle=(pick-1)*anglePerItem;
+    const currentMod=((currentRotation%360)+360)%360;
+    const targetMod=(360-selectedAngle)%360;
+    let delta=targetMod-currentMod;if(delta<0)delta+=360;delta+=360*8;currentRotation+=delta;
+    wheel.style.transform="rotate("+currentRotation+"deg)";
+    setTimeout(()=>{
+        clearTimeout(tickTimer);wheelArea.classList.remove("spin-active");
+        playWinnerSound();createEnergyBurst();createFlash();
+        popupTitle.innerText=itemNames[pick-1];popupImage.src="images/"+pick+".png";showPopup();
+        remaining=remaining.filter(value=>value!==pick);drawCount++;addToHistory(pick);updateCounter();spinning=false;spinButton.disabled=false;
+    },SPIN_DURATION+140)
+};
 newGame.onclick=function(){if(confirm("להתחיל משחק חדש? כל ההגרלות יתאפסו."))location.reload()};
 </script>
 </body>
