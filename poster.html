@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>פוסטר חקר - דגם פיזי / דגם דיגיטלי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',Arial,sans-serif;background:#555;direction:rtl;color:#111}
+button,input,textarea,select{font-family:'Heebo',Arial,sans-serif}
+
+:root{
+  --poster-bg:#e8f4f8;
+  --box-bg:rgba(255,255,255,0.96);
+  --border:#b0c4d8;
+  --border-2:#6f9ebd;
+  --title:#1a1a2e;
+  --text:#111111;
+  --accent:#2d4a8a;
+  --warn:#b42318;
+  --ok:#067647;
+}
+
+/* TOOLBAR */
+#toolbar{position:fixed;top:0;right:0;left:0;z-index:9000;min-height:52px;background:linear-gradient(90deg,#12172f,#1e2a5e);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 18px;box-shadow:0 3px 12px rgba(0,0,0,.4)}
+.tb-brand{display:flex;align-items:center;gap:10px;color:#fff;min-width:190px}
+.tb-mark{width:30px;height:30px;border-radius:9px;background:#2d7ff9;display:flex;align-items:center;justify-content:center;font-weight:900}
+.tb-brand strong{font-size:13px;font-weight:900;display:block;line-height:1.2}
+.tb-brand small{font-size:10px;color:#b8c7ff;display:block}
+.mode-switch{display:flex;align-items:center;gap:3px;padding:3px;border-radius:999px;background:rgba(255,255,255,.12)}
+.mode-btn{border:none;background:transparent;color:#b8c7ff;padding:6px 22px;border-radius:999px;font-size:12px;font-weight:900;cursor:pointer;transition:.15s}
+.mode-btn.active{background:#2d7ff9;color:#fff}
+.tb-acts{display:flex;align-items:center;gap:6px}
+.tbb{border:none;border-radius:999px;background:#2d4a8a;color:#fff;padding:6px 13px;font-size:11px;font-weight:800;cursor:pointer;min-height:30px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.tbb:hover{background:#3a5fa8}
+.tbb.sec{background:#475467}.tbb.sec:hover{background:#667085}
+.tbb.hm{width:30px;height:30px;padding:0;background:rgba(255,255,255,.15)}
+
+/* EDIT PANEL */
+#sp{position:fixed;top:52px;right:0;bottom:0;width:326px;z-index:8800;background:#f4f7ff;border-left:2px solid rgba(45,74,138,.2);box-shadow:-4px 0 18px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column;overflow:hidden}
+body.panel-open #sp{transform:translateX(0)}
+body.panel-open #wrap{padding-right:344px}
+.sph{background:#1a1a2e;color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sph strong{font-size:13px}.sph span{font-size:10px;color:#b8c7ff;display:block}
+.spc{border:none;background:rgba(255,255,255,.12);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px}
+.sptabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:7px 8px;background:#e8eeff;border-bottom:1px solid rgba(45,74,138,.14)}
+.sptab{border:1px solid rgba(45,74,138,.2);background:#fff;color:#1a1a2e;border-radius:8px;padding:6px 2px;font-size:10.5px;font-weight:900;cursor:pointer;text-align:center}
+.sptab.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+.spb{flex:1;overflow-y:auto;padding:10px 10px 24px}.tp{display:none}.tp.active{display:block}
+.st{font-size:11px;font-weight:900;color:#1a1a2e;margin:8px 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(45,74,138,.1)}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}.fg label{font-size:10px;font-weight:800;color:#536079}.fg input,.fg select{border:1px solid rgba(45,74,138,.22);border-radius:7px;padding:6px 8px;font-size:11px;outline:none;background:#fff;width:100%}.fg input:focus,.fg select:focus{border-color:#2d7ff9}
+.fg-c{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px}.fg-c label{font-size:10px;font-weight:800;color:#536079;flex:1}.fg-c input[type=color]{width:48px;height:27px;padding:1px 3px;border-radius:7px;border:1px solid rgba(45,74,138,.22);cursor:pointer;flex-shrink:0}
+.fsz-row{display:flex;align-items:center;gap:5px;margin-bottom:8px}.fsz-row label{font-size:10px;font-weight:800;color:#536079;flex:1}.fsz-ctrl{display:flex;align-items:center;gap:3px}.fsz-val{min-width:34px;text-align:center;font-size:12px;font-weight:900;border:1px solid rgba(45,74,138,.2);border-radius:6px;padding:2px 4px;background:#fff}
+.pb{border:none;border-radius:7px;background:#2d4a8a;color:#fff;padding:6px 8px;font-size:10.5px;font-weight:900;cursor:pointer;min-height:28px;text-align:center;display:flex;align-items:center;justify-content:center}.pb:hover{background:#3a5fa8}.pb.sec{background:#475467}.pb.warn{background:#b42318}.pb.ok{background:#067647}.br2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}.pn{font-size:9.5px;color:#667085;line-height:1.35;margin:4px 0 8px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px}.prow{display:grid;grid-template-columns:32px 1fr;gap:4px;align-items:center}.prow span{font-size:9.5px;font-weight:900;color:#536079}.prow input{border:1px solid rgba(45,74,138,.2);border-radius:6px;padding:4px 6px;font-size:10.5px;outline:none;background:#fff;width:100%}
+.legend{display:flex;flex-direction:column;gap:6px}.legend-row{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#fff;border:1px solid rgba(45,74,138,.12);border-radius:7px;padding:6px 7px}.legend-row span{font-size:10.5px;font-weight:800;color:#1a1a2e}.legend-row b{font-size:10.5px;color:#2d4a8a}.edit-list{display:flex;flex-direction:column;gap:7px}.edit-card{background:#fff;border:1px solid rgba(45,74,138,.14);border-radius:8px;padding:7px}.edit-card label{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;font-weight:900;color:#1a1a2e;margin-bottom:4px}.edit-card textarea,.edit-card input{width:100%;border:1px solid rgba(45,74,138,.2);border-radius:7px;background:#fbfcff;outline:none;padding:5px 7px;font-size:11px;line-height:1.35;resize:vertical;text-align:right}.edit-card textarea:focus,.edit-card input:focus{border-color:#2d7ff9}.edit-card .panel-counter{font-size:9px;color:#6b7b90;direction:ltr;white-space:nowrap}.edit-card .panel-counter.full{color:#b42318}.edit-card .panel-counter.good{color:#067647}
+
+/* WRAP + POSTER */
+#wrap{margin-top:52px;display:flex;justify-content:center;padding:24px;min-height:calc(100vh - 52px);transition:padding-right .22s ease}
+#poster{width:794px;height:1123px;background:var(--poster-bg);position:relative;flex-shrink:0;box-shadow:0 6px 32px rgba(0,0,0,.45);outline:3px solid #2d4a8a;overflow:hidden;font-family:'Heebo',Arial,sans-serif}
+#bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;pointer-events:none;opacity:.18}
+
+/* HEADER */
+#p-hdr{position:absolute;left:30px;right:30px;top:16px;height:56px;z-index:2;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.logo-area{position:absolute;right:0;top:0;display:flex;align-items:flex-start;gap:8px}
+.logo-box{width:62px;height:62px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;color:#8796aa;overflow:visible;border:none;background:transparent}
+.logo-box img{width:100%;height:100%;object-fit:contain;display:none}.logo-box .ltxt{font-size:8px;font-weight:900;color:#8796aa;text-align:center}.logo-box:hover::after{content:'לוגו';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);background:rgba(45,74,138,.9);color:#fff;font-size:8px;padding:1px 5px;border-radius:4px;white-space:nowrap}
+#poster-project{font-weight:900;font-size:36px;color:var(--title);background:transparent;border:none;outline:none;width:620px;text-align:center;text-decoration:underline;text-underline-offset:4px;line-height:1.1}
+#poster-project::placeholder{font-weight:400;font-size:20px;color:#99a8b8;text-decoration:none}
+#project-counter{position:absolute;left:10px;top:7px}
+#short-desc-box{position:absolute;left:30px;right:30px;top:73px;height:42px;z-index:2;display:flex;align-items:center;justify-content:center;isolation:isolate}
+#short-desc{width:100%;height:100%;border:none;background:transparent;resize:none;outline:none;text-align:center;font-size:13px;font-weight:600;color:#3a4a63;line-height:1.35;overflow:hidden;padding:2px 95px 2px 95px}
+#short-desc::placeholder{color:#9fb0c4}
+#desc-counter{position:absolute;left:10px;top:1px}
+#poster-project,
+#short-desc,
+.logo-box img,
+.logo-box .ltxt{position:relative;z-index:2}
+
+#p-hdr::before,
+#short-desc-box::before,
+.logo-box::before{
+  content:'';
+  position:absolute;
+  z-index:1;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s ease;
+}
+
+#p-hdr::before{
+  left:50%;
+  top:50%;
+  width:430px;
+  height:40px;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  filter:blur(12px);
+}
+
+#short-desc-box::before{
+  left:50%;
+  top:calc(50% - 11px);
+  width:210px;
+  height:14px;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  filter:blur(7px);
+}
+
+.logo-box::before{
+  left:50%;
+  top:50%;
+  width:86px;
+  height:86px;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  filter:blur(10px);
+}
+
+#p-hdr.glow-dark::before,
+#short-desc-box.glow-dark::before,
+.logo-box.glow-dark::before{
+  background:rgba(0,0,0,.45);
+  opacity:1;
+}
+
+#p-hdr.glow-light::before,
+#short-desc-box.glow-light::before,
+.logo-box.glow-light::before{
+  background:rgba(255,255,255,.82);
+  opacity:1;
+}
+
+/* Softer and tighter glow only behind the project description */
+#short-desc-box.glow-dark::before{
+  background:rgba(0,0,0,.26);
+  opacity:1;
+}
+#short-desc-box.glow-light::before{
+  background:rgba(255,255,255,.72);
+  opacity:1;
+}
+
+.glow-controls{display:flex;gap:6px;margin-top:4px}.glow-controls .pb{flex:1}
+#p-bar{position:absolute;left:190px;right:190px;top:132px;height:38px;z-index:2;background:#fff;border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;box-shadow:2px 3px 0 rgba(111,158,189,.35)}
+.bar-mf{display:flex;align-items:center;gap:5px}.bar-mf label{font-weight:900;color:var(--title);white-space:nowrap}.bar-mf input{border:none;border-bottom:1px solid rgba(74,85,104,.3);background:transparent;color:#111;outline:none;font-size:14px;text-align:right}.bar-div{width:1px;height:20px;background:var(--border)}
+
+/* BOXES */
+.box{position:absolute;border:1.5px solid var(--border);background:var(--box-bg);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;z-index:2;box-shadow:3px 4px 0 rgba(111,158,189,.45),0 6px 16px rgba(45,74,138,.10)}
+.bi{flex:1;padding:5px 9px 5px;display:flex;flex-direction:column;gap:3px;min-height:0;overflow:hidden}.bq{font-weight:900;color:var(--title);text-align:right;line-height:1.18;font-size:13.5px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0}.bq span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.box textarea,.box input[type=text]{border:none;background:transparent;color:var(--text);outline:none;resize:none;width:100%;line-height:1.34;padding:1px 0 0;text-align:right;font-size:12px;flex:1;min-height:0;overflow:hidden;margin:0}.box textarea::placeholder,.box input::placeholder{color:#b8c2cf}.counter{font-size:9px;font-weight:900;color:#6b7b90;direction:ltr;white-space:nowrap}.counter.full{color:#b42318}.counter.good{color:#067647}
+.two-line-answer{line-height:1.38!important;white-space:pre-wrap}
+.numbered-answer{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:1px;color:var(--text);font-size:12px;line-height:1.28;overflow:hidden;padding-top:1px;margin-top:0}.numbered-answer .na-line{display:flex;align-items:flex-start;gap:5px;min-height:1.25em;margin:0}.numbered-answer b{font-weight:900;color:var(--title);flex:0 0 auto;line-height:1.28}.numbered-answer span{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.28}.numbered-answer.empty span{color:#b8c2cf}.split-sources{display:none!important}
+#c-research .bi,#c-requirements .bi,#c-use .bi{padding-top:5px;padding-bottom:4px;gap:2px}
+#c-research .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{flex:0 0 auto;gap:0;padding-top:0}
+#c-research .na-line,#c-requirements .na-line,#c-use .na-line{min-height:0;line-height:1.22}
+#c-research .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.22}
+
+#c-slogan .bi{justify-content:center;align-items:center;padding:4px 10px}#c-slogan textarea{font-size:18px!important;font-weight:900!important;text-align:center!important;line-height:1.25!important;color:#2d4a8a!important;align-content:center!important}
+.flow-arrow{position:absolute;width:24px;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:4}.flow-arrow .shaft{width:2px;flex:1;background:#2d4a8a;border-radius:2px}.flow-arrow .head{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid #2d4a8a;margin-top:-1px}
+#p-names{position:absolute;left:190px;right:190px;top:178px;height:34px;z-index:2;display:flex;align-items:center;justify-content:center;border:none;border-radius:6px;background:rgba(255,255,255,.65);box-shadow:2px 3px 0 rgba(111,158,189,.35);padding:3px 8px;box-sizing:border-box}
+#poster-students{border:none;outline:none;text-align:center;align-content:center;font-size:11px;color:#444;background:transparent;width:100%;height:100%;resize:none;overflow:hidden;line-height:1.3;padding:0;font-family:Heebo,Arial,sans-serif}
+
+/* IMAGES */
+.image-box{position:absolute;z-index:2;border:1.5px solid var(--border);background:var(--box-bg);border-radius:6px;overflow:hidden;box-shadow:3px 4px 0 rgba(111,158,189,.45),0 6px 16px rgba(45,74,138,.10)}
+.iw{width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}.iw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.iw img.show{display:block}.iph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;text-align:center;pointer-events:none;color:#6b9cb8}.iph svg{width:28px;height:28px;stroke:#6b9cb8;fill:none;stroke-width:1.5}.iph span{font-size:11px;font-weight:900}.iph small{font-size:9px;color:#8aa0ae}.ichg{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);background:rgba(45,74,138,.85);color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:800;cursor:pointer;z-index:4;display:none}.iw:hover .ichg{display:block}.img-pair{position:absolute;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}.img-pair .image-box{position:relative;width:100%;height:100%}
+body.digital-mode #main-image-box,body.digital-mode .img-pair .image-box{border-radius:18px;outline:4px solid rgba(26,26,46,.12);background:#f9fbff}body.digital-mode .img-pair{grid-template-columns:1fr 1fr;gap:18px}
+body.digital-mode #c-use{
+  border:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+body.digital-mode #c-use .bi{
+  padding:0!important;
+  gap:6px;
+  overflow:visible;
+}
+body.digital-mode #c-use .bq{
+  width:357px;
+  height:28px;
+  max-width:100%;
+  justify-content:center;
+  text-align:center;
+  font-size:14px;
+  line-height:1.1;
+  padding:5px 10px;
+  box-sizing:border-box;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  background:var(--box-bg);
+  box-shadow:3px 4px 0 rgba(111,158,189,.45),0 6px 16px rgba(45,74,138,.10);
+}
+body.digital-mode #c-use .bq .counter{display:none}
+body.digital-mode #c-use .numbered-answer{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:stretch;
+  gap:0;
+  padding:0;
+  flex:0 0 auto;
+  width:357px;
+  max-width:100%;
+  box-sizing:border-box;
+  overflow:visible;
+}
+body.digital-mode #c-use .na-line{
+  width:110px;
+  min-width:110px;
+  height:111px;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:flex-start;
+  text-align:right;
+  gap:5px;
+  padding:7px 9px 5px;
+  box-sizing:border-box;
+  min-height:0;
+  position:relative;
+  background:var(--box-bg);
+  box-shadow:3px 4px 0 rgba(111,158,189,.45),0 6px 16px rgba(45,74,138,.10);
+}
+body.digital-mode #c-use .na-line b{
+  line-height:1.05;
+  font-size:17px;
+  color:var(--title);
+}
+body.digital-mode #c-use .na-line span{
+  line-height:1.15;
+  text-align:center;
+  align-self:stretch;
+  width:100%;
+  white-space:pre-wrap;
+  word-break:break-word;
+  font-size:11px;
+}
+body.digital-mode #c-use .numbered-answer.empty span{opacity:0}
+
+.flow-to-solution{
+  position:absolute;
+  left:407px;
+  top:1017px;
+  width:357px;
+  height:22px;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:6px;
+  direction:ltr;
+  color:var(--accent);
+  font-size:10.5px;
+  font-weight:900;
+  pointer-events:none;
+}
+.flow-next-arrow{font-size:18px;line-height:1}
+body.digital-mode .flow-to-solution{top:1037px;height:18px;font-size:9.5px}
+body.digital-mode .flow-next-arrow{font-size:15px}
+
+@media (max-width:720px){
+  #sp{width:92vw}
+  body.panel-open #wrap{padding-right:0}
+  #wrap{padding:12px}
+}
+@media (max-width:620px){
+  .tb-brand{display:none}
+  #toolbar{justify-content:center;padding-left:7px;padding-right:7px;gap:5px}
+  .mode-btn{padding:6px 9px}
+  .tbb{padding:6px 8px;font-size:10px}
+}
+
+/* PRINT */
+@media print{
+  @page{size:A4 portrait;margin:0}
+  html,body{width:210mm!important;height:297mm!important;overflow:hidden!important}
+  body{background:none!important;min-height:0!important;height:297mm!important}
+  #toolbar,#sp,.counter,.ichg,.logo-box:after{display:none!important}
+  #wrap{margin:0!important;padding:0!important;background:none!important;min-height:0!important;height:297mm!important;width:210mm!important}
+  #poster{width:210mm!important;height:297mm!important;zoom:1!important;transform:none!important;box-shadow:none!important;outline:none!important;page-break-inside:avoid;break-inside:avoid;overflow:hidden!important;max-height:297mm}
+  #poster-project,.bar-mf input,.box textarea,.box input{border-bottom:none!important}
+  -webkit-print-color-adjust:exact;print-color-adjust:exact
+}
+
+
+/* תיקוני פריסה וריווח: טקסט כותרתי בתיבות ייעודיות + ריווח מאוזן */
+.bi{padding:6px 10px;gap:5px}
+.bq{line-height:1.22}
+.box textarea,.box input[type=text]{line-height:1.46;padding-top:2px}
+.numbered-answer{gap:3px;line-height:1.38;padding-top:2px}
+.numbered-answer .na-line{min-height:1.38em;line-height:1.38}
+.numbered-answer b,.numbered-answer span{line-height:1.38}
+#c-research .bi,#c-requirements .bi,#c-use .bi{padding-top:6px;padding-bottom:5px;gap:3px}
+#c-research .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{gap:2px;padding-top:1px}
+#c-research .na-line,#c-requirements .na-line,#c-use .na-line{min-height:1.28em;line-height:1.28}
+#c-research .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.28}
+#c-use .bi{padding-top:7px;padding-bottom:7px;gap:5px}
+#c-use .numbered-answer{gap:3px;padding-top:1px;justify-content:flex-start}
+#c-use .na-line{line-height:1.24;min-height:1.24em}
+#c-use .na-line b,#c-use .na-line span{line-height:1.24}
+#c-question .bq,#c-solution .bq{display:none!important}
+#c-question .bi,#c-solution .bi{justify-content:center;align-items:center;padding:8px 12px;gap:0}
+#c-question textarea,#c-solution textarea{font-size:14px!important;font-weight:900!important;text-align:center!important;line-height:1.38!important;color:var(--title)!important;flex:0 0 auto;min-height:2.8em;padding:0!important;align-content:center}
+
+
+/* Neutral class/school/students colors - detached from color pickers */
+#p-bar,
+#p-names{
+  border:none!important;
+}
+#p-bar .bar-div{
+  background:#111!important;
+}
+#p-bar label,
+#p-bar input,
+#poster-students{
+  color:#111!important;
+}
+
+
+.home-emoji{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  padding:0!important;
+  border-radius:50%!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:15px!important;
+  line-height:1!important;
+  text-decoration:none!important;
+}
+
+
+
+/* PREMIUM READABILITY CONTRAST FIX */
+.mode-btn.active{background:#1d4ed8!important;color:#fff!important}
+.logo-box .ltxt{color:#475569!important}
+.counter{color:#475569!important}
+.iph span{color:#40586e!important}
+.iph small{color:#526579!important}
+.numbered-answer.empty span{color:#475569!important}
+
+</style>
+</head>
+<body class="panel-open">
+
+<div id="toolbar">
+  <div class="tb-brand"><div class="tb-mark">✦</div><div><strong>פוסטר חקר טכנולוגי</strong><small>דגם פיזי / דגם דיגיטלי</small></div></div>
+  <div class="mode-switch">
+    <button class="mode-btn active" data-mode="physical" onclick="switchMode('physical')">פוסטר דגם פיזי</button>
+    <button class="mode-btn" data-mode="digital" onclick="switchMode('digital')">פוסטר דגם דיגיטלי</button>
+  </div>
+  <div class="tb-acts">
+    <button class="tbb" onclick="togglePanel()">☰ עריכה</button>
+    <button class="tbb" onclick="openTab('design')">עיצוב</button>
+    <button class="tbb sec" onclick="producePdf()">📄 הפקת PDF</button>
+    <a href="index.html" class="tbb hm home-emoji" title="חזרה לדף הבית" aria-label="חזרה לדף הבית">🏠</a>
+  </div>
+</div>
+
+<aside id="sp">
+  <div class="sph"><div><strong>לוח עריכה</strong><span>פוסטר חקר</span></div><button class="spc" onclick="togglePanel()">✕</button></div>
+  <div class="sptabs">
+    <button class="sptab active" data-tab="design" onclick="openTab('design')">עיצוב</button>
+    <button class="sptab" data-tab="content" onclick="openTab('content')">מילוי</button>
+    <button class="sptab" data-tab="students" onclick="openTab('students')">משתתפים</button>
+  </div>
+  <div class="spb">
+    <section id="tab-design" class="tp active">
+      <div class="st">עיצוב</div>
+      <div class="br2"><label class="pb" for="bg-up" style="cursor:pointer">📁 רקע</label><input type="file" id="bg-up" accept="image/*" style="display:none"><button class="pb sec" onclick="clearBg()">נקה רקע</button></div>
+      <div class="fg-c"><label>צבע רקע</label><input type="color" id="bg-color" value="#e8f4f8"></div>
+      <div class="fg-c"><label>צבע מסגרת תיבות</label><input type="color" id="border-color" value="#b0c4d8"></div>
+      <div class="fg-c"><label>צבע כותרות</label><input type="color" id="q-color" value="#1a1a2e"></div>
+      <div class="fg-c"><label>צבע טקסט</label><input type="color" id="t-color" value="#111111"></div>
+      <div class="fg"><label>שקיפות תיבות</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="box-opacity" min="35" max="100" step="5" value="96" style="cursor:pointer;flex:1"><div id="box-op-v" class="fsz-val">96%</div></div></div>
+      <div class="fg"><label>טשטוש מאחורי הכותרת</label><div class="glow-controls"><button class="pb sec" id="title-glow-none" onclick="setGlow('title','none')">ללא</button><button class="pb" id="title-glow-light" onclick="setGlow('title','light')">לבן</button><button class="pb" id="title-glow-dark" onclick="setGlow('title','dark')">שחור</button></div></div>
+      <div class="fg"><label>טשטוש מאחורי הלוגו</label><div class="glow-controls"><button class="pb sec" id="logo-glow-none" onclick="setGlow('logo','none')">ללא</button><button class="pb" id="logo-glow-light" onclick="setGlow('logo','light')">לבן</button><button class="pb" id="logo-glow-dark" onclick="setGlow('logo','dark')">שחור</button></div></div>
+      <div class="fg"><label>טשטוש מאחורי תיאור המיזם</label><div class="glow-controls"><button class="pb sec" id="desc-glow-none" onclick="setGlow('desc','none')">ללא</button><button class="pb" id="desc-glow-light" onclick="setGlow('desc','light')">לבן</button><button class="pb" id="desc-glow-dark" onclick="setGlow('desc','dark')">שחור</button></div></div>
+      <div class="fsz-row"><label>גודל כותרת ראשית</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('h',-1)">−</button><div id="h-v" class="fsz-val">36</div><button class="pb" onclick="chSz('h',1)">+</button></div></div>
+      <div class="fsz-row"><label>גודל כותרות תיבות</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('q',-1)">−</button><div id="q-v" class="fsz-val">13.5</div><button class="pb" onclick="chSz('q',1)">+</button></div></div>
+      <div class="fsz-row"><label>גודל טקסט</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('t',-1)">−</button><div id="t-v" class="fsz-val">12</div><button class="pb" onclick="chSz('t',1)">+</button></div></div>
+      <div style="margin-top:10px"><button class="pb warn" style="width:100%" onclick="clearPoster()">נקה תוכן</button></div>
+      <p class="pn">השינויים נשמרים אוטומטית בדפדפן. להפקת הקובץ הסופי לחצו על „הפקת PDF” בסרגל העליון.</p>
+    </section>
+    <section id="tab-content" class="tp">
+      <div class="st">שאלות למילוי</div>
+      <div id="fill-list" class="edit-list"></div>
+      <p class="pn">כל שינוי כאן מתעדכן מיד בפוסטר.</p>
+    </section>
+    <section id="tab-students" class="tp">
+      <div class="st">שמות המשתתפים</div>
+      <div class="fg"><label>מספר משתתפים</label><select id="pc-cnt" onchange="setParts(this.value)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div>
+      <div class="fg"><label>שמות</label><div id="pcf" class="pgrid"></div></div>
+      <p class="pn">אפשר גם לערוך ישירות את שורת השמות בתחתית הפוסטר. אין מגבלת תווים לשמות.</p>
+    </section>
+  </div>
+</aside>
+
+<div id="wrap">
+  <div id="poster">
+    <div id="bg-layer"></div>
+
+    <div id="p-hdr">
+      <div class="logo-area">
+        <div class="logo-box" id="logo-box" onclick="G('logo-file').click()">
+          <img id="logo-img" alt=""><span class="ltxt" id="logo-txt">לוגו</span>
+          <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="loadLogo(this)">
+        </div>
+      </div>
+      <input id="poster-project" class="limited" data-label="שם המיזם" data-max="40" maxlength="40" placeholder="שם המיזם" />
+      <small id="project-counter" class="counter" data-for="poster-project">0/40</small>
+    </div>
+
+    <div id="short-desc-box">
+      <textarea id="short-desc" class="limited" data-label="תיאור קצר של המיזם" data-max="135" maxlength="135" placeholder="תיאור קצר של המיזם"></textarea>
+      <small id="desc-counter" class="counter" data-for="short-desc">0/135</small>
+    </div>
+
+    <div id="p-bar">
+      <div class="bar-mf"><label>כיתה:</label><input id="poster-class" type="text" autocomplete="off" value="" oninput="autoWidth(this)"></div>
+      <div class="bar-div"></div>
+      <div class="bar-mf"><label>בית הספר:</label><input id="poster-school" type="text" placeholder="שם בית הספר" style="width:132px" oninput="autoWidth(this)"></div>
+    </div>
+
+    <!-- צד ימין -->
+    <div class="box" id="c-problem"><div class="bi"><div class="bq"><span>מה הבעיה שזיהינו?</span><small class="counter" data-for="problem">0/100</small></div><textarea id="problem" class="limited" data-label="מה הבעיה שזיהינו?" data-max="100" maxlength="100" placeholder="כתבו את הבעיה בקצרה..."></textarea></div></div>
+    <div class="box" id="c-target"><div class="bi"><div class="bq"><span>קהל יעד — על מי הבעיה משפיעה?</span><small class="counter" data-for="target">0/80</small></div><textarea id="target" class="limited" data-label="קהל יעד" data-max="80" maxlength="80" placeholder="על מי הבעיה משפיעה?"></textarea></div></div>
+    <div class="box" id="c-question"><div class="bi"><div class="bq"><span>מה שאלת החקר שלנו?</span><small class="counter" data-for="question">0/95</small></div><textarea id="question" class="limited" data-label="מה שאלת החקר שלנו?" data-max="95" maxlength="95" placeholder="נסחו שאלת חקר..."></textarea></div></div>
+
+    <div class="image-box" id="main-image-box">
+      <div class="iw" onclick="G('img-main-file').click()">
+        <div class="iph" id="img-main-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-main-label">תמונה ראשית</span><small id="img-main-note">המוצר / הדגם</small></div>
+        <img id="img-main" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-main-file').click()">שנה</button>
+        <input type="file" id="img-main-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-main','img-main-ph')">
+      </div>
+    </div>
+
+    <div class="box" id="c-research"><div class="bi"><div class="bq"><span>איזה חקר ביצענו?</span><small class="counter" data-for="research">0/120</small></div><div id="research" class="numbered-answer empty" data-label="איזה חקר ביצענו?" data-max="120"><div class="na-line"><b>1.</b><span id="research1-out">חקר 1</span></div><div class="na-line"><b>2.</b><span id="research2-out">חקר 2</span></div></div></div></div>
+    <div class="box" id="c-findings"><div class="bi"><div class="bq"><span>מה גילינו בעקבות החקר?</span><small class="counter" data-for="findings">0/115</small></div><textarea id="findings" class="limited" data-label="מה גילינו בעקבות החקר?" data-max="115" maxlength="115" placeholder="מה גילינו?"></textarea></div></div>
+    <div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה חשוב שהפתרון יכלול?</span><small class="counter" data-for="requirements">0/110</small></div><div id="requirements" class="numbered-answer empty" data-label="מה חשוב שהפתרון יכלול?" data-max="110"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div></div></div></div>
+
+    <div id="flow-to-solution" class="flow-to-solution" aria-hidden="true"><span class="flow-next-arrow">←</span><span dir="rtl">ממשיכים לפתרון</span></div>
+
+    <!-- צד שמאל -->
+    <div class="box" id="c-solution"><div class="bi"><div class="bq"><span>מהו הפתרון שפיתחנו?</span><small class="counter" data-for="solution">0/150</small></div><textarea id="solution" class="limited" data-label="מהו הפתרון שפיתחנו?" data-max="150" maxlength="150" placeholder="תארו את הפתרון שפיתחתם..."></textarea></div></div>
+
+    <div class="img-pair" id="img-pair">
+      <div class="image-box" id="image-box-1">
+        <div class="iw" onclick="G('img-1-file').click()">
+          <div class="iph" id="img-1-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-1-label">תהליך / אב־טיפוס</span><small id="img-1-note">לחץ להעלאה</small></div>
+          <img id="img-1" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-1-file').click()">שנה</button>
+          <input type="file" id="img-1-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-1','img-1-ph')">
+        </div>
+      </div>
+      <div class="image-box" id="image-box-2">
+        <div class="iw" onclick="G('img-2-file').click()">
+          <div class="iph" id="img-2-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-2-label">שימוש / בדיקה</span><small id="img-2-note">לחץ להעלאה</small></div>
+          <img id="img-2" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-2-file').click()">שנה</button>
+          <input type="file" id="img-2-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-2','img-2-ph')">
+        </div>
+      </div>
+    </div>
+
+    <div class="box" id="c-use"><div class="bi"><div class="bq"><span>איך משתמשים?</span><small class="counter" data-for="use">0/165</small></div><div id="use" class="numbered-answer empty" data-label="איך משתמשים?" data-max="165"><div class="na-line"><b>1.</b><span id="use1-out">שימוש 1</span></div><div class="na-line"><b>2.</b><span id="use2-out">שימוש 2</span></div><div class="na-line"><b>3.</b><span id="use3-out">שימוש 3</span></div></div></div></div>
+    <div class="box" id="c-feedback"><div class="bi"><div class="bq"><span>איזה משוב קיבלנו?</span><small class="counter" data-for="feedback">0/115</small></div><textarea id="feedback" class="limited" data-label="איזה משוב קיבלנו?" data-max="115" maxlength="115" placeholder="כתבו משוב מרכזי..."></textarea></div></div>
+    <div class="box" id="c-improvement"><div class="bi"><div class="bq"><span>מה שיפרנו בעקבות המשוב?</span><small class="counter" data-for="improvement">0/115</small></div><textarea id="improvement" class="limited" data-label="מה שיפרנו בעקבות המשוב?" data-max="115" maxlength="115" placeholder="מה שופר?"></textarea></div></div>
+    <div class="box" id="c-value"><div class="bi"><div class="bq"><span>מה הערך המרכזי של הפתרון?</span><small class="counter" data-for="value">0/115</small></div><textarea id="value" class="limited" data-label="מה הערך המרכזי של הפתרון?" data-max="115" maxlength="115" placeholder="מה הערך המרכזי?"></textarea></div></div>
+
+    <div class="flow-arrow" id="arrow-feedback-improvement" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div>
+    <div class="flow-arrow" id="arrow-improvement-value" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div>
+
+    <div class="box" id="c-slogan"><div class="bi"><div class="bq" style="display:none"><span>סלוגן לפוסטר</span><small class="counter" data-for="slogan">0/50</small></div><textarea id="slogan" class="limited" data-label="סלוגן לפוסטר" data-max="50" maxlength="50" placeholder="סלוגן לפוסטר"></textarea><small class="counter" data-for="slogan" style="position:absolute;left:8px;top:3px">0/50</small></div></div>
+
+    <div id="p-names"><textarea id="poster-students" placeholder="שמות המשתתפים" rows="2" oninput="syncNamesToPanel()"></textarea></div>
+  </div>
+</div>
+
+<div class="split-sources" aria-hidden="true">
+  <textarea id="research1" data-label="איזה חקר ביצענו? 1" data-max="60" maxlength="60"></textarea>
+  <textarea id="research2" data-label="איזה חקר ביצענו? 2" data-max="60" maxlength="60"></textarea>
+  <textarea id="requirements1" data-label="מה חשוב שהפתרון יכלול? 1" data-max="55" maxlength="55"></textarea>
+  <textarea id="requirements2" data-label="מה חשוב שהפתרון יכלול? 2" data-max="55" maxlength="55"></textarea>
+  <textarea id="use1" data-label="איך משתמשים? 1" data-max="55" maxlength="55"></textarea>
+  <textarea id="use2" data-label="איך משתמשים? 2" data-max="55" maxlength="55"></textarea>
+  <textarea id="use3" data-label="איך משתמשים? 3" data-max="55" maxlength="55"></textarea>
+</div>
+
+<script>
+const G=id=>document.getElementById(id);
+const qs=(s,root=document)=>Array.from(root.querySelectorAll(s));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const esc=s=>String(s||'').replace(/[&<>\"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[ch]));
+let currentMode='physical';
+const SZ={h:36,q:13.5,t:12};
+
+const AUTOSAVE_DB='premium-poster-drafts';
+const AUTOSAVE_STORE='drafts';
+const AUTOSAVE_KEY='posterpremium-v1';
+const AUTOSAVE_MAX_AGE=30*24*60*60*1000;
+let autosaveTimer=null;
+let restoringDraft=false;
+let printTitleBackup='';
+
+function openAutosaveDb(){
+  return new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){resolve(null);return}
+    const req=indexedDB.open(AUTOSAVE_DB,1);
+    req.onupgradeneeded=()=>{
+      const db=req.result;
+      if(!db.objectStoreNames.contains(AUTOSAVE_STORE))db.createObjectStore(AUTOSAVE_STORE);
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function writeAutosave(data){
+  const db=await openAutosaveDb(); if(!db)return;
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction(AUTOSAVE_STORE,'readwrite');
+    tx.objectStore(AUTOSAVE_STORE).put(data,AUTOSAVE_KEY);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error);
+    tx.onabort=()=>reject(tx.error);
+  });
+  db.close();
+}
+async function readAutosave(){
+  const db=await openAutosaveDb(); if(!db)return null;
+  const value=await new Promise((resolve,reject)=>{
+    const tx=db.transaction(AUTOSAVE_STORE,'readonly');
+    const req=tx.objectStore(AUTOSAVE_STORE).get(AUTOSAVE_KEY);
+    req.onsuccess=()=>resolve(req.result||null);
+    req.onerror=()=>reject(req.error);
+  });
+  db.close();
+  return value;
+}
+async function clearAutosave(){
+  clearTimeout(autosaveTimer);
+  const db=await openAutosaveDb(); if(!db)return;
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction(AUTOSAVE_STORE,'readwrite');
+    tx.objectStore(AUTOSAVE_STORE).delete(AUTOSAVE_KEY);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error);
+    tx.onabort=()=>reject(tx.error);
+  });
+  db.close();
+}
+function collectDraft(){
+  const values={};
+  if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});
+  if(G('poster-students'))values['poster-students']=G('poster-students').value||'';
+  return {
+    version:1,
+    savedAt:Date.now(),
+    mode:currentMode,
+    values,
+    design:{
+      bgColor:G('bg-color')?.value||'#e8f4f8',
+      borderColor:G('border-color')?.value||'#b0c4d8',
+      qColor:G('q-color')?.value||'#1a1a2e',
+      tColor:G('t-color')?.value||'#111111',
+      opacity:G('box-opacity')?.value||'96',
+      sizes:{...SZ},
+      glow:{...glowState},
+      bgImage:G('bg-layer')?.style.backgroundImage||'none',
+      bgOpacity:G('bg-layer')?.style.opacity||'.18'
+    },
+    images:{
+      main:G('img-main')?.getAttribute('src')||'',
+      one:G('img-1')?.getAttribute('src')||'',
+      two:G('img-2')?.getAttribute('src')||'',
+      logo:G('logo-img')?.getAttribute('src')||''
+    }
+  };
+}
+async function saveDraft(){
+  if(restoringDraft)return;
+  try{await writeAutosave(collectDraft())}catch(error){console.warn('Poster autosave failed',error)}
+}
+function scheduleAutosave(){
+  if(restoringDraft)return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer=setTimeout(saveDraft,300);
+}
+function restoreImage(src,imgId,phId){
+  const img=G(imgId),ph=G(phId); if(!img||!ph)return;
+  if(src){img.src=src;img.classList.add('show');ph.style.display='none'}
+  else{img.removeAttribute('src');img.classList.remove('show');ph.style.display='flex'}
+}
+async function applyDraft(draft){
+  restoringDraft=true;
+  try{
+    Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});
+    const d=draft.design||{};
+    if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;
+    if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;
+    if(d.qColor&&G('q-color'))G('q-color').value=d.qColor;
+    if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;
+    if(d.opacity&&G('box-opacity'))G('box-opacity').value=String(d.opacity);
+    Object.assign(SZ,d.sizes||{});
+    if(G('h-v'))G('h-v').textContent=SZ.h;
+    if(G('q-v'))G('q-v').textContent=SZ.q;
+    if(G('t-v'))G('t-v').textContent=SZ.t;
+    if(typeof glowState!=='undefined')Object.assign(glowState,d.glow||{});
+    if(G('bg-layer')){
+      G('bg-layer').style.backgroundImage=d.bgImage||'none';
+      G('bg-layer').style.opacity=d.bgOpacity||((d.bgImage&&d.bgImage!=='none')?'1':'.18');
+    }
+    restoreImage(draft.images?.main,'img-main','img-main-ph');
+    restoreImage(draft.images?.one,'img-1','img-1-ph');
+    restoreImage(draft.images?.two,'img-2','img-2-ph');
+    const logo=G('logo-img');
+    if(logo){
+      if(draft.images?.logo){logo.src=draft.images.logo;logo.style.display='block';G('logo-txt').style.display='none'}
+      else{logo.removeAttribute('src');logo.style.display='none';G('logo-txt').style.display='block'}
+    }
+    syncNamesToPanel();
+    updateAllCombinedFields();
+    renderFillPanel();
+    qs('.limited').forEach(updateCounterFor);
+    autoWidth(G('poster-class'));autoWidth(G('poster-school'));
+    applyDesign();
+    applyAllGlow();
+    currentMode=draft.mode==='digital'?'digital':'physical';
+    applyLayout(currentMode);
+    fitPreview();
+  }finally{
+    restoringDraft=false;
+  }
+}
+async function offerRestoreDraft(){
+  try{
+    const draft=await readAutosave();
+    if(!draft)return;
+    if(!draft.savedAt||Date.now()-draft.savedAt>AUTOSAVE_MAX_AGE){await clearAutosave();return}
+    if(confirm('נמצאה טיוטה של הפוסטר שנשמרה אוטומטית בדפדפן. לשחזר אותה?')) await applyDraft(draft);
+    else await clearAutosave();
+  }catch(error){console.warn('Poster restore failed',error)}
+}
+function wireAutosave(){
+  document.addEventListener('input',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);
+  document.addEventListener('change',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()});
+}
+function fitPreview(){
+  if(window.matchMedia?.('print')?.matches)return;
+  const poster=G('poster'); if(!poster)return;
+  const narrow=window.innerWidth<=720;
+  const panel=document.body.classList.contains('panel-open')&&!narrow;
+  const reserved=panel?380:40;
+  const available=Math.max(260,window.innerWidth-reserved);
+  const scale=Math.max(.33,Math.min(1,available/824));
+  poster.style.zoom=String(scale);
+}
+function producePdf(){
+  saveDraft();
+  printTitleBackup=document.title;
+  const project=(G('poster-project')?.value||'').trim();
+  document.title=project?`${project} - פוסטר חקר`:'פוסטר חקר';
+  window.print();
+}
+
+const LAYOUT={
+  physical:{
+    // בפיזי: הוחלפו המיקומים בין התמונה הראשית לבין זוג התמונות,
+    // נוספה התאמת ריווח בצד שמאל עבור החצים,
+    // וצד ימין הורד מעט עם רווחים גדולים יותר כדי ליישר קו עם צד שמאל.
+    'c-problem':{left:407,top:277,width:357,height:65},
+    'c-target':{left:407,top:370,width:357,height:65},
+    'c-question':{left:407,top:463,width:357,height:70},
+    'img-pair':{left:407,top:561,width:357,height:170},
+    'c-research':{left:407,top:759,width:357,height:65},
+    'c-findings':{left:407,top:852,width:357,height:65},
+    'c-requirements':{left:407,top:945,width:357,height:65},
+    'c-solution':{left:30,top:277,width:357,height:80},
+    'main-image-box':{left:84,top:379,width:250,height:250},
+    'c-use':{left:30,top:651,width:357,height:90},
+    'c-feedback':{left:30,top:760,width:357,height:65},
+    'c-improvement':{left:30,top:853,width:357,height:65},
+    'c-value':{left:30,top:946,width:357,height:65},
+    'c-slogan':{left:30,top:1057,width:734,height:44}
+  },
+  digital:{
+    // בדיגיטלי: העלאת קבוצות התיבות העליונות מעט למעלה כדי לפנות יותר מקום לאזור התמונות.
+    'c-problem':{left:407,top:257,width:357,height:65},
+    'c-target':{left:407,top:340,width:357,height:65},
+    'c-question':{left:407,top:423,width:357,height:70},
+    'main-image-box':{left:126,top:520,width:169,height:250},
+    'img-pair':{left:313,top:520,width:356,height:250},
+    'c-research':{left:407,top:785,width:357,height:65},
+    'c-findings':{left:407,top:878,width:357,height:65},
+    'c-requirements':{left:407,top:971,width:357,height:65},
+    'c-solution':{left:30,top:257,width:357,height:80},
+    'c-use':{left:30,top:353,width:357,height:145},
+    'c-feedback':{left:30,top:785,width:357,height:65},
+    'c-improvement':{left:30,top:878,width:357,height:65},
+    'c-value':{left:30,top:971,width:357,height:65},
+    'c-slogan':{left:30,top:1057,width:734,height:44}
+  }
+};
+
+function positionFlowArrows(){
+  [
+    ['c-feedback','c-improvement','arrow-feedback-improvement'],
+    ['c-improvement','c-value','arrow-improvement-value']
+  ].forEach(([fromId,toId,arrowId])=>{
+    const from=G(fromId),to=G(toId),arrow=G(arrowId);
+    if(!from||!to||!arrow)return;
+    const arrowWidth=24;
+    const left=from.offsetLeft + (from.offsetWidth/2) - (arrowWidth/2);
+    const gap=6;
+    const top=from.offsetTop + from.offsetHeight + gap;
+    const end=to.offsetTop - gap;
+    const height=Math.max(14,end-top);
+    Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'});
+  });
+}
+function updateImageLabels(mode){
+  if(mode==='digital'){
+    if(G('img-main-label')) G('img-main-label').textContent='מסך 1';
+    if(G('img-main-note')) G('img-main-note').textContent='לחץ להעלאה';
+    if(G('img-1-label')) G('img-1-label').textContent='מסך 2';
+    if(G('img-1-note')) G('img-1-note').textContent='לחץ להעלאה';
+    if(G('img-2-label')) G('img-2-label').textContent='מסך 3';
+    if(G('img-2-note')) G('img-2-note').textContent='לחץ להעלאה';
+  }else{
+    if(G('img-main-label')) G('img-main-label').textContent='תמונה ראשית';
+    if(G('img-main-note')) G('img-main-note').textContent='המוצר / הדגם';
+    if(G('img-1-label')) G('img-1-label').textContent='תהליך / אב־טיפוס';
+    if(G('img-1-note')) G('img-1-note').textContent='לחץ להעלאה';
+    if(G('img-2-label')) G('img-2-label').textContent='שימוש / בדיקה';
+    if(G('img-2-note')) G('img-2-note').textContent='לחץ להעלאה';
+  }
+}
+
+function applyLayout(mode){
+  const lay=LAYOUT[mode];
+  Object.entries(lay).forEach(([id,p])=>{
+    const el=G(id); if(!el)return;
+    Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'});
+  });
+  positionFlowArrows();
+  document.body.classList.toggle('digital-mode',mode==='digital');
+  updateImageLabels(mode);
+  qs('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+}
+function switchMode(mode){currentMode=mode;applyLayout(mode);fitPreview();scheduleAutosave()}
+function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}
+function openTab(name){
+  document.body.classList.add('panel-open');
+  setTimeout(fitPreview,230);
+  qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+  if(name==='limits')renderLimitList();
+  if(name==='content')renderFillPanel();
+}
+
+
+const FILL_FIELDS=[
+  {id:'poster-project',label:'שם המיזם',kind:'input'},
+  {id:'short-desc',label:'תיאור קצר של המיזם',rows:2},
+  {id:'poster-class',label:'כיתה',kind:'input'},
+  {id:'poster-school',label:'בית הספר',kind:'input'},
+  {id:'problem',label:'מה הבעיה שזיהינו?',rows:2},
+  {id:'target',label:'קהל יעד — על מי הבעיה משפיעה?',rows:2},
+  {id:'question',label:'מה שאלת החקר שלנו?',rows:2},
+  {id:'research1',label:'איזה חקר ביצענו? 1',rows:2,combine:'research'},
+  {id:'research2',label:'איזה חקר ביצענו? 2',rows:2,combine:'research'},
+  {id:'findings',label:'מה גילינו בעקבות החקר?',rows:2},
+  {id:'requirements1',label:'מה חשוב שהפתרון יכלול? 1',rows:2,combine:'requirements'},
+  {id:'requirements2',label:'מה חשוב שהפתרון יכלול? 2',rows:2,combine:'requirements'},
+  {id:'solution',label:'מהו הפתרון שפיתחנו?',rows:3},
+  {id:'use1',label:'איך משתמשים? 1',rows:2,combine:'use'},
+  {id:'use2',label:'איך משתמשים? 2',rows:2,combine:'use'},
+  {id:'use3',label:'איך משתמשים? 3',rows:2,combine:'use'},
+  {id:'feedback',label:'איזה משוב קיבלנו?',rows:2},
+  {id:'improvement',label:'מה שיפרנו בעקבות המשוב?',rows:2},
+  {id:'value',label:'מה הערך המרכזי של הפתרון?',rows:2},
+  {id:'slogan',label:'סלוגן לפוסטר',rows:1}
+];
+function panelCounterText(src){
+  const max=parseInt(src?.dataset?.max||src?.getAttribute?.('maxlength')||0,10);
+  if(!max)return 'חופשי';
+  return `${(src.value||'').length}/${max}`;
+}
+function updatePanelCounter(id){
+  const src=G(id), c=G('panel-counter-'+id);
+  if(!src||!c)return;
+  const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);
+  c.textContent=panelCounterText(src);
+  c.classList.toggle('full',!!max&&(src.value||'').length>=max);
+  c.classList.toggle('good',!!max&&(src.value||'').length>0&&(src.value||'').length<max);
+}
+const COMBINED_FIELDS={
+  research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['חקר 1','חקר 2'],max:120},
+  requirements:{ids:['requirements1','requirements2'],outs:['requirements1-out','requirements2-out'],placeholders:['דרישה 1','דרישה 2'],max:110},
+  use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['שימוש 1','שימוש 2','שימוש 3'],max:165}
+};
+function updateCombinedField(key){
+  const cfg=COMBINED_FIELDS[key]; if(!cfg)return;
+  let total=0,hasText=false;
+  cfg.ids.forEach((id,i)=>{
+    const src=G(id), out=G(cfg.outs[i]);
+    const val=(src?.value||'').trim();
+    total+=(src?.value||'').length;
+    if(val)hasText=true;
+    if(out)out.textContent=val||cfg.placeholders[i];
+    updatePanelCounter(id);
+  });
+  const display=G(key); if(display)display.classList.toggle('empty',!hasText);
+  qs(`.counter[data-for="${key}"]`).forEach(c=>{
+    c.textContent=`${total}/${cfg.max}`;
+    c.classList.toggle('full',total>=cfg.max);
+    c.classList.toggle('good',total>0&&total<cfg.max);
+  });
+}
+function updateAllCombinedFields(){Object.keys(COMBINED_FIELDS).forEach(updateCombinedField)}
+function syncPanelField(id){
+  const src=G(id), dst=G('panel-'+id);
+  if(!src||!dst||document.activeElement===dst)return;
+  dst.value=src.value||'';
+  updatePanelCounter(id);
+}
+function renderFillPanel(){
+  const list=G('fill-list'); if(!list)return;
+  list.innerHTML='';
+  FILL_FIELDS.forEach(f=>{
+    const src=G(f.id); if(!src)return;
+    const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);
+    const card=document.createElement('div');card.className='edit-card';
+    const isInput=f.kind==='input';
+    const fieldHtml=isInput
+      ? `<input id="panel-${f.id}" type="text" ${max?`maxlength="${max}"`:''} value="${esc(src.value||'')}">`
+      : `<textarea id="panel-${f.id}" rows="${f.rows||2}" ${max?`maxlength="${max}"`:''}>${esc(src.value||'')}</textarea>`;
+    card.innerHTML=`<label><span>${esc(f.label)}</span><small id="panel-counter-${f.id}" class="panel-counter">${esc(panelCounterText(src))}</small></label>${fieldHtml}`;
+    list.appendChild(card);
+    const panelField=G('panel-'+f.id);
+    panelField.addEventListener('input',()=>{
+      src.value=panelField.value;
+      if(src.classList.contains('limited'))updateCounterFor(src);
+      if(f.combine)updateCombinedField(f.combine);
+      if(src.id==='poster-class'||src.id==='poster-school')autoWidth(src);
+      if(src.id==='poster-students')syncNamesToPanel();
+      updatePanelCounter(src.id);
+    });
+    if(f.combine)updateCombinedField(f.combine);
+    updatePanelCounter(f.id);
+  });
+}
+
+function updateCounterFor(el){
+  const max=parseInt(el.dataset.max||el.getAttribute('maxlength')||0,10);
+  if(!max)return;
+  const len=(el.value||'').length;
+  if(len>max)el.value=el.value.slice(0,max);
+  qs(`.counter[data-for="${el.id}"]`).forEach(c=>{
+    c.textContent=`${el.value.length}/${max}`;
+    c.classList.toggle('full',el.value.length>=max);
+    c.classList.toggle('good',el.value.length>0&&el.value.length<max);
+  });
+  syncPanelField(el.id);
+}
+function bindLimits(){
+  qs('.limited').forEach(el=>{
+    el.addEventListener('input',()=>updateCounterFor(el));
+    updateCounterFor(el);
+  });
+  ['poster-class','poster-school','poster-students'].forEach(id=>{const el=G(id);if(el)el.addEventListener('input',()=>syncPanelField(id));});
+}
+function renderLimitList(){
+  const list=G('limit-list'); if(!list)return;
+  list.innerHTML='';
+  FILL_FIELDS.forEach(f=>{
+    const el=G(f.id); if(!el)return;
+    const row=document.createElement('div');row.className='legend-row';
+    const max=el.dataset.max||el.getAttribute('maxlength')||'';
+    row.innerHTML=`<span>${esc(f.label)}</span><b>${max?'עד '+max+' תווים':'חופשי'}</b>`;
+    list.appendChild(row);
+  });
+  [['איזה חקר ביצענו? בפוסטר','עד 120 תווים'],['מה חשוב שהפתרון יכלול? בפוסטר','עד 110 תווים'],['איך משתמשים? בפוסטר','עד 165 תווים']].forEach(([label,max])=>{
+    const row=document.createElement('div');row.className='legend-row';
+    row.innerHTML=`<span>${esc(label)}</span><b>${esc(max)}</b>`;
+    list.appendChild(row);
+  });
+}
+
+let glowState={title:'none',logo:'none',desc:'none'};
+function updateGlowButtons(kind){
+  ['none','light','dark'].forEach(mode=>{
+    const btn=G(`${kind}-glow-${mode}`); if(!btn)return;
+    btn.style.outline=glowState[kind]===mode?'2px solid #2d7ff9':'none';
+  });
+}
+function applyGlow(kind){
+  const mode=glowState[kind]||'none';
+  let el=null;
+
+  if(kind==='title'){
+    el=G('p-hdr');
+  }
+  if(kind==='desc'){
+    el=G('short-desc-box');
+  }
+  if(kind==='logo'){
+    el=G('logo-box')||document.querySelector('.logo-box');
+  }
+
+  if(!el)return;
+  el.classList.remove('glow-light','glow-dark');
+  if(mode!=='none')el.classList.add(`glow-${mode}`);
+  updateGlowButtons(kind);
+}
+function setGlow(kind,mode){
+  glowState[kind]=mode;
+  applyGlow(kind);
+  scheduleAutosave();
+}
+function applyAllGlow(){ ['title','logo','desc'].forEach(applyGlow); }
+
+function applyDesign(){
+  const bg=G('bg-color').value, border=G('border-color').value, border2='#111111', qc=G('q-color').value, tc=G('t-color').value, op=G('box-opacity').value;
+  document.documentElement.style.setProperty('--poster-bg',bg);
+  document.documentElement.style.setProperty('--border',border);
+  document.documentElement.style.setProperty('--border-2',border2);
+  document.documentElement.style.setProperty('--title',qc);
+  document.documentElement.style.setProperty('--text',tc);
+  document.documentElement.style.setProperty('--box-bg',`rgba(255,255,255,${parseInt(op,10)/100})`);
+  qs('#poster .box,#poster .image-box').forEach(e=>e.style.borderColor=border);
+  qs('#p-bar,#p-names').forEach(e=>e.style.border='none');
+  qs('#p-bar .bar-div').forEach(e=>e.style.background='#111');
+  G('box-op-v').textContent=op+'%';
+  G('poster-project').style.fontSize=SZ.h+'px';
+  qs('.bq').forEach(e=>e.style.fontSize=SZ.q+'px');
+  qs('.box textarea,.box input[type=text],.numbered-answer').forEach(e=>e.style.fontSize=SZ.t+'px');
+  G('poster-students').style.color='#111';
+}
+function chSz(type,delta){
+  const ranges={h:[24,54],q:[10,20],t:[9,17]};
+  SZ[type]=clamp((SZ[type]||12)+delta,ranges[type][0],ranges[type][1]);
+  G(type+'-v').textContent=SZ[type];
+  applyDesign();
+}
+function wireDesign(){
+  ['bg-color','border-color','q-color','t-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));
+  G('bg-up').addEventListener('change',function(){
+    if(!this.files?.[0])return;
+    const r=new FileReader();
+    r.onload=e=>{G('bg-layer').style.backgroundImage=`url("${e.target.result}")`;G('bg-layer').style.opacity='1';scheduleAutosave()};
+    r.readAsDataURL(this.files[0]);
+  });
+}
+function clearBg(){G('bg-layer').style.backgroundImage='none';G('bg-layer').style.opacity='.18';G('bg-up').value='';scheduleAutosave()}
+function loadImg(inp,imgId,phId){
+  if(!inp.files?.[0])return;
+  const r=new FileReader();
+  r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave()};
+  r.readAsDataURL(inp.files[0]);
+}
+function loadLogo(inp){
+  if(!inp.files?.[0])return;
+  const r=new FileReader();
+  r.onload=e=>{G('logo-img').src=e.target.result;G('logo-img').style.display='block';G('logo-txt').style.display='none';scheduleAutosave()};
+  r.readAsDataURL(inp.files[0]);
+}
+function autoWidth(inp){
+  const m=document.createElement('span');
+  m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;
+  m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);
+  inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove();
+}
+
+function setParts(n,names=[],skipSync=false){
+  n=clamp(parseInt(n)||1,1,8);G('pc-cnt').value=String(n);
+  const wrap=G('pcf');wrap.innerHTML='';
+  const prev=qs('.prow input').map(i=>i.value.trim());
+  const vals=names.length?names:prev;
+  for(let i=1;i<=n;i++){
+    const row=document.createElement('div');row.className='prow';
+    row.innerHTML=`<span>ת${i}</span><input type="text" placeholder="שם" value="${esc(vals[i-1]||'')}">`;
+    row.querySelector('input').addEventListener('input',syncNames);
+    wrap.appendChild(row);
+  }
+  if(!skipSync)syncNames();
+}
+function syncNames(){
+  const text=qs('.prow input').map(i=>i.value.trim()).filter(Boolean).join(', ');
+  G('poster-students').value=text;
+}
+function syncNamesToPanel(){
+  const names=G('poster-students').value.split(/[,،;\n]+/).map(s=>s.trim()).filter(Boolean);
+  setParts(Math.max(1,names.length||1),names,true);
+}
+function clearPoster(){
+  if(!confirm('לנקות את כל התוכן?'))return;
+  qs('input[type=text], textarea').forEach(el=>{if(el.id!=='poster-students')el.value=''});
+  G('poster-students').value='';
+  qs('#poster img').forEach(img=>{img.removeAttribute('src');img.classList.remove('show');if(img.id==='logo-img')img.style.display='none'});
+  qs('.iph').forEach(ph=>ph.style.display='flex');G('logo-txt').style.display='block';
+  setParts(1,[]);updateAllCombinedFields();renderFillPanel();clearAutosave();
+}
+
+setParts(1);
+bindLimits();
+wireDesign();
+applyDesign();
+applyAllGlow();
+updateAllCombinedFields();
+renderFillPanel();
+wireAutosave();
+window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});
+window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1'});
+window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});
+applyLayout('physical');
+autoWidth(G('poster-class'));autoWidth(G('poster-school'));
+fitPreview();
+setTimeout(offerRestoreDraft,120);
+</script>
+</body>
+</html>
