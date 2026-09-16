@@ -48,9 +48,9 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .centerCore .subText{color:#6ef8ff;font-size:17px;margin-top:4px;font-weight:700;text-shadow:0 0 10px #00bfff}
 .pointer{position:absolute;top:-22px;left:50%;transform:translateX(-50%);z-index:100;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-top:65px solid #efffff;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #00eaff) drop-shadow(0 0 34px #008cff) drop-shadow(0 0 48px #7138ff)}
 .pointer::after{content:"";position:absolute;left:-25px;top:-64px;border-left:25px solid transparent;border-right:25px solid transparent;border-top:48px solid #00e5ff;filter:drop-shadow(0 0 10px #00eaff)}
-.controls{position:absolute;bottom:0;display:flex;gap:18px;z-index:100;max-width:96vw}
-.button{min-width:205px;padding:16px 30px;border-radius:17px;border:1px solid #9dfaff;cursor:pointer;font-size:22px;font-weight:900;color:white;background:linear-gradient(180deg,#18e8ff 0%,#0088ff 48%,#4c38e8 100%);box-shadow:0 0 6px #fff,0 0 14px #00eaff,0 0 30px rgba(0,125,255,.92),0 0 46px rgba(107,55,255,.32),inset 0 0 18px rgba(255,255,255,.30);text-shadow:0 0 8px rgba(255,255,255,.72);transition:transform .15s,box-shadow .2s,filter .2s,opacity .2s}
-.button:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.12);box-shadow:0 0 10px #fff,0 0 22px #73f7ff,0 0 44px rgba(0,125,255,1),0 0 62px rgba(121,56,255,.40)}
+.controls{position:absolute;bottom:2px;display:flex;gap:8px;z-index:100;max-width:96vw}
+.button{min-width:112px;padding:8px 13px;border-radius:11px;border:1px solid #9dfaff;cursor:pointer;font-size:15px;font-weight:800;color:white;background:linear-gradient(180deg,#18e8ff 0%,#0088ff 48%,#4c38e8 100%);box-shadow:0 0 4px #fff,0 0 9px #00eaff,0 0 18px rgba(0,125,255,.82),inset 0 0 10px rgba(255,255,255,.24);text-shadow:0 0 6px rgba(255,255,255,.65);transition:transform .15s,box-shadow .2s,filter .2s,opacity .2s}
+.button:hover{transform:translateY(-2px) scale(1.02);filter:brightness(1.12);box-shadow:0 0 7px #fff,0 0 14px #73f7ff,0 0 26px rgba(0,125,255,1)}
 .button:active{transform:scale(.96)}
 .button:disabled{opacity:.45;cursor:not-allowed}
 #newGame{background:linear-gradient(180deg,#163f72,#0c2251 58%,#191741);border-color:rgba(108,232,255,.80)}
@@ -67,7 +67,7 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .popupTopText{font-size:16px;color:#9aeaff;margin-bottom:6px}#popupTitle{margin:5px 0 16px;font-size:34px;color:#a3fbff;text-shadow:0 0 5px #fff,0 0 15px #00eaff,0 0 28px #008cff}.imageWrap{width:290px;height:290px;margin:0 auto 18px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff,#eafcff);border:2px solid #78f4ff;box-shadow:0 0 7px #fff,0 0 24px rgba(0,234,255,.70),0 0 42px rgba(92,55,255,.22)}#popupImage{width:90%;height:90%;object-fit:contain}.popupInstruction{color:white;font-size:20px;line-height:1.5;margin:4px 0}.popupInstruction strong{color:#66f6ff;text-shadow:0 0 11px #00bfff}#popupClose{position:absolute;top:13px;left:14px;width:40px;height:40px;border-radius:50%;border:1px solid #79f6ff;background:rgba(3,18,40,.95);color:white;font-size:24px;cursor:pointer;box-shadow:0 0 13px rgba(0,234,255,.42)}
 .flash{position:fixed;inset:0;z-index:8500;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(255,255,255,.32) 0 6%,rgba(0,234,255,.50) 13%,rgba(0,119,255,.25) 32%,rgba(117,52,255,.16) 50%,transparent 67%)}.flash.active{animation:flashAnim .9s ease}@keyframes flashAnim{0%{opacity:0}28%{opacity:1}52%{opacity:.58}100%{opacity:0}}
 @media(max-width:1150px){.app{display:block}.wheelArea{height:750px}.drawPanel{width:min(720px,95vw);min-height:auto;margin:20px auto}#drawList{max-height:280px}}
-@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:10px}.header .subtitle{display:none}.button{min-width:0;width:min(42vw,175px);padding:14px 16px;font-size:18px}}
+@media(max-width:760px){.wheelArea{height:590px}.wheelArea::before,.wheelArea::after{opacity:.45}.controls{bottom:0;gap:7px}.header .subtitle{display:none}.button{min-width:100px;width:auto;padding:7px 10px;font-size:14px}}
 </style>
 </head>
 <body>
@@ -92,7 +92,6 @@ const wheel=document.getElementById("wheel");
 const wheelArea=document.querySelector(".wheelArea");
 const wheelShell=document.querySelector(".wheelShell");
 const bigGlow=document.querySelector(".bigGlow");
-const header=document.querySelector(".header");
 const controls=document.querySelector(".controls");
 const spinButton=document.getElementById("spinButton");
 const newGame=document.getElementById("newGame");
@@ -110,7 +109,7 @@ let resizeFrame=0;
 function fitWheelToViewport(){
     const viewportHeight=window.innerHeight||document.documentElement.clientHeight;
     const areaWidth=Math.max(280,wheelArea.clientWidth||window.innerWidth);
-    const controlsHeight=Math.max(54,controls.getBoundingClientRect().height||54);
+    const controlsHeight=Math.max(34,controls.getBoundingClientRect().height||34);
     const availableWidth=Math.max(280,areaWidth-20);
     const desktopTarget=viewportHeight*0.78;
     const mobileTarget=viewportHeight*0.68;
@@ -118,10 +117,10 @@ function fitWheelToViewport(){
     const targetSize=Math.min(BASE_SHELL_SIZE,availableWidth*0.94,heightTarget);
     const scale=Math.max(.48,Math.min(1,targetSize/BASE_SHELL_SIZE));
     const visualSize=BASE_SHELL_SIZE*scale;
-    const upwardShift=Math.min(22,controlsHeight*.28);
+    const upwardShift=Math.min(14,controlsHeight*.24);
     wheelShell.style.transform=`translateY(-${upwardShift}px) scale(${scale})`;
     wheelShell.style.transformOrigin="center center";
-    wheelArea.style.height=`${Math.ceil(visualSize+controlsHeight+34)}px`;
+    wheelArea.style.height=`${Math.ceil(visualSize+controlsHeight+20)}px`;
     wheelArea.style.minHeight="0";
     const glowSize=Math.min(BASE_GLOW_SIZE*scale,availableWidth);
     bigGlow.style.width=`${Math.max(300,glowSize)}px`;
