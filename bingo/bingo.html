@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BINGO SPIN-OFF</title>
+
+<style>
+
+/* =========================================================
+   בסיס
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --cyan: #00eaff;
+    --cyan-light: #8cffff;
+    --blue: #008cff;
+    --blue-dark: #004da8;
+    --navy: #020817;
+    --panel: rgba(4, 18, 42, 0.88);
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(0, 166, 255, 0.22),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 86% 12%,
+            rgba(0, 234, 255, 0.12),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 50% 85%,
+            rgba(25, 60, 180, 0.17),
+            transparent 36%
+        ),
+        linear-gradient(
+            180deg,
+            #01030a 0%,
+            #020917 45%,
+            #01040d 100%
+        );
+
+    position: relative;
+}
+
+
+/* =========================================================
+   כוכבים ברקע
+========================================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background-image:
+        radial-gradient(circle, white 0 1px, transparent 1.4px),
+        radial-gradient(circle, #4adfff 0 1px, transparent 1.5px),
+        radial-gradient(circle, #8ab7ff 0 1px, transparent 1.3px);
+
+    background-size:
+        100px 100px,
+        160px 160px,
+        230px 230px;
+
+    background-position:
+        0 0,
+        45px 70px,
+        90px 30px;
+
+    opacity: 0.48;
+
+    pointer-events: none;
+    z-index: -3;
+
+    animation: starsMove 45s linear infinite;
+}
+
+@keyframes starsMove {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-160px);
+    }
+}
+
+
+/* ערפיליות */
+
+.spaceFog {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: -2;
+
+    background:
+        radial-gradient(
+            ellipse at 0% 50%,
+            rgba(0, 132, 255, 0.18),
+            transparent 28%
+        ),
+        radial-gradient(
+            ellipse at 100% 40%,
+            rgba(0, 234, 255, 0.10),
+            transparent 28%
+        );
+}
+
+
+/* =========================================================
+   כותרת
+========================================================= */
+
+.header {
+    text-align: center;
+
+    padding:
+        18px
+        20px
+        0;
+
+    position: relative;
+    z-index: 20;
+}
+
+.header h1 {
+    margin: 0;
+
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            74px
+        );
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color: #dffcff;
+
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 12px var(--cyan),
+        0 0 28px var(--blue),
+        0 0 55px rgba(0, 104, 255, 0.90);
+}
+
+.header .subtitle {
+    margin-top: 5px;
+
+    color: #72ddff;
+
+    font-size: 18px;
+
+    letter-spacing: 1px;
+
+    text-shadow:
+        0 0 8px rgba(0, 234, 255, 0.8);
+}
+
+
+/* =========================================================
+   מבנה
+========================================================= */
+
+.app {
+    width: min(1500px, 97vw);
+
+    margin:
+        5px
+        auto
+        30px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(700px, 1fr)
+        300px;
+
+    gap: 20px;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   אזור גלגל
+========================================================= */
+
+.wheelArea {
+    position: relative;
+
+    min-height: 790px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* הילה */
+
+.bigGlow {
+    position: absolute;
+
+    width: 760px;
+    height: 760px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 234, 255, 0.12) 0%,
+            rgba(0, 95, 255, 0.08) 45%,
+            transparent 70%
+        );
+
+    filter: blur(18px);
+
+    animation:
+        pulseGlow
+        3s
+        ease-in-out
+        infinite
+        alternate;
+}
+
+@keyframes pulseGlow {
+    from {
+        transform: scale(0.96);
+        opacity: 0.65;
+    }
+
+    to {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+
+/* מעטפת */
+
+.wheelShell {
+    position: relative;
+
+    width: 700px;
+    height: 700px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* טבעת חיצונית */
+
+.outerRing {
+    position: absolute;
+
+    inset: 1px;
+
+    border-radius: 50%;
+
+    border:
+        5px
+        solid
+        #55efff;
+
+    box-shadow:
+        0 0 10px #00eaff,
+        0 0 25px #00a6ff,
+        0 0 60px rgba(0, 92, 255, 0.8),
+        inset 0 0 30px rgba(0, 234, 255, 0.45);
+
+    animation:
+        ringGlow
+        1.8s
+        ease-in-out
+        infinite
+        alternate;
+}
+
+@keyframes ringGlow {
+    from {
+        filter:
+            brightness(0.85);
+    }
+
+    to {
+        filter:
+            brightness(1.25);
+    }
+}
+
+
+/* =========================================================
+   הגלגל
+========================================================= */
+
+#wheel {
+    position: absolute;
+
+    width: 650px;
+    height: 650px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    border:
+        3px
+        solid
+        rgba(157, 246, 255, 0.95);
+
+    background:
+
+        repeating-conic-gradient(
+            from -11.25deg,
+
+            rgba(0, 127, 230, 0.80)
+            0deg
+            11.25deg,
+
+            rgba(3, 28, 69, 0.96)
+            11.25deg
+            22.5deg
+        );
+
+    box-shadow:
+        0 0 25px #00eaff,
+        0 0 50px rgba(0, 115, 255, 0.45),
+        inset 0 0 80px #001023;
+
+    transform: rotate(0deg);
+
+    transition:
+        transform
+        8s
+        cubic-bezier(
+            0.08,
+            0.64,
+            0.07,
+            1
+        );
+}
+
+
+/* קווי הפרדה */
+
+.segmentLine {
+    position: absolute;
+
+    width: 2px;
+    height: 50%;
+
+    left: 50%;
+    top: 0;
+
+    transform-origin:
+        50%
+        100%;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 234, 255, 1),
+            rgba(79, 177, 255, 0.18)
+        );
+
+    box-shadow:
+        0 0 8px #00cfff;
+}
+
+
+/* תמונות על הגלגל */
+
+.wheelItem {
+    position: absolute;
+
+    width: 92px;
+    height: 92px;
+
+    margin-left: -46px;
+    margin-top: -46px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #e8faff
+        );
+
+    border:
+        2px
+        solid
+        #81f5ff;
+
+    box-shadow:
+        0 0 8px #00eaff,
+        0 0 17px rgba(0, 174, 255, 0.70);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.wheelItem img {
+    width: 90%;
+    height: 90%;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   מרכז גלגל
+========================================================= */
+
+.centerCore {
+    position: absolute;
+
+    width: 205px;
+    height: 205px;
+
+    border-radius: 50%;
+
+    z-index: 15;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #103e74,
+            #05152e 58%,
+            #01050d 100%
+        );
+
+    border:
+        4px
+        solid
+        var(--cyan);
+
+    box-shadow:
+        0 0 16px var(--cyan),
+        0 0 38px var(--blue),
+        inset 0 0 35px rgba(0, 150, 255, 0.38);
+}
+
+.centerCore .mainText {
+    font-size: 30px;
+    font-weight: 900;
+
+    direction: ltr;
+
+    text-shadow:
+        0 0 14px #00eaff;
+}
+
+.centerCore .subText {
+    color: #38eaff;
+
+    font-size: 17px;
+
+    margin-top: 4px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   מחוג
+========================================================= */
+
+.pointer {
+    position: absolute;
+
+    top: -22px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 100;
+
+    width: 0;
+    height: 0;
+
+    border-left:
+        34px
+        solid
+        transparent;
+
+    border-right:
+        34px
+        solid
+        transparent;
+
+    border-top:
+        65px
+        solid
+        #eaffff;
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            white
+        )
+        drop-shadow(
+            0 0 14px
+            #00eaff
+        )
+        drop-shadow(
+            0 0 24px
+            #008cff
+        );
+}
+
+.pointer::after {
+    content: "";
+
+    position: absolute;
+
+    left: -25px;
+    top: -64px;
+
+    border-left:
+        25px
+        solid
+        transparent;
+
+    border-right:
+        25px
+        solid
+        transparent;
+
+    border-top:
+        48px
+        solid
+        #00dfff;
+}
+
+
+/* =========================================================
+   כפתורים
+========================================================= */
+
+.controls {
+    position: absolute;
+
+    bottom: 5px;
+
+    display: flex;
+
+    gap: 18px;
+
+    z-index: 100;
+}
+
+.button {
+    min-width: 205px;
+
+    padding:
+        16px
+        30px;
+
+    border-radius: 17px;
+
+    border:
+        1px
+        solid
+        #69f7ff;
+
+    cursor: pointer;
+
+    font-size: 22px;
+
+    font-weight: 900;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            180deg,
+            #00c9ff,
+            #0065df
+        );
+
+    box-shadow:
+        0 0 10px #00eaff,
+        0 0 26px rgba(0, 125, 255, 0.85),
+        inset 0 0 15px rgba(255,255,255,0.25);
+
+    transition:
+        transform 0.15s,
+        box-shadow 0.2s,
+        opacity 0.2s;
+}
+
+.button:hover {
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 0 16px #73f7ff,
+        0 0 40px rgba(0, 125, 255, 1);
+}
+
+.button:active {
+    transform:
+        scale(0.95);
+}
+
+.button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#newGame {
+    background:
+        linear-gradient(
+            180deg,
+            #153760,
+            #061328
+        );
+}
+
+
+/* =========================================================
+   לוח הגרלות
+========================================================= */
+
+.drawPanel {
+    min-height: 590px;
+
+    padding: 20px;
+
+    border-radius: 22px;
+
+    border:
+        1px
+        solid
+        rgba(0, 234, 255, 0.75);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(6, 28, 63, 0.94),
+            rgba(2, 10, 25, 0.97)
+        );
+
+    box-shadow:
+        0 0 20px rgba(0, 234, 255, 0.25),
+        inset 0 0 26px rgba(0, 109, 255, 0.10);
+
+    backdrop-filter:
+        blur(12px);
+}
+
+.drawPanel h2 {
+    margin:
+        0
+        0
+        5px;
+
+    font-size: 26px;
+
+    color: var(--cyan);
+
+    text-shadow:
+        0 0 10px #008cff;
+}
+
+.drawPanel .counter {
+    margin-bottom: 17px;
+
+    color: #8ccfff;
+
+    font-size: 15px;
+}
+
+#drawList {
+    max-height: 510px;
+
+    overflow-y: auto;
+
+    padding-left: 3px;
+}
+
+.drawRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 54px;
+
+    padding:
+        7px
+        10px;
+
+    margin-bottom: 8px;
+
+    border-radius: 12px;
+
+    border:
+        1px
+        solid
+        rgba(0, 184, 255, 0.22);
+
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    animation:
+        rowIn
+        0.35s
+        ease;
+}
+
+@keyframes rowIn {
+    from {
+        transform:
+            translateX(20px);
+
+        opacity: 0;
+    }
+
+    to {
+        transform:
+            translateX(0);
+
+        opacity: 1;
+    }
+}
+
+.drawNumber {
+    width: 24px;
+
+    color: #58efff;
+
+    font-weight: bold;
+}
+
+.drawRow img {
+    width: 40px;
+    height: 40px;
+
+    object-fit: contain;
+
+    border-radius: 8px;
+
+    background: white;
+
+    padding: 3px;
+}
+
+.drawRow span {
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   Popup overlay
+========================================================= */
+
+#popupOverlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9000;
+
+    display: none;
+
+    background:
+        rgba(0, 4, 14, 0.70);
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+/* =========================================================
+   Popup
+========================================================= */
+
+#popup {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.55);
+
+    width:
+        min(
+            520px,
+            92vw
+        );
+
+    z-index: 9999;
+
+    display: none;
+
+    opacity: 0;
+
+    padding:
+        25px;
+
+    border-radius:
+        28px;
+
+    border:
+        2px
+        solid
+        var(--cyan);
+
+    text-align:
+        center;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 32, 70, 0.98),
+            rgba(1, 8, 21, 0.99)
+        );
+
+    box-shadow:
+        0 0 20px #00eaff,
+        0 0 60px rgba(0, 100, 255, 0.75),
+        inset 0 0 30px rgba(0, 173, 255, 0.15);
+
+    transition:
+        transform
+        0.4s
+        ease,
+        opacity
+        0.4s
+        ease;
+}
+
+#popup.popupShow {
+    display: block;
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+.popupTopText {
+    font-size: 16px;
+
+    color: #83ddff;
+
+    margin-bottom: 6px;
+}
+
+#popupTitle {
+    margin:
+        5px
+        0
+        16px;
+
+    font-size: 34px;
+
+    color: #7df7ff;
+
+    text-shadow:
+        0 0 15px #008cff;
+}
+
+.imageWrap {
+    width: 290px;
+    height: 290px;
+
+    margin:
+        0
+        auto
+        18px;
+
+    border-radius:
+        24px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #eafcff
+        );
+
+    border:
+        2px
+        solid
+        #3ceaff;
+
+    box-shadow:
+        0 0 22px rgba(0, 234, 255, 0.55);
+}
+
+#popupImage {
+    width: 90%;
+    height: 90%;
+
+    object-fit:
+        contain;
+}
+
+.popupInstruction {
+    color: white;
+
+    font-size: 20px;
+
+    line-height: 1.5;
+
+    margin:
+        4px
+        0;
+}
+
+.popupInstruction strong {
+    color: #00eaff;
+}
+
+#popupClose {
+    position: absolute;
+
+    top: 13px;
+    left: 14px;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius:
+        50%;
+
+    border:
+        1px
+        solid
+        #00eaff;
+
+    background:
+        rgba(3, 18, 40, 0.95);
+
+    color:
+        white;
+
+    font-size:
+        24px;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   חגיגת אור כשנבחר פריט
+========================================================= */
+
+.flash {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 8500;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 234, 255, 0.45),
+            transparent 48%
+        );
+}
+
+.flash.active {
+    animation:
+        flashAnim
+        0.8s
+        ease;
+}
+
+@keyframes flashAnim {
+    0% {
+        opacity: 0;
+    }
+
+    35% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    .app {
+        display: block;
+    }
+
+    .wheelArea {
+        min-height: 750px;
+    }
+
+    .drawPanel {
+        width:
+            min(
+                720px,
+                95vw
+            );
+
+        min-height:
+            auto;
+
+        margin:
+            20px
+            auto;
+    }
+
+    #drawList {
+        max-height:
+            280px;
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .wheelArea {
+        min-height:
+            590px;
+    }
+
+    .wheelShell {
+        transform:
+            scale(0.70);
+    }
+
+    .controls {
+        bottom:
+            -30px;
+    }
+
+    .header .subtitle {
+        display:
+            none;
+    }
+
+    .button {
+        min-width:
+            175px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="spaceFog"></div>
+
+
+<!-- =======================================================
+     כותרת
+======================================================= -->
+
+<header class="header">
+
+    <h1>
+        BINGO SPIN-OFF
+    </h1>
+
+    <div class="subtitle">
+        מסובבים • מגלים • מסמנים בלוח
+    </div>
+
+</header>
+
+
+<!-- =======================================================
+     האפליקציה
+======================================================= -->
+
+<div class="app">
+
+
+    <!-- גלגל -->
+
+    <main class="wheelArea">
+
+        <div class="bigGlow"></div>
+
+
+        <div class="wheelShell">
+
+            <div class="pointer"></div>
+
+            <div class="outerRing"></div>
+
+            <div id="wheel"></div>
+
+
+            <div class="centerCore">
+
+                <div class="mainText">
+                    BINGO
+                </div>
+
+                <div class="subText">
+                    SPIN-OFF
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="controls">
+
+            <button
+                id="spinButton"
+                class="button"
+            >
+                🎲 הגרל
+            </button>
+
+
+            <button
+                id="newGame"
+                class="button"
+            >
+                ↻ משחק חדש
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <!-- רשימת הגרלות -->
+
+    <aside class="drawPanel">
+
+        <h2>
+            ההגרלות
+        </h2>
+
+        <div
+            id="counter"
+            class="counter"
+        >
+            0 מתוך 16 הוגרלו
+        </div>
+
+
+        <div id="drawList"></div>
+
+    </aside>
+
+</div>
+
+
+<!-- =======================================================
+     Popup
+======================================================= -->
+
+<div id="popupOverlay"></div>
+
+
+<div id="popup">
+
+    <button id="popupClose">
+        ×
+    </button>
+
+
+    <div class="popupTopText">
+        הפריט שנבחר
+    </div>
+
+
+    <h2 id="popupTitle"></h2>
+
+
+    <div class="imageWrap">
+
+        <img
+            id="popupImage"
+            alt=""
+        >
+
+    </div>
+
+
+    <p class="popupInstruction">
+
+        חפשו את הפריט בלוח שלכם.
+
+        <br>
+
+        <strong>
+            מצאתם? סמנו אותו!
+        </strong>
+
+    </p>
+
+</div>
+
+
+<div
+    id="flash"
+    class="flash"
+></div>
+
+
+
+<script>
+
+/* =========================================================
+   16 הפריטים
+========================================================= */
+
+const itemNames = [
+
+    "קנקן סינון מים",
+
+    "מקדחה אלחוטית",
+
+    "שמיכת חירום תרמית",
+
+    "גלגל אופניים",
+
+    "כרית ויסקו",
+
+    "מדחום אוזן",
+
+    "פאנל סולארי",
+
+    "מערכת נשימה לצלילה",
+
+    "תרכובת מזון לתינוקות",
+
+    "משקפי ראייה",
+
+    "נעלי ספורט",
+
+    "מנה חמה",
+
+    "ג׳ויסטיק",
+
+    "חולצת ספורט",
+
+    "קסדת אופניים",
+
+    "שואב אבק אלחוטי"
+
+];
+
+
+/* =========================================================
+   הגדרות
+========================================================= */
+
+const ITEM_COUNT =
+    itemNames.length;
+
+const anglePerItem =
+    360 / ITEM_COUNT;
+
+
+/*
+   התמונות:
+   images/1.png
+   images/2.png
+   ...
+   images/16.png
+*/
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const wheel =
+    document.getElementById(
+        "wheel"
+    );
+
+const spinButton =
+    document.getElementById(
+        "spinButton"
+    );
+
+const newGame =
+    document.getElementById(
+        "newGame"
+    );
+
+const popup =
+    document.getElementById(
+        "popup"
+    );
+
+const popupOverlay =
+    document.getElementById(
+        "popupOverlay"
+    );
+
+const popupImage =
+    document.getElementById(
+        "popupImage"
+    );
+
+const popupTitle =
+    document.getElementById(
+        "popupTitle"
+    );
+
+const popupClose =
+    document.getElementById(
+        "popupClose"
+    );
+
+const drawList =
+    document.getElementById(
+        "drawList"
+    );
+
+const counter =
+    document.getElementById(
+        "counter"
+    );
+
+const flash =
+    document.getElementById(
+        "flash"
+    );
+
+
+/* =========================================================
+   יצירת קווי הגלגל
+========================================================= */
+
+for (
+    let i = 0;
+    i < ITEM_COUNT;
+    i++
+) {
+
+    const line =
+        document.createElement(
+            "div"
+        );
+
+    line.className =
+        "segmentLine";
+
+
+    line.style.transform =
+        `
+        rotate(
+            ${i * anglePerItem}deg
+        )
+        `;
+
+
+    wheel.appendChild(
+        line
+    );
+
+}
+
+
+/* =========================================================
+   יצירת הפריטים על הגלגל
+========================================================= */
+
+
+/*
+   הגלגל 650 × 650
+   מרכז = 325
+*/
+
+const centerX = 325;
+const centerY = 325;
+
+
+/*
+   מרחק התמונות מהמרכז
+*/
+
+const iconRadius = 260;
+
+
+for (
+    let i = 0;
+    i < ITEM_COUNT;
+    i++
+) {
+
+    /*
+       נקודת האמצע של כל פלח
+    */
+
+    const angle =
+        (
+            i *
+            anglePerItem
+        );
+
+
+    const rad =
+        angle *
+        Math.PI /
+        180;
+
+
+    const x =
+        centerX +
+        Math.sin(rad) *
+        iconRadius;
+
+
+    const y =
+        centerY -
+        Math.cos(rad) *
+        iconRadius;
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "wheelItem";
+
+
+    item.style.left =
+        x + "px";
+
+
+    item.style.top =
+        y + "px";
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    image.src =
+        "images/" +
+        (i + 1) +
+        ".png";
+
+
+    image.alt =
+        itemNames[i];
+
+
+    item.appendChild(
+        image
+    );
+
+
+    wheel.appendChild(
+        item
+    );
+
+}
+
+
+/* =========================================================
+   מצב המשחק
+========================================================= */
+
+let remaining =
+    [
+        ...Array(
+            ITEM_COUNT
+        ).keys()
+    ]
+    .map(
+        i => i + 1
+    );
+
+
+let spinning =
+    false;
+
+
+let currentRotation =
+    0;
+
+
+let drawCount =
+    0;
+
+
+/* =========================================================
+   Popup
+========================================================= */
+
+function showPopup() {
+
+    popup.style.display =
+        "block";
+
+
+    popupOverlay.style.display =
+        "block";
+
+
+    requestAnimationFrame(
+        () => {
+
+            popup.classList.add(
+                "popupShow"
+            );
+
+        }
+    );
+
+}
+
+
+function hidePopup() {
+
+    popup.classList.remove(
+        "popupShow"
+    );
+
+
+    popupOverlay.style.display =
+        "none";
+
+
+    setTimeout(
+        () => {
+
+            popup.style.display =
+                "none";
+
+        },
+        350
+    );
+
+}
+
+
+popupClose.onclick =
+    hidePopup;
+
+
+popupOverlay.onclick =
+    hidePopup;
+
+
+/* =========================================================
+   הבזק
+========================================================= */
+
+function createFlash() {
+
+    flash.classList.remove(
+        "active"
+    );
+
+
+    void flash.offsetWidth;
+
+
+    flash.classList.add(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   עדכון מונה
+========================================================= */
+
+function updateCounter() {
+
+    counter.innerText =
+        drawCount +
+        " מתוך " +
+        ITEM_COUNT +
+        " הוגרלו";
+
+}
+
+
+/* =========================================================
+   הוספה להיסטוריה
+========================================================= */
+
+function addToHistory(
+    pick
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "drawRow";
+
+
+    const number =
+        document.createElement(
+            "div"
+        );
+
+    number.className =
+        "drawNumber";
+
+    number.innerText =
+        drawCount;
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+    image.src =
+        "images/" +
+        pick +
+        ".png";
+
+
+    const text =
+        document.createElement(
+            "span"
+        );
+
+    text.innerText =
+        itemNames[
+            pick - 1
+        ];
+
+
+    row.appendChild(
+        number
+    );
+
+    row.appendChild(
+        image
+    );
+
+    row.appendChild(
+        text
+    );
+
+
+    drawList.prepend(
+        row
+    );
+
+}
+
+
+/* =========================================================
+   הגרלה
+========================================================= */
+
+spinButton.onclick =
+function () {
+
+
+    /*
+       מונע לחיצה נוספת
+       בזמן שהגלגל מסתובב
+    */
+
+    if (spinning) {
+        return;
+    }
+
+
+    /*
+       אין יותר פריטים
+    */
+
+    if (
+        remaining.length === 0
+    ) {
+
+        alert(
+            "כל 16 הפריטים כבר הוגרלו!"
+        );
+
+        return;
+    }
+
+
+    spinning =
+        true;
+
+
+    spinButton.disabled =
+        true;
+
+
+    hidePopup();
+
+
+    /*
+       בחירת פריט מתוך אלו
+       שעדיין לא הוגרלו
+    */
+
+    const randomIndex =
+        Math.floor(
+            Math.random() *
+            remaining.length
+        );
+
+
+    const pick =
+        remaining[
+            randomIndex
+        ];
+
+
+    /*
+       זווית הפריט על הגלגל
+    */
+
+    const selectedAngle =
+        (
+            pick - 1
+        ) *
+        anglePerItem;
+
+
+    /*
+       המיקום הנוכחי
+       של הגלגל
+    */
+
+    const currentMod =
+        (
+            (
+                currentRotation %
+                360
+            ) +
+            360
+        ) %
+        360;
+
+
+    /*
+       הזווית הדרושה
+       כדי שהפריט יגיע
+       למחוג למעלה
+    */
+
+    const targetMod =
+        (
+            360 -
+            selectedAngle
+        ) %
+        360;
+
+
+    let delta =
+        targetMod -
+        currentMod;
+
+
+    if (
+        delta < 0
+    ) {
+
+        delta += 360;
+
+    }
+
+
+    /*
+       8 סיבובים מלאים
+       + עצירה בפריט
+    */
+
+    delta +=
+        360 * 8;
+
+
+    currentRotation +=
+        delta;
+
+
+    wheel.style.transform =
+        "rotate(" +
+        currentRotation +
+        "deg)";
+
+
+    /*
+       לאחר סיום הסיבוב
+    */
+
+    setTimeout(
+        () => {
+
+
+            createFlash();
+
+
+            popupTitle.innerText =
+                itemNames[
+                    pick - 1
+                ];
+
+
+            popupImage.src =
+                "images/" +
+                pick +
+                ".png";
+
+
+            showPopup();
+
+
+            /*
+               מסירים מהמאגר
+            */
+
+            remaining =
+                remaining.filter(
+                    value =>
+                        value !==
+                        pick
+                );
+
+
+            /*
+               היסטוריה
+            */
+
+            drawCount++;
+
+
+            addToHistory(
+                pick
+            );
+
+
+            updateCounter();
+
+
+            spinning =
+                false;
+
+
+            spinButton.disabled =
+                false;
+
+
+        },
+        8200
+    );
+
+};
+
+
+/* =========================================================
+   משחק חדש
+========================================================= */
+
+newGame.onclick =
+function () {
+
+    const approved =
+        confirm(
+            "להתחיל משחק חדש? כל ההגרלות יתאפסו."
+        );
+
+
+    if (
+        approved
+    ) {
+
+        location.reload();
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
