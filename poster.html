@@ -52,53 +52,15 @@ body.panel-open #wrap{padding-right:344px}
 .pb{border:none;border-radius:7px;background:#2d4a8a;color:#fff;padding:6px 8px;font-size:10.5px;font-weight:900;cursor:pointer;min-height:28px;text-align:center;display:flex;align-items:center;justify-content:center}.pb:hover{background:#3a5fa8}.pb.sec{background:#475467}.pb.warn{background:#b42318}.pb.ok{background:#067647}.br2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}.pn{font-size:9.5px;color:#667085;line-height:1.35;margin:4px 0 8px}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px}.prow{display:grid;grid-template-columns:32px 1fr;gap:4px;align-items:center}.prow span{font-size:9.5px;font-weight:900;color:#536079}.prow input{border:1px solid rgba(45,74,138,.2);border-radius:6px;padding:4px 6px;font-size:10.5px;outline:none;background:#fff;width:100%}
 
-
 /* WRAP + POSTER */
 #wrap{margin-top:52px;display:flex;justify-content:center;padding:24px;min-height:calc(100vh - 52px);transition:padding-right .22s ease}
 #poster{width:794px;height:1123px;background:var(--poster-bg);position:relative;flex-shrink:0;box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 24px rgba(88,231,255,.18),0 20px 40px rgba(0,0,0,.55);outline:2px solid rgba(88,231,255,.9);overflow:hidden;font-family:'Heebo',Arial,sans-serif;isolation:isolate}
 #bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;z-index:1;pointer-events:none;opacity:.28;mix-blend-mode:screen}
-#space-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;mix-blend-mode:screen;background:
-  radial-gradient(circle at 14% 23%, rgba(88,231,255,.22) 0 1px, transparent 1.5px),
-  radial-gradient(circle at 86% 18%, rgba(179,102,255,.18) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 79% 72%, rgba(88,231,255,.18) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 18% 78%, rgba(179,102,255,.16) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 50% 48%, rgba(255,255,255,.08) 0 170px, transparent 171px),
-  radial-gradient(circle at 50% 48%, rgba(88,231,255,.12) 0 220px, transparent 221px),
-  radial-gradient(circle at 50% 48%, rgba(179,102,255,.10) 0 275px, transparent 276px),
-  repeating-linear-gradient(0deg, transparent 0 41px, rgba(130,214,255,.05) 41px 42px),
-  repeating-linear-gradient(90deg, transparent 0 41px, rgba(130,214,255,.05) 41px 42px);}
-#space-overlay::before{content:'';position:absolute;inset:0;background:
-  radial-gradient(ellipse 340px 210px at 72% 28%, transparent 0 96%, rgba(88,231,255,.26) 97%, transparent 100%),
-  radial-gradient(ellipse 270px 180px at 24% 70%, transparent 0 96%, rgba(179,102,255,.22) 97%, transparent 100%),
-  linear-gradient(135deg, transparent 0 20%, rgba(88,231,255,.05) 20.3% 20.6%, transparent 21% 79%, rgba(179,102,255,.05) 79.3% 79.6%, transparent 80%);}
-#space-overlay::after{content:'';position:absolute;inset:0;background:
-  linear-gradient(115deg, transparent 0 73%, rgba(88,231,255,.11) 73.2% 73.5%, transparent 73.8%),
-  linear-gradient(24deg, transparent 0 18%, rgba(179,102,255,.09) 18.2% 18.45%, transparent 18.7%),
-  linear-gradient(0deg, transparent 0 50%, rgba(255,255,255,.06) 50.15% 50.3%, transparent 50.45%);}
-#poster::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:
-  radial-gradient(circle at 16% 18%, rgba(0,238,255,.16) 0%, rgba(0,238,255,0) 24%),
-  radial-gradient(circle at 82% 16%, rgba(171,95,255,.22) 0%, rgba(171,95,255,0) 26%),
-  radial-gradient(circle at 76% 72%, rgba(255,64,180,.12) 0%, rgba(255,64,180,0) 22%),
-  radial-gradient(circle at 28% 82%, rgba(0,110,255,.14) 0%, rgba(0,110,255,0) 24%),
-  linear-gradient(180deg,#06101f 0%,#081732 46%,#050912 100%);}
-#poster::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.95;background-image:
-  radial-gradient(circle at 8% 12%, rgba(255,255,255,.95) 0 1px, transparent 1.5px),
-  radial-gradient(circle at 21% 33%, rgba(151,245,255,.95) 0 1px, transparent 1.7px),
-  radial-gradient(circle at 38% 18%, rgba(255,255,255,.9) 0 1.2px, transparent 1.8px),
-  radial-gradient(circle at 62% 11%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 82% 27%, rgba(196,165,255,.85) 0 1.1px, transparent 1.9px),
-  radial-gradient(circle at 91% 13%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 12% 56%, rgba(255,255,255,.9) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 29% 49%, rgba(155,239,255,.95) 0 1.1px, transparent 1.7px),
-  radial-gradient(circle at 44% 64%, rgba(255,255,255,.85) 0 1.2px, transparent 1.8px),
-  radial-gradient(circle at 66% 52%, rgba(255,255,255,.9) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 79% 61%, rgba(171,95,255,.88) 0 1.2px, transparent 1.9px),
-  radial-gradient(circle at 93% 47%, rgba(255,255,255,.92) 0 1px, transparent 1.7px),
-  radial-gradient(circle at 17% 84%, rgba(255,255,255,.95) 0 1.1px, transparent 1.6px),
-  radial-gradient(circle at 34% 88%, rgba(151,245,255,.9) 0 1px, transparent 1.7px),
-  radial-gradient(circle at 57% 79%, rgba(255,255,255,.85) 0 1.2px, transparent 1.8px),
-  radial-gradient(circle at 72% 87%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),
-  radial-gradient(circle at 88% 82%, rgba(255,255,255,.9) 0 1.1px, transparent 1.7px);}
+#space-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;mix-blend-mode:screen;background:radial-gradient(circle at 14% 23%, rgba(88,231,255,.22) 0 1px, transparent 1.5px),radial-gradient(circle at 86% 18%, rgba(179,102,255,.18) 0 1px, transparent 1.6px),radial-gradient(circle at 79% 72%, rgba(88,231,255,.18) 0 1px, transparent 1.6px),radial-gradient(circle at 18% 78%, rgba(179,102,255,.16) 0 1px, transparent 1.6px),radial-gradient(circle at 50% 48%, rgba(255,255,255,.08) 0 170px, transparent 171px),radial-gradient(circle at 50% 48%, rgba(88,231,255,.12) 0 220px, transparent 221px),radial-gradient(circle at 50% 48%, rgba(179,102,255,.10) 0 275px, transparent 276px),repeating-linear-gradient(0deg, transparent 0 41px, rgba(130,214,255,.05) 41px 42px),repeating-linear-gradient(90deg, transparent 0 41px, rgba(130,214,255,.05) 41px 42px)}
+#space-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 340px 210px at 72% 28%, transparent 0 96%, rgba(88,231,255,.26) 97%, transparent 100%),radial-gradient(ellipse 270px 180px at 24% 70%, transparent 0 96%, rgba(179,102,255,.22) 97%, transparent 100%),linear-gradient(135deg, transparent 0 20%, rgba(88,231,255,.05) 20.3% 20.6%, transparent 21% 79%, rgba(179,102,255,.05) 79.3% 79.6%, transparent 80%)}
+#space-overlay::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg, transparent 0 73%, rgba(88,231,255,.11) 73.2% 73.5%, transparent 73.8%),linear-gradient(24deg, transparent 0 18%, rgba(179,102,255,.09) 18.2% 18.45%, transparent 18.7%),linear-gradient(0deg, transparent 0 50%, rgba(255,255,255,.06) 50.15% 50.3%, transparent 50.45%)}
+#poster::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 16% 18%, rgba(0,238,255,.16) 0%, rgba(0,238,255,0) 24%),radial-gradient(circle at 82% 16%, rgba(171,95,255,.22) 0%, rgba(171,95,255,0) 26%),radial-gradient(circle at 76% 72%, rgba(255,64,180,.12) 0%, rgba(255,64,180,0) 22%),radial-gradient(circle at 28% 82%, rgba(0,110,255,.14) 0%, rgba(0,110,255,0) 24%),linear-gradient(180deg,#06101f 0%,#081732 46%,#050912 100%)}
+#poster::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.95;background-image:radial-gradient(circle at 8% 12%, rgba(255,255,255,.95) 0 1px, transparent 1.5px),radial-gradient(circle at 21% 33%, rgba(151,245,255,.95) 0 1px, transparent 1.7px),radial-gradient(circle at 38% 18%, rgba(255,255,255,.9) 0 1.2px, transparent 1.8px),radial-gradient(circle at 62% 11%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),radial-gradient(circle at 82% 27%, rgba(196,165,255,.85) 0 1.1px, transparent 1.9px),radial-gradient(circle at 91% 13%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),radial-gradient(circle at 12% 56%, rgba(255,255,255,.9) 0 1px, transparent 1.6px),radial-gradient(circle at 29% 49%, rgba(155,239,255,.95) 0 1.1px, transparent 1.7px),radial-gradient(circle at 44% 64%, rgba(255,255,255,.85) 0 1.2px, transparent 1.8px),radial-gradient(circle at 66% 52%, rgba(255,255,255,.9) 0 1px, transparent 1.6px),radial-gradient(circle at 79% 61%, rgba(171,95,255,.88) 0 1.2px, transparent 1.9px),radial-gradient(circle at 93% 47%, rgba(255,255,255,.92) 0 1px, transparent 1.7px),radial-gradient(circle at 17% 84%, rgba(255,255,255,.95) 0 1.1px, transparent 1.6px),radial-gradient(circle at 34% 88%, rgba(151,245,255,.9) 0 1px, transparent 1.7px),radial-gradient(circle at 57% 79%, rgba(255,255,255,.85) 0 1.2px, transparent 1.8px),radial-gradient(circle at 72% 87%, rgba(255,255,255,.95) 0 1px, transparent 1.6px),radial-gradient(circle at 88% 82%, rgba(255,255,255,.9) 0 1.1px, transparent 1.7px)}
 
 /* HEADER */
 #p-hdr{position:absolute;left:30px;right:30px;top:16px;height:56px;z-index:2;display:flex;align-items:center;justify-content:center;isolation:isolate}
@@ -109,95 +71,27 @@ body.panel-open #wrap{padding-right:344px}
 #poster-project::placeholder{font-weight:400;font-size:20px;color:#99c8e3;text-decoration:none}
 #project-counter{position:absolute;left:10px;top:7px}
 #short-desc-box{position:absolute;left:30px;right:30px;top:73px;height:42px;z-index:2;display:flex;align-items:center;justify-content:center;isolation:isolate}
-#short-desc{width:100%;height:100%;border:none;background:transparent;resize:none;outline:none;text-align:center;font-size:13px;font-weight:600;color:#d7ebff;line-height:1.35;overflow:hidden;padding:2px 95px 2px 95px}
+#short-desc{width:100%;height:100%;border:none;background:transparent;resize:none;outline:none;text-align:center;font-size:13px;font-weight:600;color:#d7ebff;line-height:1.35;overflow:hidden;padding:2px 95px}
 #short-desc::placeholder{color:#9bc5df}
 #desc-counter{position:absolute;left:10px;top:1px}
-#poster-project,
-#short-desc,
-.logo-box img,
-.logo-box .ltxt{position:relative;z-index:2}
-
-#p-hdr::before,
-#short-desc-box::before,
-.logo-box::before{
-  content:'';
-  position:absolute;
-  z-index:1;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .15s ease;
-}
-
-#p-hdr::before{
-  left:50%;
-  top:50%;
-  width:430px;
-  height:40px;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  filter:blur(12px);
-}
-
-#short-desc-box::before{
-  left:50%;
-  top:calc(50% - 11px);
-  width:210px;
-  height:14px;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  filter:blur(7px);
-}
-
-.logo-box::before{
-  left:50%;
-  top:50%;
-  width:86px;
-  height:86px;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  filter:blur(10px);
-}
-
-#p-hdr.glow-dark::before,
-#short-desc-box.glow-dark::before,
-.logo-box.glow-dark::before{
-  background:rgba(0,0,0,.45);
-  opacity:1;
-}
-
-#p-hdr.glow-light::before,
-#short-desc-box.glow-light::before,
-.logo-box.glow-light::before{
-  background:rgba(255,255,255,.82);
-  opacity:1;
-}
-
-/* Softer and tighter glow only behind the project description */
-#short-desc-box.glow-dark::before{
-  background:rgba(0,0,0,.26);
-  opacity:1;
-}
-#short-desc-box.glow-light::before{
-  background:rgba(255,255,255,.72);
-  opacity:1;
-}
-
+#poster-project,#short-desc,.logo-box img,.logo-box .ltxt{position:relative;z-index:2}
+#p-hdr::before,#short-desc-box::before,.logo-box::before{content:'';position:absolute;z-index:1;pointer-events:none;opacity:0;transition:opacity .15s ease}
+#p-hdr::before{left:50%;top:50%;width:430px;height:40px;transform:translate(-50%,-50%);border-radius:999px;filter:blur(12px)}
+#short-desc-box::before{left:50%;top:calc(50% - 11px);width:210px;height:14px;transform:translate(-50%,-50%);border-radius:999px;filter:blur(7px)}
+.logo-box::before{left:50%;top:50%;width:86px;height:86px;transform:translate(-50%,-50%);border-radius:999px;filter:blur(10px)}
+#p-hdr.glow-dark::before,#short-desc-box.glow-dark::before,.logo-box.glow-dark::before{background:rgba(0,0,0,.45);opacity:1}
+#p-hdr.glow-light::before,#short-desc-box.glow-light::before,.logo-box.glow-light::before{background:rgba(255,255,255,.82);opacity:1}
+#short-desc-box.glow-dark::before{background:rgba(0,0,0,.26);opacity:1}#short-desc-box.glow-light::before{background:rgba(255,255,255,.72);opacity:1}
 .glow-controls{display:flex;gap:6px;margin-top:4px}.glow-controls .pb{flex:1}
 #p-bar{position:absolute;left:190px;right:190px;top:132px;height:38px;z-index:2;background:rgba(9,21,48,.58);border:1px solid rgba(88,231,255,.62);border-radius:10px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;box-shadow:0 0 12px rgba(88,231,255,.18),0 0 24px rgba(179,102,255,.10);backdrop-filter:blur(8px)}
 .bar-mf{display:flex;align-items:center;gap:5px}.bar-mf label{font-weight:900;color:var(--title);white-space:nowrap}.bar-mf input{border:none;border-bottom:1px solid rgba(116,223,255,.35);background:transparent;color:#eefbff;outline:none;font-size:14px;text-align:right}.bar-div{width:1px;height:20px;background:linear-gradient(180deg,rgba(88,231,255,.15),rgba(88,231,255,.95),rgba(179,102,255,.75))}
 
 /* BOXES */
 .box{position:absolute;border:1.5px solid var(--border);background:var(--box-bg);border-radius:10px;display:flex;flex-direction:column;overflow:hidden;z-index:2;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 0 12px rgba(88,231,255,.22),0 0 24px rgba(179,102,255,.10),0 10px 20px rgba(0,0,0,.24);backdrop-filter:blur(7px)}
-.bi{flex:1;padding:5px 9px 5px;display:flex;flex-direction:column;gap:3px;min-height:0;overflow:hidden}.bq{font-weight:900;color:var(--title);text-align:right;line-height:1.18;font-size:13.5px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0}.bq span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.box textarea,.box input[type=text]{border:none;background:transparent;color:var(--text);outline:none;resize:none;width:100%;line-height:1.34;padding:1px 0 0;text-align:right;font-size:12px;flex:1;min-height:0;overflow:hidden;margin:0}.box textarea::placeholder,.box input::placeholder{color:#9fb7d1}.counter{font-size:9px;font-weight:900;color:#9adfff;direction:ltr;white-space:nowrap}.counter.full{color:#ff7d9f}.counter.good{color:#72f2ba}
-.two-line-answer{line-height:1.38!important;white-space:pre-wrap}
-.numbered-answer{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:1px;color:var(--text);font-size:12px;line-height:1.28;overflow:hidden;padding-top:1px;margin-top:0}.numbered-answer .na-line{display:flex;align-items:flex-start;gap:5px;min-height:1.25em;margin:0}.numbered-answer b{font-weight:900;color:var(--title);flex:0 0 auto;line-height:1.28}.numbered-answer span{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.28}.numbered-answer.empty span{color:#b8c2cf}.split-sources{display:none!important}
-#c-research .bi,#c-requirements .bi,#c-use .bi{padding-top:5px;padding-bottom:4px;gap:2px}
-#c-research .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{flex:0 0 auto;gap:0;padding-top:0}
-#c-research .na-line,#c-requirements .na-line,#c-use .na-line{min-height:0;line-height:1.22}
-#c-research .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.22}
-
-#c-slogan .bi{padding:6px 10px;gap:4px}
-.space-footer-text{font-size:15px;font-weight:800;text-align:center;line-height:1.35;color:var(--text)}
+.bi{flex:1;padding:5px 9px;display:flex;flex-direction:column;gap:3px;min-height:0;overflow:hidden}.bq{font-weight:900;color:var(--title);text-align:right;line-height:1.18;font-size:13.5px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0}.bq span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.box textarea,.box input[type=text]{border:none;background:transparent;color:var(--text);outline:none;resize:none;width:100%;line-height:1.34;padding:1px 0 0;text-align:right;font-size:12px;flex:1;min-height:0;overflow:hidden;margin:0}.box textarea::placeholder,.box input::placeholder{color:#9fb7d1}.counter{font-size:9px;font-weight:900;color:#9adfff;direction:ltr;white-space:nowrap}.counter.full{color:#ff7d9f}.counter.good{color:#72f2ba}
+.two-line-answer{line-height:1.38!important;white-space:pre-wrap}.numbered-answer{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:1px;color:var(--text);font-size:12px;line-height:1.28;overflow:hidden;padding-top:1px;margin-top:0}.numbered-answer .na-line{display:flex;align-items:flex-start;gap:5px;min-height:1.25em;margin:0}.numbered-answer b{font-weight:900;color:var(--title);flex:0 0 auto;line-height:1.28}.numbered-answer span{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.28}.numbered-answer.empty span{color:#b8c2cf}.split-sources{display:none!important}
+#c-research .bi,#c-requirements .bi,#c-use .bi{padding-top:5px;padding-bottom:4px;gap:2px}#c-research .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{flex:0 0 auto;gap:0;padding-top:0}#c-research .na-line,#c-requirements .na-line,#c-use .na-line{min-height:0;line-height:1.22}#c-research .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.22}
+#c-slogan .bi{padding:6px 10px;gap:4px}.space-footer-text{font-size:15px;font-weight:800;text-align:center;line-height:1.35;color:var(--text)}
 .flow-arrow{position:absolute;width:24px;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:4;filter:drop-shadow(0 0 8px rgba(88,231,255,.7)) drop-shadow(0 0 14px rgba(179,102,255,.35))}.flow-arrow .shaft{width:3px;flex:1;background:linear-gradient(180deg,#58e7ff 0%,#8ef7ff 42%,#b366ff 100%);border-radius:999px;box-shadow:0 0 8px rgba(88,231,255,.45)}.flow-arrow .head{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #58e7ff;margin-top:-1px}
 #p-names{position:absolute;left:190px;right:190px;top:178px;height:34px;z-index:2;display:flex;align-items:center;justify-content:center;border:1px solid rgba(88,231,255,.6);border-radius:10px;background:rgba(9,21,48,.52);box-shadow:0 0 12px rgba(88,231,255,.16),0 0 20px rgba(179,102,255,.08);padding:3px 8px;box-sizing:border-box;backdrop-filter:blur(8px)}
 #poster-students{border:none;outline:none;text-align:center;align-content:center;font-size:11px;color:#eefbff;background:transparent;width:100%;height:100%;resize:none;overflow:hidden;line-height:1.3;padding:0;font-family:Heebo,Arial,sans-serif}
@@ -206,727 +100,62 @@ body.panel-open #wrap{padding-right:344px}
 .image-box{position:absolute;z-index:2;border:1.5px solid var(--border);background:var(--box-bg);border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 0 14px rgba(88,231,255,.24),0 0 28px rgba(179,102,255,.12),0 10px 20px rgba(0,0,0,.24);backdrop-filter:blur(7px)}
 .iw{width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}.iw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.iw img.show{display:block}.iph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;text-align:center;pointer-events:none;color:#9fe8ff}.iph svg{width:28px;height:28px;stroke:#7eefff;fill:none;stroke-width:1.5}.iph span{font-size:11px;font-weight:900}.iph small{font-size:9px;color:#bed4ef}.ichg{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,rgba(88,231,255,.9),rgba(179,102,255,.9));color:#081325;border:none;border-radius:999px;padding:2px 10px;font-size:10px;font-weight:900;cursor:pointer;z-index:4;display:none;box-shadow:0 0 10px rgba(88,231,255,.35)}.iw:hover .ichg{display:block}.img-pair{position:absolute;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}.img-pair .image-box{position:relative;width:100%;height:100%}
 
-.flow-to-solution{
-  position:absolute;
-  left:407px;
-  top:1044px;
-  width:357px;
-  height:22px;
-  z-index:3;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:6px;
-  direction:ltr;
-  color:var(--accent);
-  font-size:10.5px;
-  font-weight:900;
-  pointer-events:none;
-  text-shadow:0 0 8px rgba(88,231,255,.45),0 0 14px rgba(179,102,255,.20);
-}
-.flow-next-arrow{font-size:18px;line-height:1;text-shadow:0 0 8px rgba(88,231,255,.65)}
-
-@media (max-width:720px){
-  #sp{width:92vw}
-  body.panel-open #wrap{padding-right:0}
-  #wrap{padding:12px}
-}
-@media (max-width:620px){
-  .tb-brand{display:none}
-  #toolbar{justify-content:center;padding-left:7px;padding-right:7px;gap:5px}
-  .tbb{padding:6px 8px;font-size:10px}
-}
+@media (max-width:720px){#sp{width:92vw}body.panel-open #wrap{padding-right:0}#wrap{padding:12px}}
+@media (max-width:620px){.tb-brand{display:none}#toolbar{justify-content:center;padding-left:7px;padding-right:7px;gap:5px}.tbb{padding:6px 8px;font-size:10px}}
 
 /* PRINT */
-@media print{
-  @page{size:A4 portrait;margin:0}
-  html,body{width:210mm!important;height:297mm!important;overflow:hidden!important}
-  body{background:none!important;min-height:0!important;height:297mm!important}
-  #toolbar,#sp,.counter,.ichg,.logo-box:after{display:none!important}
-  #wrap{margin:0!important;padding:0!important;background:none!important;min-height:0!important;height:297mm!important;width:210mm!important}
-  #poster{width:210mm!important;height:297mm!important;zoom:1!important;transform:none!important;box-shadow:none!important;outline:none!important;page-break-inside:avoid;break-inside:avoid;overflow:hidden!important;max-height:297mm}
-  #poster-project,.bar-mf input,.box textarea,.box input{border-bottom:none!important}
-  -webkit-print-color-adjust:exact;print-color-adjust:exact
-}
-
+@media print{@page{size:A4 portrait;margin:0}html,body{width:210mm!important;height:297mm!important;overflow:hidden!important}body{background:none!important;min-height:0!important;height:297mm!important}#toolbar,#sp,.counter,.ichg,.logo-box:after{display:none!important}#wrap{margin:0!important;padding:0!important;background:none!important;min-height:0!important;height:297mm!important;width:210mm!important}#poster{width:210mm!important;height:297mm!important;zoom:1!important;transform:none!important;box-shadow:none!important;outline:none!important;page-break-inside:avoid;break-inside:avoid;overflow:hidden!important;max-height:297mm}#poster-project,.bar-mf input,.box textarea,.box input{border-bottom:none!important}-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
 /* תיקוני פריסה וריווח: טקסט כותרתי בתיבות ייעודיות + ריווח מאוזן */
-.bi{padding:6px 10px;gap:5px}
-.bq{line-height:1.22}
-.box textarea,.box input[type=text]{line-height:1.46;padding-top:2px}
-.numbered-answer{gap:3px;line-height:1.38;padding-top:2px}
-.numbered-answer .na-line{min-height:1.38em;line-height:1.38}
-.numbered-answer b,.numbered-answer span{line-height:1.38}
-#c-research .bi,#c-findings .bi,#c-requirements .bi,#c-use .bi{padding-top:6px;padding-bottom:5px;gap:3px}
-#c-research .numbered-answer,#c-findings .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{gap:2px;padding-top:1px}
-#c-research .na-line,#c-findings .na-line,#c-requirements .na-line,#c-use .na-line{min-height:1.28em;line-height:1.28}
-#c-research .na-line b,#c-findings .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-findings .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.28}
-#c-use .bi{padding-top:7px;padding-bottom:7px;gap:5px}
-#c-use .numbered-answer{gap:3px;padding-top:1px;justify-content:flex-start}
-#c-use .na-line{line-height:1.24;min-height:1.24em}
-#c-use .na-line b,#c-use .na-line span{line-height:1.24}
-#c-question .bi,#c-solution .bi{padding:6px 10px;gap:4px}
-#c-question textarea,#c-solution textarea{line-height:1.42!important}
-
+.bi{padding:6px 10px;gap:5px}.bq{line-height:1.22}.box textarea,.box input[type=text]{line-height:1.46;padding-top:2px}.numbered-answer{gap:3px;line-height:1.38;padding-top:2px}.numbered-answer .na-line{min-height:1.38em;line-height:1.38}.numbered-answer b,.numbered-answer span{line-height:1.38}#c-research .bi,#c-findings .bi,#c-requirements .bi,#c-use .bi{padding-top:6px;padding-bottom:5px;gap:3px}#c-research .numbered-answer,#c-findings .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{gap:2px;padding-top:1px}#c-research .na-line,#c-findings .na-line,#c-requirements .na-line,#c-use .na-line{min-height:1.28em;line-height:1.28}#c-research .na-line b,#c-findings .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-findings .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.28}#c-use .bi{padding-top:7px;padding-bottom:7px;gap:5px}#c-use .numbered-answer{gap:3px;padding-top:1px;justify-content:flex-start}#c-use .na-line{line-height:1.24;min-height:1.24em}#c-use .na-line b,#c-use .na-line span{line-height:1.24}#c-question .bi,#c-solution .bi{padding:6px 10px;gap:4px}#c-question textarea,#c-solution textarea{line-height:1.42!important}
 
 /* Neutral class/school/students colors - detached from color pickers */
-#p-bar,
-#p-names{
-  border:1px solid rgba(88,231,255,.6)!important;
-}
-#p-bar .bar-div{
-  background:linear-gradient(180deg,rgba(88,231,255,.15),rgba(88,231,255,.95),rgba(179,102,255,.75))!important;
-}
-#p-bar label,
-#p-bar input,
-#poster-students{
-  color:#eefbff!important;
-}
-
-
-.home-emoji{
-  width:30px!important;
-  height:30px!important;
-  min-width:30px!important;
-  padding:0!important;
-  border-radius:50%!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  font-size:15px!important;
-  line-height:1!important;
-  text-decoration:none!important;
-}
-
-
-
+#p-bar,#p-names{border:1px solid rgba(88,231,255,.6)!important}#p-bar .bar-div{background:linear-gradient(180deg,rgba(88,231,255,.15),rgba(88,231,255,.95),rgba(179,102,255,.75))!important}#p-bar label,#p-bar input,#poster-students{color:#eefbff!important}
+.home-emoji{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:50%!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:15px!important;line-height:1!important;text-decoration:none!important}
 /* READABILITY CONTRAST FIX */
-.logo-box .ltxt{color:#475569!important}
-.counter{color:#475569!important}
-.iph span{color:#40586e!important}
-.iph small{color:#526579!important}
-.numbered-answer.empty span{color:#475569!important}
-
+.logo-box .ltxt{color:#475569!important}.counter{color:#475569!important}.iph span{color:#40586e!important}.iph small{color:#526579!important}.numbered-answer.empty span{color:#475569!important}
 </style>
 </head>
 <body class="panel-open">
-
-<div id="toolbar">
-  <div class="tb-brand"><div class="tb-mark">✦</div><div><strong>SpaceTech | פוסטר משימת פיתוח</strong><small>מהחלל לכדור הארץ</small></div></div>
-  <div class="tb-acts">
-    <button class="tbb" onclick="togglePanel()">☰ עריכה</button>
-    <button class="tbb" onclick="openTab('design')">עיצוב</button>
-    <button class="tbb sec" onclick="producePdf()">📄 הפקת PDF</button>
-    <a href="index.html" class="tbb hm home-emoji" title="חזרה לדף הבית" aria-label="חזרה לדף הבית">🏠</a>
-  </div>
-</div>
-
-<aside id="sp">
-  <div class="sph"><div><strong>לוח עריכה</strong><span>פוסטר SpaceTech</span></div><button class="spc" onclick="togglePanel()">✕</button></div>
-  <div class="sptabs">
-    <button class="sptab active" data-tab="design" onclick="openTab('design')">עיצוב</button>
-    <button class="sptab" data-tab="content" onclick="openTab('content')">מילוי</button>
-    <button class="sptab" data-tab="students" onclick="openTab('students')">משתתפים</button>
-  </div>
-  <div class="spb">
-    <section id="tab-design" class="tp active">
-      <div class="st">עיצוב</div>
-      <div class="br2"><label class="pb" for="bg-up" style="cursor:pointer">📁 רקע</label><input type="file" id="bg-up" accept="image/*" style="display:none"><button class="pb sec" onclick="clearBg()">נקה רקע</button></div>
-      <div class="fg-c"><label>צבע רקע</label><input type="color" id="bg-color" value="#071325"></div>
-      <div class="fg-c"><label>צבע מסגרת תיבות</label><input type="color" id="border-color" value="#58e7ff"></div>
-      <div class="fg-c"><label>צבע כותרות</label><input type="color" id="q-color" value="#eefbff"></div>
-      <div class="fg-c"><label>צבע טקסט</label><input type="color" id="t-color" value="#e6f6ff"></div>
-      <div class="fg"><label>שקיפות תיבות</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="box-opacity" min="35" max="100" step="5" value="78" style="cursor:pointer;flex:1"><div id="box-op-v" class="fsz-val">78%</div></div></div>
-      <div class="fg"><label>טשטוש מאחורי הכותרת</label><div class="glow-controls"><button class="pb sec" id="title-glow-none" onclick="setGlow('title','none')">ללא</button><button class="pb" id="title-glow-light" onclick="setGlow('title','light')">לבן</button><button class="pb" id="title-glow-dark" onclick="setGlow('title','dark')">שחור</button></div></div>
-      <div class="fg"><label>טשטוש מאחורי הלוגו</label><div class="glow-controls"><button class="pb sec" id="logo-glow-none" onclick="setGlow('logo','none')">ללא</button><button class="pb" id="logo-glow-light" onclick="setGlow('logo','light')">לבן</button><button class="pb" id="logo-glow-dark" onclick="setGlow('logo','dark')">שחור</button></div></div>
-      <div class="fg"><label>טשטוש מאחורי תיאור הפתרון</label><div class="glow-controls"><button class="pb sec" id="desc-glow-none" onclick="setGlow('desc','none')">ללא</button><button class="pb" id="desc-glow-light" onclick="setGlow('desc','light')">לבן</button><button class="pb" id="desc-glow-dark" onclick="setGlow('desc','dark')">שחור</button></div></div>
-      <div class="fsz-row"><label>גודל כותרת ראשית</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('h',-1)">−</button><div id="h-v" class="fsz-val">36</div><button class="pb" onclick="chSz('h',1)">+</button></div></div>
-      <div class="fsz-row"><label>גודל כותרות תיבות</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('q',-1)">−</button><div id="q-v" class="fsz-val">13.5</div><button class="pb" onclick="chSz('q',1)">+</button></div></div>
-      <div class="fsz-row"><label>גודל טקסט</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('t',-1)">−</button><div id="t-v" class="fsz-val">12</div><button class="pb" onclick="chSz('t',1)">+</button></div></div>
-      <div style="margin-top:10px"><button class="pb warn" style="width:100%" onclick="clearPoster()">נקה תוכן</button></div>
-      <p class="pn">השינויים נשמרים אוטומטית בדפדפן. להפקת הקובץ הסופי לחצו על „הפקת PDF” בסרגל העליון.</p>
-    </section>
-    <section id="tab-content" class="tp">
-      <div class="st">שאלות למילוי</div>
-      <div id="fill-list" class="edit-list"></div>
-      <p class="pn">כל שינוי כאן מתעדכן מיד בפוסטר.</p>
-    </section>
-    <section id="tab-students" class="tp">
-      <div class="st">שמות המשתתפים</div>
-      <div class="fg"><label>מספר משתתפים</label><select id="pc-cnt" onchange="setParts(this.value)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div>
-      <div class="fg"><label>שמות</label><div id="pcf" class="pgrid"></div></div>
-      <p class="pn">אפשר גם לערוך ישירות את שורת השמות בתחתית הפוסטר. אין מגבלת תווים לשמות.</p>
-    </section>
-  </div>
-</aside>
-
-<div id="wrap">
-  <div id="poster">
-    <div id="bg-layer"></div>
-    <div id="space-overlay"></div>
-
-    <div id="p-hdr">
-      <div class="logo-area">
-        <div class="logo-box" id="logo-box" onclick="G('logo-file').click()">
-          <img id="logo-img" alt=""><span class="ltxt" id="logo-txt">לוגו</span>
-          <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="loadLogo(this)">
-        </div>
-      </div>
-      <input id="poster-project" class="limited" data-label="שם הפתרון" data-max="40" maxlength="40" placeholder="שם הפתרון" />
-      <small id="project-counter" class="counter" data-for="poster-project">0/40</small>
-    </div>
-
-    <div id="short-desc-box">
-      <textarea id="short-desc" class="limited" data-label="הפתרון שלנו במשפט אחד" data-max="135" maxlength="135" placeholder="מה פיתחנו, למי זה עוזר ואיך?"></textarea>
-      <small id="desc-counter" class="counter" data-for="short-desc">0/135</small>
-    </div>
-
-    <div id="p-bar">
-      <div class="bar-mf"><label>כיתה:</label><input id="poster-class" type="text" autocomplete="off" value="" oninput="autoWidth(this)"></div>
-      <div class="bar-div"></div>
-      <div class="bar-mf"><label>בית הספר:</label><input id="poster-school" type="text" placeholder="שם בית הספר" style="width:132px" oninput="autoWidth(this)"></div>
-    </div>
-
-    <!-- צד ימין -->
-    <div class="box" id="c-problem"><div class="bi"><div class="bq"><span>מה הבעיה שבחרנו לפתור?</span><small class="counter" data-for="problem">0/120</small></div><textarea id="problem" class="limited" data-label="מה הבעיה שבחרנו לפתור?" data-max="120" maxlength="120" placeholder="תארו בקצרה את הבעיה..."></textarea></div></div>
-    <div class="box" id="c-target"><div class="bi"><div class="bq"><span>מי נתקל בבעיה הזאת ומה הוא צריך?</span><small class="counter" data-for="target">0/110</small></div><textarea id="target" class="limited" data-label="מי נתקל בבעיה הזאת ומה הוא צריך?" data-max="110" maxlength="110" placeholder="מי קהל היעד ומה הצורך שלו?"></textarea></div></div>
-    <div class="box" id="c-question"><div class="bi"><div class="bq"><span>איזה רעיון בחרנו ולמה?</span><small class="counter" data-for="question">0/125</small></div><textarea id="question" class="limited" data-label="איזה רעיון בחרנו ולמה?" data-max="125" maxlength="125" placeholder="הסבירו למה הוא מתאים לבעיה ולדרישות שהגדרתם..."></textarea></div></div>
-
-    <div class="image-box" id="main-image-box">
-      <div class="iw" onclick="G('img-main-file').click()">
-        <div class="iph" id="img-main-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-main-label">הפתרון שלנו</span><small id="img-main-note">שרטוט / תמונה</small></div>
-        <img id="img-main" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-main-file').click()">שנה</button>
-        <input type="file" id="img-main-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-main','img-main-ph')">
-      </div>
-    </div>
-
-    <div class="box" id="c-research"><div class="bi"><div class="bq"><span>מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?</span><small class="counter" data-for="research">0/160</small></div><div id="research" class="numbered-answer empty" data-label="מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?" data-max="160"><div class="na-line"><b>1.</b><span id="research1-out">טכנולוגיה / מערכת / יכולת</span></div><div class="na-line"><b>2.</b><span id="research2-out">מה היא עושה ואיך היא נתנה לנו השראה</span></div></div></div></div>
-    <div class="box" id="c-findings"><div class="bi"><div class="bq"><span>אילו רעיונות חשבנו עליהם?</span><small class="counter" data-for="findings">0/150</small></div><div id="findings" class="numbered-answer empty" data-label="אילו רעיונות חשבנו עליהם?" data-max="150"><div class="na-line"><b>1.</b><span id="findings1-out">רעיון 1</span></div><div class="na-line"><b>2.</b><span id="findings2-out">רעיון 2</span></div><div class="na-line"><b>3.</b><span id="findings3-out">רעיון 3</span></div></div></div></div>
-    <div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה הפתרון שלנו חייב לעשות?</span><small class="counter" data-for="requirements">0/120</small></div><div id="requirements" class="numbered-answer empty" data-label="מה הפתרון שלנו חייב לעשות?" data-max="120"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div><div class="na-line"><b>3.</b><span id="requirements3-out">דרישה 3</span></div></div></div></div>
-
-    <div id="flow-to-solution" class="flow-to-solution" aria-hidden="true"><span class="flow-next-arrow">←</span><span dir="rtl">מרעיון למוצר</span></div>
-
-    <!-- צד שמאל -->
-    <div class="box" id="c-solution"><div class="bi"><div class="bq"><span>ממה בנינו את הפתרון?</span><small class="counter" data-for="solution">0/140</small></div><textarea id="solution" class="limited" data-label="ממה בנינו את הפתרון?" data-max="140" maxlength="140" placeholder="אילו חומרים, רכיבים או מנגנונים השתמשנו בהם?"></textarea></div></div>
-
-    <div class="img-pair" id="img-pair">
-      <div class="image-box" id="image-box-1">
-        <div class="iw" onclick="G('img-1-file').click()">
-          <div class="iph" id="img-1-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-1-label">רעיונות / סקיצה</span><small id="img-1-note">2–3 רעיונות</small></div>
-          <img id="img-1" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-1-file').click()">שנה</button>
-          <input type="file" id="img-1-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-1','img-1-ph')">
-        </div>
-      </div>
-      <div class="image-box" id="image-box-2">
-        <div class="iw" onclick="G('img-2-file').click()">
-          <div class="iph" id="img-2-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-2-label">בדיקה / אב־טיפוס</span><small id="img-2-note">מה בדקנו</small></div>
-          <img id="img-2" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-2-file').click()">שנה</button>
-          <input type="file" id="img-2-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-2','img-2-ph')">
-        </div>
-      </div>
-    </div>
-
-    <div class="box" id="c-use"><div class="bi"><div class="bq"><span>איך הפתרון שלנו עובד?</span><small class="counter" data-for="use">0/165</small></div><div id="use" class="numbered-answer empty" data-label="איך הפתרון שלנו עובד?" data-max="165"><div class="na-line"><b>1.</b><span id="use1-out">חלק מרכזי 1</span></div><div class="na-line"><b>2.</b><span id="use2-out">חלק מרכזי 2</span></div><div class="na-line"><b>3.</b><span id="use3-out">חלק מרכזי 3</span></div></div></div></div>
-    <div class="box" id="c-feedback"><div class="bi"><div class="bq"><span>מה בדקנו?</span><small class="counter" data-for="feedback">0/120</small></div><textarea id="feedback" class="limited" data-label="מה בדקנו?" data-max="120" maxlength="120" placeholder="איך בדקנו אם הפתרון באמת עובד ומתאים לצורך?"></textarea></div></div>
-    <div class="box" id="c-improvement"><div class="bi"><div class="bq"><span>מה גילינו בבדיקה?</span><small class="counter" data-for="improvement">0/120</small></div><textarea id="improvement" class="limited" data-label="מה גילינו בבדיקה?" data-max="120" maxlength="120" placeholder="מה עבד טוב ומה פחות טוב?"></textarea></div></div>
-    <div class="box" id="c-value"><div class="bi"><div class="bq"><span>מה שיפרנו או היינו משפרים?</span><small class="counter" data-for="value">0/120</small></div><textarea id="value" class="limited" data-label="מה שיפרנו או היינו משפרים?" data-max="120" maxlength="120" placeholder="איזה שינוי עשינו בעקבות הבדיקה, או מה היינו משנים בהמשך?"></textarea></div></div>
-
-    <div class="flow-arrow" id="arrow-feedback-improvement" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div>
-    <div class="flow-arrow" id="arrow-improvement-value" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div>
-
-    <div class="box" id="c-slogan"><div class="bi"><div class="bq"><span>הפתרון שלנו במשפט אחד</span><small class="counter" data-for="slogan">0/140</small></div><textarea id="slogan" class="limited" data-label="הפתרון שלנו במשפט אחד" data-max="140" maxlength="140" placeholder="פיתחנו ______ שעוזר ל־______ באמצעות ______."></textarea></div></div>
-
-    <div id="p-names"><textarea id="poster-students" placeholder="שמות המשתתפים" rows="2" oninput="syncNamesToPanel()"></textarea></div>
-  </div>
-</div>
-
-<div class="split-sources" aria-hidden="true">
-  <textarea id="research1" data-label="איזו טכנולוגיה, מערכת או יכולת מהחלל נתנה לנו השראה?" data-max="70" maxlength="70"></textarea>
-  <textarea id="research2" data-label="מה היא עושה?" data-max="90" maxlength="90"></textarea>
-  <textarea id="requirements1" data-label="דרישה מהפתרון 1" data-max="40" maxlength="40"></textarea>
-  <textarea id="requirements2" data-label="דרישה מהפתרון 2" data-max="40" maxlength="40"></textarea>
-  <textarea id="findings1" data-label="רעיון 1" data-max="50" maxlength="50"></textarea>
-  <textarea id="findings2" data-label="רעיון 2" data-max="50" maxlength="50"></textarea>
-  <textarea id="findings3" data-label="רעיון 3" data-max="50" maxlength="50"></textarea>
-  <textarea id="requirements3" data-label="דרישה מהפתרון 3" data-max="40" maxlength="40"></textarea>
-  <textarea id="use1" data-label="חלק מרכזי 1" data-max="55" maxlength="55"></textarea>
-  <textarea id="use2" data-label="חלק מרכזי 2" data-max="55" maxlength="55"></textarea>
-  <textarea id="use3" data-label="חלק מרכזי 3" data-max="55" maxlength="55"></textarea>
-</div>
-
+<div id="toolbar"><div class="tb-brand"><div class="tb-mark">✦</div><div><strong>SpaceTech | פוסטר משימת פיתוח</strong><small>מהחלל לכדור הארץ</small></div></div><div class="tb-acts"><button class="tbb" onclick="togglePanel()">☰ עריכה</button><button class="tbb" onclick="openTab('design')">עיצוב</button><button class="tbb sec" onclick="producePdf()">📄 הפקת PDF</button><a href="index.html" class="tbb hm home-emoji" title="חזרה לדף הבית" aria-label="חזרה לדף הבית">🏠</a></div></div>
+<aside id="sp"><div class="sph"><div><strong>לוח עריכה</strong><span>פוסטר SpaceTech</span></div><button class="spc" onclick="togglePanel()">✕</button></div><div class="sptabs"><button class="sptab active" data-tab="design" onclick="openTab('design')">עיצוב</button><button class="sptab" data-tab="content" onclick="openTab('content')">מילוי</button><button class="sptab" data-tab="students" onclick="openTab('students')">משתתפים</button></div><div class="spb"><section id="tab-design" class="tp active"><div class="st">עיצוב</div><div class="br2"><label class="pb" for="bg-up" style="cursor:pointer">📁 רקע</label><input type="file" id="bg-up" accept="image/*" style="display:none"><button class="pb sec" onclick="clearBg()">נקה רקע</button></div><div class="fg-c"><label>צבע רקע</label><input type="color" id="bg-color" value="#071325"></div><div class="fg-c"><label>צבע מסגרת תיבות</label><input type="color" id="border-color" value="#58e7ff"></div><div class="fg-c"><label>צבע כותרות</label><input type="color" id="q-color" value="#eefbff"></div><div class="fg-c"><label>צבע טקסט</label><input type="color" id="t-color" value="#e6f6ff"></div><div class="fg"><label>שקיפות תיבות</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="box-opacity" min="35" max="100" step="5" value="78" style="cursor:pointer;flex:1"><div id="box-op-v" class="fsz-val">78%</div></div></div><div class="fg"><label>טשטוש מאחורי הכותרת</label><div class="glow-controls"><button class="pb sec" id="title-glow-none" onclick="setGlow('title','none')">ללא</button><button class="pb" id="title-glow-light" onclick="setGlow('title','light')">לבן</button><button class="pb" id="title-glow-dark" onclick="setGlow('title','dark')">שחור</button></div></div><div class="fg"><label>טשטוש מאחורי הלוגו</label><div class="glow-controls"><button class="pb sec" id="logo-glow-none" onclick="setGlow('logo','none')">ללא</button><button class="pb" id="logo-glow-light" onclick="setGlow('logo','light')">לבן</button><button class="pb" id="logo-glow-dark" onclick="setGlow('logo','dark')">שחור</button></div></div><div class="fg"><label>טשטוש מאחורי תיאור הפתרון</label><div class="glow-controls"><button class="pb sec" id="desc-glow-none" onclick="setGlow('desc','none')">ללא</button><button class="pb" id="desc-glow-light" onclick="setGlow('desc','light')">לבן</button><button class="pb" id="desc-glow-dark" onclick="setGlow('desc','dark')">שחור</button></div></div><div class="fsz-row"><label>גודל כותרת ראשית</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('h',-1)">−</button><div id="h-v" class="fsz-val">36</div><button class="pb" onclick="chSz('h',1)">+</button></div></div><div class="fsz-row"><label>גודל כותרות תיבות</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('q',-1)">−</button><div id="q-v" class="fsz-val">13.5</div><button class="pb" onclick="chSz('q',1)">+</button></div></div><div class="fsz-row"><label>גודל טקסט</label><div class="fsz-ctrl"><button class="pb" onclick="chSz('t',-1)">−</button><div id="t-v" class="fsz-val">12</div><button class="pb" onclick="chSz('t',1)">+</button></div></div><div style="margin-top:10px"><button class="pb warn" style="width:100%" onclick="clearPoster()">נקה תוכן</button></div><p class="pn">השינויים נשמרים אוטומטית בדפדפן. להפקת הקובץ הסופי לחצו על „הפקת PDF” בסרגל העליון.</p></section><section id="tab-content" class="tp"><div class="st">שאלות למילוי</div><div id="fill-list" class="edit-list"></div><p class="pn">כל שינוי כאן מתעדכן מיד בפוסטר.</p></section><section id="tab-students" class="tp"><div class="st">שמות המשתתפים</div><div class="fg"><label>מספר משתתפים</label><select id="pc-cnt" onchange="setParts(this.value)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div><div class="fg"><label>שמות</label><div id="pcf" class="pgrid"></div></div><p class="pn">אפשר גם לערוך ישירות את שורת השמות בתחתית הפוסטר. אין מגבלת תווים לשמות.</p></section></div></aside>
+<div id="wrap"><div id="poster"><div id="bg-layer"></div><div id="space-overlay"></div><div id="p-hdr"><div class="logo-area"><div class="logo-box" id="logo-box" onclick="G('logo-file').click()"><img id="logo-img" alt=""><span class="ltxt" id="logo-txt">לוגו</span><input type="file" id="logo-file" accept="image/*" style="display:none" onchange="loadLogo(this)"></div></div><input id="poster-project" class="limited" data-label="שם הפתרון" data-max="40" maxlength="40" placeholder="שם הפתרון" /><small id="project-counter" class="counter" data-for="poster-project">0/40</small></div><div id="short-desc-box"><textarea id="short-desc" class="limited" data-label="הפתרון שלנו במשפט אחד" data-max="135" maxlength="135" placeholder="מה פיתחנו, למי זה עוזר ואיך?"></textarea><small id="desc-counter" class="counter" data-for="short-desc">0/135</small></div><div id="p-bar"><div class="bar-mf"><label>כיתה:</label><input id="poster-class" type="text" autocomplete="off" value="" oninput="autoWidth(this)"></div><div class="bar-div"></div><div class="bar-mf"><label>בית הספר:</label><input id="poster-school" type="text" placeholder="שם בית הספר" style="width:132px" oninput="autoWidth(this)"></div></div>
+<div class="box" id="c-problem"><div class="bi"><div class="bq"><span>מה הבעיה שבחרנו לפתור?</span><small class="counter" data-for="problem">0/120</small></div><textarea id="problem" class="limited" data-label="מה הבעיה שבחרנו לפתור?" data-max="120" maxlength="120" placeholder="תארו בקצרה את הבעיה..."></textarea></div></div><div class="box" id="c-target"><div class="bi"><div class="bq"><span>מי נתקל בבעיה הזאת ומה הוא צריך?</span><small class="counter" data-for="target">0/110</small></div><textarea id="target" class="limited" data-label="מי נתקל בבעיה הזאת ומה הוא צריך?" data-max="110" maxlength="110" placeholder="מי קהל היעד ומה הצורך שלו?"></textarea></div></div><div class="box" id="c-question"><div class="bi"><div class="bq"><span>איזה רעיון בחרנו ולמה?</span><small class="counter" data-for="question">0/125</small></div><textarea id="question" class="limited" data-label="איזה רעיון בחרנו ולמה?" data-max="125" maxlength="125" placeholder="הסבירו למה הוא מתאים לבעיה ולדרישות שהגדרתם..."></textarea></div></div>
+<div class="image-box" id="main-image-box"><div class="iw" onclick="G('img-main-file').click()"><div class="iph" id="img-main-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-main-label">הפתרון שלנו</span><small id="img-main-note">שרטוט / תמונה</small></div><img id="img-main" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-main-file').click()">שנה</button><input type="file" id="img-main-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-main','img-main-ph')"></div></div>
+<div class="box" id="c-research"><div class="bi"><div class="bq"><span>מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?</span><small class="counter" data-for="research">0/160</small></div><div id="research" class="numbered-answer empty" data-label="מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?" data-max="160"><div class="na-line"><b>1.</b><span id="research1-out">טכנולוגיה / מערכת / יכולת</span></div><div class="na-line"><b>2.</b><span id="research2-out">מה היא עושה ואיך היא נתנה לנו השראה</span></div></div></div></div><div class="box" id="c-findings"><div class="bi"><div class="bq"><span>אילו רעיונות חשבנו עליהם?</span><small class="counter" data-for="findings">0/150</small></div><div id="findings" class="numbered-answer empty" data-label="אילו רעיונות חשבנו עליהם?" data-max="150"><div class="na-line"><b>1.</b><span id="findings1-out">רעיון 1</span></div><div class="na-line"><b>2.</b><span id="findings2-out">רעיון 2</span></div><div class="na-line"><b>3.</b><span id="findings3-out">רעיון 3</span></div></div></div></div><div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה הפתרון שלנו חייב לעשות?</span><small class="counter" data-for="requirements">0/120</small></div><div id="requirements" class="numbered-answer empty" data-label="מה הפתרון שלנו חייב לעשות?" data-max="120"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div><div class="na-line"><b>3.</b><span id="requirements3-out">דרישה 3</span></div></div></div></div>
+<div class="box" id="c-solution"><div class="bi"><div class="bq"><span>ממה בנינו את הפתרון?</span><small class="counter" data-for="solution">0/140</small></div><textarea id="solution" class="limited" data-label="ממה בנינו את הפתרון?" data-max="140" maxlength="140" placeholder="אילו חומרים, רכיבים או מנגנונים השתמשנו בהם?"></textarea></div></div>
+<div class="img-pair" id="img-pair"><div class="image-box" id="image-box-1"><div class="iw" onclick="G('img-1-file').click()"><div class="iph" id="img-1-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-1-label">רעיונות / סקיצה</span><small id="img-1-note">2–3 רעיונות</small></div><img id="img-1" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-1-file').click()">שנה</button><input type="file" id="img-1-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-1','img-1-ph')"></div></div><div class="image-box" id="image-box-2"><div class="iw" onclick="G('img-2-file').click()"><div class="iph" id="img-2-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-2-label">בדיקה / אב־טיפוס</span><small id="img-2-note">מה בדקנו</small></div><img id="img-2" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-2-file').click()">שנה</button><input type="file" id="img-2-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-2','img-2-ph')"></div></div></div>
+<div class="box" id="c-use"><div class="bi"><div class="bq"><span>איך הפתרון שלנו עובד?</span><small class="counter" data-for="use">0/165</small></div><div id="use" class="numbered-answer empty" data-label="איך הפתרון שלנו עובד?" data-max="165"><div class="na-line"><b>1.</b><span id="use1-out">חלק מרכזי 1</span></div><div class="na-line"><b>2.</b><span id="use2-out">חלק מרכזי 2</span></div><div class="na-line"><b>3.</b><span id="use3-out">חלק מרכזי 3</span></div></div></div></div><div class="box" id="c-feedback"><div class="bi"><div class="bq"><span>מה בדקנו?</span><small class="counter" data-for="feedback">0/120</small></div><textarea id="feedback" class="limited" data-label="מה בדקנו?" data-max="120" maxlength="120" placeholder="איך בדקנו אם הפתרון באמת עובד ומתאים לצורך?"></textarea></div></div><div class="box" id="c-improvement"><div class="bi"><div class="bq"><span>מה גילינו בבדיקה?</span><small class="counter" data-for="improvement">0/120</small></div><textarea id="improvement" class="limited" data-label="מה גילינו בבדיקה?" data-max="120" maxlength="120" placeholder="מה עבד טוב ומה פחות טוב?"></textarea></div></div><div class="box" id="c-value"><div class="bi"><div class="bq"><span>מה שיפרנו או היינו משפרים?</span><small class="counter" data-for="value">0/120</small></div><textarea id="value" class="limited" data-label="מה שיפרנו או היינו משפרים?" data-max="120" maxlength="120" placeholder="איזה שינוי עשינו בעקבות הבדיקה, או מה היינו משנים בהמשך?"></textarea></div></div><div class="flow-arrow" id="arrow-feedback-improvement" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div><div class="flow-arrow" id="arrow-improvement-value" aria-hidden="true"><div class="shaft"></div><div class="head"></div></div><div class="box" id="c-slogan"><div class="bi"><div class="bq"><span>הפתרון שלנו במשפט אחד</span><small class="counter" data-for="slogan">0/140</small></div><textarea id="slogan" class="limited" data-label="הפתרון שלנו במשפט אחד" data-max="140" maxlength="140" placeholder="פיתחנו ______ שעוזר ל־______ באמצעות ______."></textarea></div></div><div id="p-names"><textarea id="poster-students" placeholder="שמות המשתתפים" rows="2" oninput="syncNamesToPanel()"></textarea></div></div></div>
+<div class="split-sources" aria-hidden="true"><textarea id="research1" data-label="איזו טכנולוגיה, מערכת או יכולת מהחלל נתנה לנו השראה?" data-max="70" maxlength="70"></textarea><textarea id="research2" data-label="מה היא עושה?" data-max="90" maxlength="90"></textarea><textarea id="requirements1" data-label="דרישה מהפתרון 1" data-max="40" maxlength="40"></textarea><textarea id="requirements2" data-label="דרישה מהפתרון 2" data-max="40" maxlength="40"></textarea><textarea id="findings1" data-label="רעיון 1" data-max="50" maxlength="50"></textarea><textarea id="findings2" data-label="רעיון 2" data-max="50" maxlength="50"></textarea><textarea id="findings3" data-label="רעיון 3" data-max="50" maxlength="50"></textarea><textarea id="requirements3" data-label="דרישה מהפתרון 3" data-max="40" maxlength="40"></textarea><textarea id="use1" data-label="חלק מרכזי 1" data-max="55" maxlength="55"></textarea><textarea id="use2" data-label="חלק מרכזי 2" data-max="55" maxlength="55"></textarea><textarea id="use3" data-label="חלק מרכזי 3" data-max="55" maxlength="55"></textarea></div>
 <script>
-const G=id=>document.getElementById(id);
-const qs=(s,root=document)=>Array.from(root.querySelectorAll(s));
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const esc=s=>String(s||'').replace(/[&<>\"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[ch]));
-const SZ={h:36,q:13.5,t:12};
-
-const AUTOSAVE_DB='spacetech-poster-drafts';
-const AUTOSAVE_STORE='drafts';
-const AUTOSAVE_KEY='spacetech-poster-v1';
-const AUTOSAVE_MAX_AGE=30*24*60*60*1000;
-let autosaveTimer=null;
-let restoringDraft=false;
-let printTitleBackup='';
-
-function openAutosaveDb(){
-  return new Promise((resolve,reject)=>{
-    if(!('indexedDB' in window)){resolve(null);return}
-    const req=indexedDB.open(AUTOSAVE_DB,1);
-    req.onupgradeneeded=()=>{
-      const db=req.result;
-      if(!db.objectStoreNames.contains(AUTOSAVE_STORE))db.createObjectStore(AUTOSAVE_STORE);
-    };
-    req.onsuccess=()=>resolve(req.result);
-    req.onerror=()=>reject(req.error);
-  });
-}
-async function writeAutosave(data){
-  const db=await openAutosaveDb(); if(!db)return;
-  await new Promise((resolve,reject)=>{
-    const tx=db.transaction(AUTOSAVE_STORE,'readwrite');
-    tx.objectStore(AUTOSAVE_STORE).put(data,AUTOSAVE_KEY);
-    tx.oncomplete=()=>resolve();
-    tx.onerror=()=>reject(tx.error);
-    tx.onabort=()=>reject(tx.error);
-  });
-  db.close();
-}
-async function readAutosave(){
-  const db=await openAutosaveDb(); if(!db)return null;
-  const value=await new Promise((resolve,reject)=>{
-    const tx=db.transaction(AUTOSAVE_STORE,'readonly');
-    const req=tx.objectStore(AUTOSAVE_STORE).get(AUTOSAVE_KEY);
-    req.onsuccess=()=>resolve(req.result||null);
-    req.onerror=()=>reject(req.error);
-  });
-  db.close();
-  return value;
-}
-async function clearAutosave(){
-  clearTimeout(autosaveTimer);
-  const db=await openAutosaveDb(); if(!db)return;
-  await new Promise((resolve,reject)=>{
-    const tx=db.transaction(AUTOSAVE_STORE,'readwrite');
-    tx.objectStore(AUTOSAVE_STORE).delete(AUTOSAVE_KEY);
-    tx.oncomplete=()=>resolve();
-    tx.onerror=()=>reject(tx.error);
-    tx.onabort=()=>reject(tx.error);
-  });
-  db.close();
-}
-function collectDraft(){
-  const values={};
-  if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});
-  if(G('poster-students'))values['poster-students']=G('poster-students').value||'';
-  return {
-    version:1,
-    savedAt:Date.now(),
-    values,
-    design:{
-      bgColor:G('bg-color')?.value||'#071325',
-      borderColor:G('border-color')?.value||'#58e7ff',
-      qColor:G('q-color')?.value||'#eefbff',
-      tColor:G('t-color')?.value||'#e6f6ff',
-      opacity:G('box-opacity')?.value||'78',
-      sizes:{...SZ},
-      glow:{...glowState},
-      bgImage:G('bg-layer')?.style.backgroundImage||'none',
-      bgOpacity:G('bg-layer')?.style.opacity||'.28'
-    },
-    images:{
-      main:G('img-main')?.getAttribute('src')||'',
-      one:G('img-1')?.getAttribute('src')||'',
-      two:G('img-2')?.getAttribute('src')||'',
-      logo:G('logo-img')?.getAttribute('src')||''
-    }
-  };
-}
-async function saveDraft(){
-  if(restoringDraft)return;
-  try{await writeAutosave(collectDraft())}catch(error){console.warn('Poster autosave failed',error)}
-}
-function scheduleAutosave(){
-  if(restoringDraft)return;
-  clearTimeout(autosaveTimer);
-  autosaveTimer=setTimeout(saveDraft,300);
-}
-function restoreImage(src,imgId,phId){
-  const img=G(imgId),ph=G(phId); if(!img||!ph)return;
-  if(src){img.src=src;img.classList.add('show');ph.style.display='none'}
-  else{img.removeAttribute('src');img.classList.remove('show');ph.style.display='flex'}
-}
-async function applyDraft(draft){
-  restoringDraft=true;
-  try{
-    Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});
-    const d=draft.design||{};
-    if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;
-    if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;
-    if(d.qColor&&G('q-color'))G('q-color').value=d.qColor;
-    if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;
-    if(d.opacity&&G('box-opacity'))G('box-opacity').value=String(d.opacity);
-    Object.assign(SZ,d.sizes||{});
-    if(G('h-v'))G('h-v').textContent=SZ.h;
-    if(G('q-v'))G('q-v').textContent=SZ.q;
-    if(G('t-v'))G('t-v').textContent=SZ.t;
-    if(typeof glowState!=='undefined')Object.assign(glowState,d.glow||{});
-    if(G('bg-layer')){
-      G('bg-layer').style.backgroundImage=d.bgImage||'none';
-      G('bg-layer').style.opacity=d.bgOpacity||((d.bgImage&&d.bgImage!=='none')?'1':'.28');
-    }
-    restoreImage(draft.images?.main,'img-main','img-main-ph');
-    restoreImage(draft.images?.one,'img-1','img-1-ph');
-    restoreImage(draft.images?.two,'img-2','img-2-ph');
-    const logo=G('logo-img');
-    if(logo){
-      if(draft.images?.logo){logo.src=draft.images.logo;logo.style.display='block';G('logo-txt').style.display='none'}
-      else{logo.removeAttribute('src');logo.style.display='none';G('logo-txt').style.display='block'}
-    }
-    syncNamesToPanel();
-    updateAllCombinedFields();
-    renderFillPanel();
-    qs('.limited').forEach(updateCounterFor);
-    autoWidth(G('poster-class'));autoWidth(G('poster-school'));
-    applyDesign();
-    applyAllGlow();
-    applyLayout();
-    fitPreview();
-  }finally{
-    restoringDraft=false;
-  }
-}
-async function offerRestoreDraft(){
-  try{
-    const draft=await readAutosave();
-    if(!draft)return;
-    if(!draft.savedAt||Date.now()-draft.savedAt>AUTOSAVE_MAX_AGE){await clearAutosave();return}
-    if(confirm('נמצאה טיוטה של הפוסטר שנשמרה אוטומטית בדפדפן. לשחזר אותה?')) await applyDraft(draft);
-    else await clearAutosave();
-  }catch(error){console.warn('Poster restore failed',error)}
-}
-function wireAutosave(){
-  document.addEventListener('input',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);
-  document.addEventListener('change',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()});
-}
-function fitPreview(){
-  if(window.matchMedia?.('print')?.matches)return;
-  const poster=G('poster'); if(!poster)return;
-  const narrow=window.innerWidth<=720;
-  const panel=document.body.classList.contains('panel-open')&&!narrow;
-  const reserved=panel?380:40;
-  const available=Math.max(260,window.innerWidth-reserved);
-  const scale=Math.max(.33,Math.min(1,available/824));
-  poster.style.zoom=String(scale);
-}
-function producePdf(){
-  saveDraft();
-  printTitleBackup=document.title;
-  const project=(G('poster-project')?.value||'').trim();
-  document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר משימת פיתוח';
-  window.print();
-}
-
-const LAYOUT={
-  'c-problem':{left:407,top:277,width:357,height:65},
-  'c-target':{left:407,top:370,width:357,height:65},
-  'c-question':{left:407,top:463,width:357,height:80},
-  'img-pair':{left:407,top:561,width:357,height:170},
-  'c-research':{left:407,top:755,width:357,height:74},
-  'c-findings':{left:407,top:839,width:357,height:92},
-  'c-requirements':{left:407,top:944,width:357,height:92},
-  'c-solution':{left:30,top:277,width:357,height:80},
-  'main-image-box':{left:84,top:379,width:250,height:250},
-  'c-use':{left:30,top:651,width:357,height:90},
-  'c-feedback':{left:30,top:760,width:357,height:65},
-  'c-improvement':{left:30,top:853,width:357,height:65},
-  'c-value':{left:30,top:946,width:357,height:65},
-  'c-slogan':{left:30,top:1054,width:734,height:56}
-};
-
-function positionFlowArrows(){
-  [
-    ['c-feedback','c-improvement','arrow-feedback-improvement'],
-    ['c-improvement','c-value','arrow-improvement-value']
-  ].forEach(([fromId,toId,arrowId])=>{
-    const from=G(fromId),to=G(toId),arrow=G(arrowId);
-    if(!from||!to||!arrow)return;
-    const arrowWidth=24;
-    const left=from.offsetLeft + (from.offsetWidth/2) - (arrowWidth/2);
-    const gap=6;
-    const top=from.offsetTop + from.offsetHeight + gap;
-    const end=to.offsetTop - gap;
-    const height=Math.max(14,end-top);
-    Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'});
-  });
-}
-
-function applyLayout(){
-  Object.entries(LAYOUT).forEach(([id,p])=>{
-    const el=G(id); if(!el)return;
-    Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'});
-  });
-  positionFlowArrows();
-}
-function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}
-function openTab(name){
-  document.body.classList.add('panel-open');
-  setTimeout(fitPreview,230);
-  qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
-  if(name==='content')renderFillPanel();
-}
-
-
-const FILL_FIELDS=[
-  {id:'poster-project',label:'שם הפתרון',kind:'input'},
-  {id:'short-desc',label:'תיאור קצר של הפתרון',rows:2},
-  {id:'poster-class',label:'כיתה',kind:'input'},
-  {id:'poster-school',label:'בית הספר',kind:'input'},
-  {id:'problem',label:'מה הבעיה שבחרנו לפתור?',rows:2},
-  {id:'target',label:'מי נתקל בבעיה הזאת ומה הוא צריך?',rows:2},
-  {id:'requirements1',label:'מה הפתרון שלנו חייב לעשות? 1',rows:2,combine:'requirements'},
-  {id:'requirements2',label:'מה הפתרון שלנו חייב לעשות? 2',rows:2,combine:'requirements'},
-  {id:'requirements3',label:'מה הפתרון שלנו חייב לעשות? 3',rows:2,combine:'requirements'},
-  {id:'research1',label:'מה למדנו מטכנולוגיות החלל? 1',rows:2,combine:'research'},
-  {id:'research2',label:'מה למדנו מטכנולוגיות החלל? 2',rows:2,combine:'research'},
-  {id:'findings1',label:'אילו רעיונות חשבנו עליהם? 1',rows:2,combine:'findings'},
-  {id:'findings2',label:'אילו רעיונות חשבנו עליהם? 2',rows:2,combine:'findings'},
-  {id:'findings3',label:'אילו רעיונות חשבנו עליהם? 3',rows:2,combine:'findings'},
-  {id:'question',label:'איזה רעיון בחרנו ולמה?',rows:3},
-  {id:'solution',label:'ממה בנינו את הפתרון?',rows:3},
-  {id:'use1',label:'איך הפתרון שלנו עובד? חלק 1',rows:2,combine:'use'},
-  {id:'use2',label:'איך הפתרון שלנו עובד? חלק 2',rows:2,combine:'use'},
-  {id:'use3',label:'איך הפתרון שלנו עובד? חלק 3',rows:2,combine:'use'},
-  {id:'feedback',label:'מה בדקנו?',rows:2},
-  {id:'improvement',label:'מה גילינו בבדיקה?',rows:2},
-  {id:'value',label:'מה שיפרנו או היינו משפרים?',rows:2},
-  {id:'slogan',label:'הפתרון שלנו במשפט אחד',rows:2}
-];
-function panelCounterText(src){
-  const max=parseInt(src?.dataset?.max||src?.getAttribute?.('maxlength')||0,10);
-  if(!max)return 'חופשי';
-  return `${(src.value||'').length}/${max}`;
-}
-function updatePanelCounter(id){
-  const src=G(id), c=G('panel-counter-'+id);
-  if(!src||!c)return;
-  const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);
-  c.textContent=panelCounterText(src);
-  c.classList.toggle('full',!!max&&(src.value||'').length>=max);
-  c.classList.toggle('good',!!max&&(src.value||'').length>0&&(src.value||'').length<max);
-}
-const COMBINED_FIELDS={
-  research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['טכנולוגיה / מערכת / יכולת','מה היא עושה ואיך היא נתנה לנו השראה'],max:160},
-  findings:{ids:['findings1','findings2','findings3'],outs:['findings1-out','findings2-out','findings3-out'],placeholders:['רעיון 1','רעיון 2','רעיון 3'],max:150},
-  requirements:{ids:['requirements1','requirements2','requirements3'],outs:['requirements1-out','requirements2-out','requirements3-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3'],max:120},
-  use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['חלק מרכזי 1','חלק מרכזי 2','חלק מרכזי 3'],max:165}
-};
-function updateCombinedField(key){
-  const cfg=COMBINED_FIELDS[key]; if(!cfg)return;
-  let total=0,hasText=false;
-  cfg.ids.forEach((id,i)=>{
-    const src=G(id), out=G(cfg.outs[i]);
-    const val=(src?.value||'').trim();
-    total+=(src?.value||'').length;
-    if(val)hasText=true;
-    if(out)out.textContent=val||cfg.placeholders[i];
-    updatePanelCounter(id);
-  });
-  const display=G(key); if(display)display.classList.toggle('empty',!hasText);
-  qs(`.counter[data-for="${key}"]`).forEach(c=>{
-    c.textContent=`${total}/${cfg.max}`;
-    c.classList.toggle('full',total>=cfg.max);
-    c.classList.toggle('good',total>0&&total<cfg.max);
-  });
-}
-function updateAllCombinedFields(){Object.keys(COMBINED_FIELDS).forEach(updateCombinedField)}
-function syncPanelField(id){
-  const src=G(id), dst=G('panel-'+id);
-  if(!src||!dst||document.activeElement===dst)return;
-  dst.value=src.value||'';
-  updatePanelCounter(id);
-}
-function renderFillPanel(){
-  const list=G('fill-list'); if(!list)return;
-  list.innerHTML='';
-  FILL_FIELDS.forEach(f=>{
-    const src=G(f.id); if(!src)return;
-    const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);
-    const card=document.createElement('div');card.className='edit-card';
-    const isInput=f.kind==='input';
-    const fieldHtml=isInput
-      ? `<input id="panel-${f.id}" type="text" ${max?`maxlength="${max}"`:''} value="${esc(src.value||'')}">`
-      : `<textarea id="panel-${f.id}" rows="${f.rows||2}" ${max?`maxlength="${max}"`:''}>${esc(src.value||'')}</textarea>`;
-    card.innerHTML=`<label><span>${esc(f.label)}</span><small id="panel-counter-${f.id}" class="panel-counter">${esc(panelCounterText(src))}</small></label>${fieldHtml}`;
-    list.appendChild(card);
-    const panelField=G('panel-'+f.id);
-    panelField.addEventListener('input',()=>{
-      src.value=panelField.value;
-      if(src.classList.contains('limited'))updateCounterFor(src);
-      if(f.combine)updateCombinedField(f.combine);
-      if(src.id==='poster-class'||src.id==='poster-school')autoWidth(src);
-      if(src.id==='poster-students')syncNamesToPanel();
-      updatePanelCounter(src.id);
-    });
-    if(f.combine)updateCombinedField(f.combine);
-    updatePanelCounter(f.id);
-  });
-}
-
-function updateCounterFor(el){
-  const max=parseInt(el.dataset.max||el.getAttribute('maxlength')||0,10);
-  if(!max)return;
-  const len=(el.value||'').length;
-  if(len>max)el.value=el.value.slice(0,max);
-  qs(`.counter[data-for="${el.id}"]`).forEach(c=>{
-    c.textContent=`${el.value.length}/${max}`;
-    c.classList.toggle('full',el.value.length>=max);
-    c.classList.toggle('good',el.value.length>0&&el.value.length<max);
-  });
-  syncPanelField(el.id);
-}
-function bindLimits(){
-  qs('.limited').forEach(el=>{
-    el.addEventListener('input',()=>updateCounterFor(el));
-    updateCounterFor(el);
-  });
-  ['poster-class','poster-school','poster-students'].forEach(id=>{const el=G(id);if(el)el.addEventListener('input',()=>syncPanelField(id));});
-}
-
-let glowState={title:'none',logo:'none',desc:'none'};
-function updateGlowButtons(kind){
-  ['none','light','dark'].forEach(mode=>{
-    const btn=G(`${kind}-glow-${mode}`); if(!btn)return;
-    btn.style.outline=glowState[kind]===mode?'2px solid #2d7ff9':'none';
-  });
-}
-function applyGlow(kind){
-  const mode=glowState[kind]||'none';
-  let el=null;
-
-  if(kind==='title'){
-    el=G('p-hdr');
-  }
-  if(kind==='desc'){
-    el=G('short-desc-box');
-  }
-  if(kind==='logo'){
-    el=G('logo-box')||document.querySelector('.logo-box');
-  }
-
-  if(!el)return;
-  el.classList.remove('glow-light','glow-dark');
-  if(mode!=='none')el.classList.add(`glow-${mode}`);
-  updateGlowButtons(kind);
-}
-function setGlow(kind,mode){
-  glowState[kind]=mode;
-  applyGlow(kind);
-  scheduleAutosave();
-}
-function applyAllGlow(){ ['title','logo','desc'].forEach(applyGlow); }
-
-function applyDesign(){
-  const bg=G('bg-color').value, border=G('border-color').value, border2='#b366ff', qc=G('q-color').value, tc=G('t-color').value, op=G('box-opacity').value;
-  document.documentElement.style.setProperty('--poster-bg',bg);
-  document.documentElement.style.setProperty('--border',border);
-  document.documentElement.style.setProperty('--border-2',border2);
-  document.documentElement.style.setProperty('--title',qc);
-  document.documentElement.style.setProperty('--text',tc);
-  document.documentElement.style.setProperty('--accent',border);
-  document.documentElement.style.setProperty('--box-bg',`rgba(8,18,44,${parseInt(op,10)/100})`);
-  qs('#poster .box,#poster .image-box').forEach(e=>e.style.borderColor=border);
-  qs('#p-bar,#p-names').forEach(e=>e.style.border=`1px solid ${border}`);
-  qs('#p-bar .bar-div').forEach(e=>e.style.background=`linear-gradient(180deg,rgba(88,231,255,.15),${border},rgba(179,102,255,.75))`);
-  G('box-op-v').textContent=op+'%';
-  G('poster-project').style.fontSize=SZ.h+'px';
-  qs('.bq').forEach(e=>e.style.fontSize=SZ.q+'px');
-  qs('.box textarea,.box input[type=text],.numbered-answer').forEach(e=>e.style.fontSize=SZ.t+'px');
-  qs('#p-bar label,#p-bar input').forEach(e=>e.style.color=tc);
-  G('poster-students').style.color=tc;
-}
-function chSz(type,delta){
-  const ranges={h:[24,54],q:[10,20],t:[9,17]};
-  SZ[type]=clamp((SZ[type]||12)+delta,ranges[type][0],ranges[type][1]);
-  G(type+'-v').textContent=SZ[type];
-  applyDesign();
-}
-function wireDesign(){
-  ['bg-color','border-color','q-color','t-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));
-  G('bg-up').addEventListener('change',function(){
-    if(!this.files?.[0])return;
-    const r=new FileReader();
-    r.onload=e=>{G('bg-layer').style.backgroundImage=`url("${e.target.result}")`;G('bg-layer').style.opacity='1';scheduleAutosave()};
-    r.readAsDataURL(this.files[0]);
-  });
-}
-function clearBg(){G('bg-layer').style.backgroundImage='none';G('bg-layer').style.opacity='.28';G('bg-up').value='';scheduleAutosave()}
-function loadImg(inp,imgId,phId){
-  if(!inp.files?.[0])return;
-  const r=new FileReader();
-  r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave()};
-  r.readAsDataURL(inp.files[0]);
-}
-function loadLogo(inp){
-  if(!inp.files?.[0])return;
-  const r=new FileReader();
-  r.onload=e=>{G('logo-img').src=e.target.result;G('logo-img').style.display='block';G('logo-txt').style.display='none';scheduleAutosave()};
-  r.readAsDataURL(inp.files[0]);
-}
-function autoWidth(inp){
-  const m=document.createElement('span');
-  m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;
-  m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);
-  inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove();
-}
-
-function setParts(n,names=[],skipSync=false){
-  n=clamp(parseInt(n)||1,1,8);G('pc-cnt').value=String(n);
-  const wrap=G('pcf');wrap.innerHTML='';
-  const prev=qs('.prow input').map(i=>i.value.trim());
-  const vals=names.length?names:prev;
-  for(let i=1;i<=n;i++){
-    const row=document.createElement('div');row.className='prow';
-    row.innerHTML=`<span>ת${i}</span><input type="text" placeholder="שם" value="${esc(vals[i-1]||'')}">`;
-    row.querySelector('input').addEventListener('input',syncNames);
-    wrap.appendChild(row);
-  }
-  if(!skipSync)syncNames();
-}
-function syncNames(){
-  const text=qs('.prow input').map(i=>i.value.trim()).filter(Boolean).join(', ');
-  G('poster-students').value=text;
-}
-function syncNamesToPanel(){
-  const names=G('poster-students').value.split(/[,،;\n]+/).map(s=>s.trim()).filter(Boolean);
-  setParts(Math.max(1,names.length||1),names,true);
-}
-function clearPoster(){
-  if(!confirm('לנקות את כל התוכן?'))return;
-  qs('input[type=text], textarea').forEach(el=>{if(el.id!=='poster-students')el.value=''});
-  G('poster-students').value='';
-  qs('#poster img').forEach(img=>{img.removeAttribute('src');img.classList.remove('show');if(img.id==='logo-img')img.style.display='none'});
-  qs('.iph').forEach(ph=>ph.style.display='flex');G('logo-txt').style.display='block';
-  setParts(1,[]);updateAllCombinedFields();renderFillPanel();clearAutosave();
-}
-
-setParts(1);
-bindLimits();
-wireDesign();
-applyDesign();
-applyAllGlow();
-updateAllCombinedFields();
-renderFillPanel();
-wireAutosave();
-window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});
-window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1'});
-window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});
-applyLayout();
-autoWidth(G('poster-class'));autoWidth(G('poster-school'));
-fitPreview();
-setTimeout(offerRestoreDraft,120);
+const G=id=>document.getElementById(id);const qs=(s,root=document)=>Array.from(root.querySelectorAll(s));const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));const esc=s=>String(s||'').replace(/[&<>\"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[ch]));const SZ={h:36,q:13.5,t:12};
+const AUTOSAVE_DB='spacetech-poster-drafts',AUTOSAVE_STORE='drafts',AUTOSAVE_KEY='spacetech-poster-v1',AUTOSAVE_MAX_AGE=30*24*60*60*1000;let autosaveTimer=null,restoringDraft=false,printTitleBackup='';
+function openAutosaveDb(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){resolve(null);return}const req=indexedDB.open(AUTOSAVE_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AUTOSAVE_STORE))db.createObjectStore(AUTOSAVE_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function writeAutosave(data){const db=await openAutosaveDb();if(!db)return;await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_STORE,'readwrite');tx.objectStore(AUTOSAVE_STORE).put(data,AUTOSAVE_KEY);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});db.close()}
+async function readAutosave(){const db=await openAutosaveDb();if(!db)return null;const value=await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_STORE,'readonly');const req=tx.objectStore(AUTOSAVE_STORE).get(AUTOSAVE_KEY);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error)});db.close();return value}
+async function clearAutosave(){clearTimeout(autosaveTimer);const db=await openAutosaveDb();if(!db)return;await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_STORE,'readwrite');tx.objectStore(AUTOSAVE_STORE).delete(AUTOSAVE_KEY);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});db.close()}
+function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),values,design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',opacity:G('box-opacity')?.value||'78',sizes:{...SZ},glow:{...glowState},bgImage:G('bg-layer')?.style.backgroundImage||'none',bgOpacity:G('bg-layer')?.style.opacity||'.28'},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',logo:G('logo-img')?.getAttribute('src')||''}}}
+async function saveDraft(){if(restoringDraft)return;try{await writeAutosave(collectDraft())}catch(error){console.warn('Poster autosave failed',error)}}function scheduleAutosave(){if(restoringDraft)return;clearTimeout(autosaveTimer);autosaveTimer=setTimeout(saveDraft,300)}
+function restoreImage(src,imgId,phId){const img=G(imgId),ph=G(phId);if(!img||!ph)return;if(src){img.src=src;img.classList.add('show');ph.style.display='none'}else{img.removeAttribute('src');img.classList.remove('show');ph.style.display='flex'}}
+async function applyDraft(draft){restoringDraft=true;try{Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});const d=draft.design||{};if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;if(d.qColor&&G('q-color'))G('q-color').value=d.qColor;if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;if(d.opacity&&G('box-opacity'))G('box-opacity').value=String(d.opacity);Object.assign(SZ,d.sizes||{});if(G('h-v'))G('h-v').textContent=SZ.h;if(G('q-v'))G('q-v').textContent=SZ.q;if(G('t-v'))G('t-v').textContent=SZ.t;if(typeof glowState!=='undefined')Object.assign(glowState,d.glow||{});if(G('bg-layer')){G('bg-layer').style.backgroundImage=d.bgImage||'none';G('bg-layer').style.opacity=d.bgOpacity||((d.bgImage&&d.bgImage!=='none')?'1':'.28')}restoreImage(draft.images?.main,'img-main','img-main-ph');restoreImage(draft.images?.one,'img-1','img-1-ph');restoreImage(draft.images?.two,'img-2','img-2-ph');const logo=G('logo-img');if(logo){if(draft.images?.logo){logo.src=draft.images.logo;logo.style.display='block';G('logo-txt').style.display='none'}else{logo.removeAttribute('src');logo.style.display='none';G('logo-txt').style.display='block'}}syncNamesToPanel();updateAllCombinedFields();renderFillPanel();qs('.limited').forEach(updateCounterFor);autoWidth(G('poster-class'));autoWidth(G('poster-school'));applyDesign();applyAllGlow();applyLayout();fitPreview()}finally{restoringDraft=false}}
+async function offerRestoreDraft(){try{const draft=await readAutosave();if(!draft)return;if(!draft.savedAt||Date.now()-draft.savedAt>AUTOSAVE_MAX_AGE){await clearAutosave();return}if(confirm('נמצאה טיוטה של הפוסטר שנשמרה אוטומטית בדפדפן. לשחזר אותה?'))await applyDraft(draft);else await clearAutosave()}catch(error){console.warn('Poster restore failed',error)}}
+function wireAutosave(){document.addEventListener('input',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);document.addEventListener('change',e=>{if(e.target?.matches?.('input,textarea,select'))scheduleAutosave()},true);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()})}
+function fitPreview(){if(window.matchMedia?.('print')?.matches)return;const poster=G('poster');if(!poster)return;const narrow=window.innerWidth<=720;const panel=document.body.classList.contains('panel-open')&&!narrow;const reserved=panel?380:40;const available=Math.max(260,window.innerWidth-reserved);const scale=Math.max(.33,Math.min(1,available/824));poster.style.zoom=String(scale)}
+function producePdf(){saveDraft();printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר משימת פיתוח';window.print()}
+const LAYOUT={'c-problem':{left:407,top:277,width:357,height:65},'c-target':{left:407,top:370,width:357,height:65},'c-question':{left:407,top:463,width:357,height:80},'img-pair':{left:407,top:561,width:357,height:170},'c-research':{left:407,top:755,width:357,height:74},'c-findings':{left:407,top:839,width:357,height:92},'c-requirements':{left:407,top:944,width:357,height:92},'c-solution':{left:30,top:277,width:357,height:85},'main-image-box':{left:84,top:384,width:250,height:250},'c-use':{left:30,top:656,width:357,height:95},'c-feedback':{left:30,top:770,width:357,height:70},'c-improvement':{left:30,top:868,width:357,height:70},'c-value':{left:30,top:966,width:357,height:70},'c-slogan':{left:30,top:1054,width:734,height:56}};
+function positionFlowArrows(){[['c-feedback','c-improvement','arrow-feedback-improvement'],['c-improvement','c-value','arrow-improvement-value']].forEach(([fromId,toId,arrowId])=>{const from=G(fromId),to=G(toId),arrow=G(arrowId);if(!from||!to||!arrow)return;const arrowWidth=24,left=from.offsetLeft+(from.offsetWidth/2)-(arrowWidth/2),gap=6,top=from.offsetTop+from.offsetHeight+gap,end=to.offsetTop-gap,height=Math.max(14,end-top);Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'})})}
+function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});positionFlowArrows()}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
+const FILL_FIELDS=[{id:'poster-project',label:'שם הפתרון',kind:'input'},{id:'short-desc',label:'תיאור קצר של הפתרון',rows:2},{id:'poster-class',label:'כיתה',kind:'input'},{id:'poster-school',label:'בית הספר',kind:'input'},{id:'problem',label:'מה הבעיה שבחרנו לפתור?',rows:2},{id:'target',label:'מי נתקל בבעיה הזאת ומה הוא צריך?',rows:2},{id:'requirements1',label:'מה הפתרון שלנו חייב לעשות? 1',rows:2,combine:'requirements'},{id:'requirements2',label:'מה הפתרון שלנו חייב לעשות? 2',rows:2,combine:'requirements'},{id:'requirements3',label:'מה הפתרון שלנו חייב לעשות? 3',rows:2,combine:'requirements'},{id:'research1',label:'מה למדנו מטכנולוגיות החלל? 1',rows:2,combine:'research'},{id:'research2',label:'מה למדנו מטכנולוגיות החלל? 2',rows:2,combine:'research'},{id:'findings1',label:'אילו רעיונות חשבנו עליהם? 1',rows:2,combine:'findings'},{id:'findings2',label:'אילו רעיונות חשבנו עליהם? 2',rows:2,combine:'findings'},{id:'findings3',label:'אילו רעיונות חשבנו עליהם? 3',rows:2,combine:'findings'},{id:'question',label:'איזה רעיון בחרנו ולמה?',rows:3},{id:'solution',label:'ממה בנינו את הפתרון?',rows:3},{id:'use1',label:'איך הפתרון שלנו עובד? חלק 1',rows:2,combine:'use'},{id:'use2',label:'איך הפתרון שלנו עובד? חלק 2',rows:2,combine:'use'},{id:'use3',label:'איך הפתרון שלנו עובד? חלק 3',rows:2,combine:'use'},{id:'feedback',label:'מה בדקנו?',rows:2},{id:'improvement',label:'מה גילינו בבדיקה?',rows:2},{id:'value',label:'מה שיפרנו או היינו משפרים?',rows:2},{id:'slogan',label:'הפתרון שלנו במשפט אחד',rows:2}];
+function panelCounterText(src){const max=parseInt(src?.dataset?.max||src?.getAttribute?.('maxlength')||0,10);if(!max)return 'חופשי';return `${(src.value||'').length}/${max}`}function updatePanelCounter(id){const src=G(id),c=G('panel-counter-'+id);if(!src||!c)return;const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);c.textContent=panelCounterText(src);c.classList.toggle('full',!!max&&(src.value||'').length>=max);c.classList.toggle('good',!!max&&(src.value||'').length>0&&(src.value||'').length<max)}
+const COMBINED_FIELDS={research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['טכנולוגיה / מערכת / יכולת','מה היא עושה ואיך היא נתנה לנו השראה'],max:160},findings:{ids:['findings1','findings2','findings3'],outs:['findings1-out','findings2-out','findings3-out'],placeholders:['רעיון 1','רעיון 2','רעיון 3'],max:150},requirements:{ids:['requirements1','requirements2','requirements3'],outs:['requirements1-out','requirements2-out','requirements3-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3'],max:120},use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['חלק מרכזי 1','חלק מרכזי 2','חלק מרכזי 3'],max:165}};
+function updateCombinedField(key){const cfg=COMBINED_FIELDS[key];if(!cfg)return;let total=0,hasText=false;cfg.ids.forEach((id,i)=>{const src=G(id),out=G(cfg.outs[i]),val=(src?.value||'').trim();total+=(src?.value||'').length;if(val)hasText=true;if(out)out.textContent=val||cfg.placeholders[i];updatePanelCounter(id)});const display=G(key);if(display)display.classList.toggle('empty',!hasText);qs(`.counter[data-for="${key}"]`).forEach(c=>{c.textContent=`${total}/${cfg.max}`;c.classList.toggle('full',total>=cfg.max);c.classList.toggle('good',total>0&&total<cfg.max)})}function updateAllCombinedFields(){Object.keys(COMBINED_FIELDS).forEach(updateCombinedField)}function syncPanelField(id){const src=G(id),dst=G('panel-'+id);if(!src||!dst||document.activeElement===dst)return;dst.value=src.value||'';updatePanelCounter(id)}
+function renderFillPanel(){const list=G('fill-list');if(!list)return;list.innerHTML='';FILL_FIELDS.forEach(f=>{const src=G(f.id);if(!src)return;const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10),card=document.createElement('div');card.className='edit-card';const isInput=f.kind==='input',fieldHtml=isInput?`<input id="panel-${f.id}" type="text" ${max?`maxlength="${max}"`:''} value="${esc(src.value||'')}">`:`<textarea id="panel-${f.id}" rows="${f.rows||2}" ${max?`maxlength="${max}"`:''}>${esc(src.value||'')}</textarea>`;card.innerHTML=`<label><span>${esc(f.label)}</span><small id="panel-counter-${f.id}" class="panel-counter">${esc(panelCounterText(src))}</small></label>${fieldHtml}`;list.appendChild(card);const panelField=G('panel-'+f.id);panelField.addEventListener('input',()=>{src.value=panelField.value;if(src.classList.contains('limited'))updateCounterFor(src);if(f.combine)updateCombinedField(f.combine);if(src.id==='poster-class'||src.id==='poster-school')autoWidth(src);if(src.id==='poster-students')syncNamesToPanel();updatePanelCounter(src.id)});if(f.combine)updateCombinedField(f.combine);updatePanelCounter(f.id)})}
+function updateCounterFor(el){const max=parseInt(el.dataset.max||el.getAttribute('maxlength')||0,10);if(!max)return;const len=(el.value||'').length;if(len>max)el.value=el.value.slice(0,max);qs(`.counter[data-for="${el.id}"]`).forEach(c=>{c.textContent=`${el.value.length}/${max}`;c.classList.toggle('full',el.value.length>=max);c.classList.toggle('good',el.value.length>0&&el.value.length<max)});syncPanelField(el.id)}function bindLimits(){qs('.limited').forEach(el=>{el.addEventListener('input',()=>updateCounterFor(el));updateCounterFor(el)});['poster-class','poster-school','poster-students'].forEach(id=>{const el=G(id);if(el)el.addEventListener('input',()=>syncPanelField(id))})}
+let glowState={title:'none',logo:'none',desc:'none'};function updateGlowButtons(kind){['none','light','dark'].forEach(mode=>{const btn=G(`${kind}-glow-${mode}`);if(!btn)return;btn.style.outline=glowState[kind]===mode?'2px solid #2d7ff9':'none'})}function applyGlow(kind){const mode=glowState[kind]||'none';let el=null;if(kind==='title')el=G('p-hdr');if(kind==='desc')el=G('short-desc-box');if(kind==='logo')el=G('logo-box')||document.querySelector('.logo-box');if(!el)return;el.classList.remove('glow-light','glow-dark');if(mode!=='none')el.classList.add(`glow-${mode}`);updateGlowButtons(kind)}function setGlow(kind,mode){glowState[kind]=mode;applyGlow(kind);scheduleAutosave()}function applyAllGlow(){['title','logo','desc'].forEach(applyGlow)}
+function applyDesign(){const bg=G('bg-color').value,border=G('border-color').value,border2='#b366ff',qc=G('q-color').value,tc=G('t-color').value,op=G('box-opacity').value;document.documentElement.style.setProperty('--poster-bg',bg);document.documentElement.style.setProperty('--border',border);document.documentElement.style.setProperty('--border-2',border2);document.documentElement.style.setProperty('--title',qc);document.documentElement.style.setProperty('--text',tc);document.documentElement.style.setProperty('--accent',border);document.documentElement.style.setProperty('--box-bg',`rgba(8,18,44,${parseInt(op,10)/100})`);qs('#poster .box,#poster .image-box').forEach(e=>e.style.borderColor=border);qs('#p-bar,#p-names').forEach(e=>e.style.border=`1px solid ${border}`);qs('#p-bar .bar-div').forEach(e=>e.style.background=`linear-gradient(180deg,rgba(88,231,255,.15),${border},rgba(179,102,255,.75))`);G('box-op-v').textContent=op+'%';G('poster-project').style.fontSize=SZ.h+'px';qs('.bq').forEach(e=>e.style.fontSize=SZ.q+'px');qs('.box textarea,.box input[type=text],.numbered-answer').forEach(e=>e.style.fontSize=SZ.t+'px');qs('#p-bar label,#p-bar input').forEach(e=>e.style.color=tc);G('poster-students').style.color=tc}
+function chSz(type,delta){const ranges={h:[24,54],q:[10,20],t:[9,17]};SZ[type]=clamp((SZ[type]||12)+delta,ranges[type][0],ranges[type][1]);G(type+'-v').textContent=SZ[type];applyDesign()}function wireDesign(){['bg-color','border-color','q-color','t-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));G('bg-up').addEventListener('change',function(){if(!this.files?.[0])return;const r=new FileReader();r.onload=e=>{G('bg-layer').style.backgroundImage=`url("${e.target.result}")`;G('bg-layer').style.opacity='1';scheduleAutosave()};r.readAsDataURL(this.files[0])})}function clearBg(){G('bg-layer').style.backgroundImage='none';G('bg-layer').style.opacity='.28';G('bg-up').value='';scheduleAutosave()}function loadImg(inp,imgId,phId){if(!inp.files?.[0])return;const r=new FileReader();r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave()};r.readAsDataURL(inp.files[0])}function loadLogo(inp){if(!inp.files?.[0])return;const r=new FileReader();r.onload=e=>{G('logo-img').src=e.target.result;G('logo-img').style.display='block';G('logo-txt').style.display='none';scheduleAutosave()};r.readAsDataURL(inp.files[0])}function autoWidth(inp){const m=document.createElement('span');m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove()}
+function setParts(n,names=[],skipSync=false){n=clamp(parseInt(n)||1,1,8);G('pc-cnt').value=String(n);const wrap=G('pcf');wrap.innerHTML='';const prev=qs('.prow input').map(i=>i.value.trim()),vals=names.length?names:prev;for(let i=1;i<=n;i++){const row=document.createElement('div');row.className='prow';row.innerHTML=`<span>ת${i}</span><input type="text" placeholder="שם" value="${esc(vals[i-1]||'')}">`;row.querySelector('input').addEventListener('input',syncNames);wrap.appendChild(row)}if(!skipSync)syncNames()}function syncNames(){const text=qs('.prow input').map(i=>i.value.trim()).filter(Boolean).join(', ');G('poster-students').value=text}function syncNamesToPanel(){const names=G('poster-students').value.split(/[,،;\n]+/).map(s=>s.trim()).filter(Boolean);setParts(Math.max(1,names.length||1),names,true)}function clearPoster(){if(!confirm('לנקות את כל התוכן?'))return;qs('input[type=text], textarea').forEach(el=>{if(el.id!=='poster-students')el.value=''});G('poster-students').value='';qs('#poster img').forEach(img=>{img.removeAttribute('src');img.classList.remove('show');if(img.id==='logo-img')img.style.display='none'});qs('.iph').forEach(ph=>ph.style.display='flex');G('logo-txt').style.display='block';setParts(1,[]);updateAllCombinedFields();renderFillPanel();clearAutosave()}
+setParts(1);bindLimits();wireDesign();applyDesign();applyAllGlow();updateAllCombinedFields();renderFillPanel();wireAutosave();window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1'});window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});applyLayout();autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();setTimeout(offerRestoreDraft,120);
 </script>
 </body>
 </html>
