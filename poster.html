@@ -114,6 +114,12 @@ body.panel-open #wrap{padding-right:344px}
 .home-emoji{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:50%!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:15px!important;line-height:1!important;text-decoration:none!important}
 /* READABILITY CONTRAST FIX */
 .logo-box .ltxt{color:#475569!important}.counter{color:#475569!important}.iph span{color:#40586e!important}.iph small{color:#526579!important}.numbered-answer.empty span{color:#475569!important}
+
+/* Center the slogan box title and text without letting the counter shift them */
+#c-slogan .bq{position:relative;justify-content:center;text-align:center;width:100%}
+#c-slogan .bq span:first-child{overflow:visible;text-overflow:clip;white-space:normal;text-align:center}
+#c-slogan .counter{position:absolute;left:0;top:50%;transform:translateY(-50%)}
+#c-slogan textarea,#c-slogan textarea::placeholder{text-align:center!important}
 </style>
 </head>
 <body class="panel-open">
