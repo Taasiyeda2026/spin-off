@@ -402,7 +402,7 @@ body.panel-open #wrap{padding-right:344px}
 
     <div class="box" id="c-research"><div class="bi"><div class="bq"><span>מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?</span><small class="counter" data-for="research">0/160</small></div><div id="research" class="numbered-answer empty" data-label="מה למדנו מטכנולוגיות החלל שיכול לעזור לנו?" data-max="160"><div class="na-line"><b>1.</b><span id="research1-out">טכנולוגיה / מערכת / יכולת</span></div><div class="na-line"><b>2.</b><span id="research2-out">מה היא עושה ואיך היא נתנה לנו השראה</span></div></div></div></div>
     <div class="box" id="c-findings"><div class="bi"><div class="bq"><span>אילו רעיונות חשבנו עליהם?</span><small class="counter" data-for="findings">0/150</small></div><div id="findings" class="numbered-answer empty" data-label="אילו רעיונות חשבנו עליהם?" data-max="150"><div class="na-line"><b>1.</b><span id="findings1-out">רעיון 1</span></div><div class="na-line"><b>2.</b><span id="findings2-out">רעיון 2</span></div><div class="na-line"><b>3.</b><span id="findings3-out">רעיון 3</span></div></div></div></div>
-    <div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה הפתרון שלנו חייב לעשות?</span><small class="counter" data-for="requirements">0/160</small></div><div id="requirements" class="numbered-answer empty" data-label="מה הפתרון שלנו חייב לעשות?" data-max="160"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div><div class="na-line"><b>3.</b><span id="requirements3-out">דרישה 3</span></div><div class="na-line"><b>4.</b><span id="requirements4-out">דרישה 4</span></div></div></div></div>
+    <div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה הפתרון שלנו חייב לעשות?</span><small class="counter" data-for="requirements">0/120</small></div><div id="requirements" class="numbered-answer empty" data-label="מה הפתרון שלנו חייב לעשות?" data-max="120"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div><div class="na-line"><b>3.</b><span id="requirements3-out">דרישה 3</span></div></div></div></div>
 
     <div id="flow-to-solution" class="flow-to-solution" aria-hidden="true"><span class="flow-next-arrow">←</span><span dir="rtl">מרעיון למוצר</span></div>
 
@@ -449,7 +449,6 @@ body.panel-open #wrap{padding-right:344px}
   <textarea id="findings2" data-label="רעיון 2" data-max="50" maxlength="50"></textarea>
   <textarea id="findings3" data-label="רעיון 3" data-max="50" maxlength="50"></textarea>
   <textarea id="requirements3" data-label="דרישה מהפתרון 3" data-max="40" maxlength="40"></textarea>
-  <textarea id="requirements4" data-label="דרישה מהפתרון 4" data-max="40" maxlength="40"></textarea>
   <textarea id="use1" data-label="חלק מרכזי 1" data-max="55" maxlength="55"></textarea>
   <textarea id="use2" data-label="חלק מרכזי 2" data-max="55" maxlength="55"></textarea>
   <textarea id="use3" data-label="חלק מרכזי 3" data-max="55" maxlength="55"></textarea>
@@ -690,7 +689,6 @@ const FILL_FIELDS=[
   {id:'requirements1',label:'מה הפתרון שלנו חייב לעשות? 1',rows:2,combine:'requirements'},
   {id:'requirements2',label:'מה הפתרון שלנו חייב לעשות? 2',rows:2,combine:'requirements'},
   {id:'requirements3',label:'מה הפתרון שלנו חייב לעשות? 3',rows:2,combine:'requirements'},
-  {id:'requirements4',label:'מה הפתרון שלנו חייב לעשות? 4',rows:2,combine:'requirements'},
   {id:'research1',label:'מה למדנו מטכנולוגיות החלל? 1',rows:2,combine:'research'},
   {id:'research2',label:'מה למדנו מטכנולוגיות החלל? 2',rows:2,combine:'research'},
   {id:'findings1',label:'אילו רעיונות חשבנו עליהם? 1',rows:2,combine:'findings'},
@@ -722,7 +720,7 @@ function updatePanelCounter(id){
 const COMBINED_FIELDS={
   research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['טכנולוגיה / מערכת / יכולת','מה היא עושה ואיך היא נתנה לנו השראה'],max:160},
   findings:{ids:['findings1','findings2','findings3'],outs:['findings1-out','findings2-out','findings3-out'],placeholders:['רעיון 1','רעיון 2','רעיון 3'],max:150},
-  requirements:{ids:['requirements1','requirements2','requirements3','requirements4'],outs:['requirements1-out','requirements2-out','requirements3-out','requirements4-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3','דרישה 4'],max:160},
+  requirements:{ids:['requirements1','requirements2','requirements3'],outs:['requirements1-out','requirements2-out','requirements3-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3'],max:120},
   use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['חלק מרכזי 1','חלק מרכזי 2','חלק מרכזי 3'],max:165}
 };
 function updateCombinedField(key){
