@@ -7,6 +7,58 @@
   <meta name="description" content="SPIN-OFF — אתר הקורס טכנולוגיות החלל של תעשיידע">
   <title>SPIN-OFF | תעשיידע</title>
   <link rel="stylesheet" href="style.css">
+
+<style id="back-to-top-style">
+.back-to-top{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:9998;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(78,214,231,.48);
+  border-radius:50%;
+  background:rgba(5,22,43,.76);
+  color:rgba(229,253,255,.94);
+  box-shadow:0 3px 12px rgba(0,0,0,.14);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,visibility .18s ease,border-color .18s ease;
+}
+.back-to-top.is-visible{
+  opacity:.82;
+  visibility:visible;
+  transform:translateY(0);
+}
+.back-to-top:hover,
+.back-to-top:focus-visible{
+  opacity:1;
+  border-color:rgba(111,239,253,.82);
+  outline:none;
+}
+.back-to-top svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:560px){
+  .back-to-top{left:12px;width:30px;height:30px}
+}
+@media print{
+  .back-to-top{display:none!important}
+}
+</style>
 </head>
 <body class="home-page">
   <main class="home-stage" aria-label="SPIN-OFF — אתר הקורס טכנולוגיות החלל">
@@ -42,5 +94,31 @@
       });
     })();
   </script>
+
+<button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>
+</button>
+<script id="back-to-top-script">
+(() => {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  const placeAboveBottomBar = () => {
+    const bars = [...document.querySelectorAll('.actions, .bar')];
+    const fixedBar = bars.find(el => getComputedStyle(el).position === 'fixed' && el.getBoundingClientRect().bottom >= window.innerHeight - 3);
+    btn.style.bottom = fixedBar ? (fixedBar.getBoundingClientRect().height + 12) + 'px' : '18px';
+  };
+
+  const update = () => {
+    btn.classList.toggle('is-visible', window.scrollY > 260);
+  };
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', placeAboveBottomBar);
+  placeAboveBottomBar();
+  update();
+})();
+</script>
 </body>
 </html>
