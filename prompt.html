@@ -1,6 +1,58 @@
 <!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>מחולל פרומפטים למוצר שלנו</title><style>
 :root{--b:#12355b;--b2:#2374a8;--bg:#f4f7fb;--line:#d7e3ee;--muted:#64748b;--ok:#0f766e;--red:#b42318}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Hebrew",sans-serif;background:radial-gradient(circle at top right,#dceef8,transparent 32%),var(--bg);color:#172033}.app{max-width:1050px;margin:auto;padding:16px 14px 86px}.hero,.screen{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 32px #183b5a14}.hero{position:relative;padding:18px 54px 16px 18px;margin-bottom:12px}.home{position:absolute;left:14px;top:14px;width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--b);font-size:20px}.hero h1{margin:0 0 5px;color:var(--b);font-size:30px}.hero p{margin:0;color:var(--muted);font-size:14px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px;max-width:700px}.step{border:1px solid var(--line);border-radius:12px;padding:8px 10px;color:var(--muted);font-size:12px;font-weight:800;background:#fff}.step.on{color:#fff;background:var(--b);border-color:var(--b)}.step.done{color:var(--ok);background:#edfcf7;border-color:#bdeee5}.screen{display:none;overflow:hidden}.screen.on{display:block}.head{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:13px 15px}.head h2{margin:0;font-size:19px}.head p{margin:3px 0 0;font-size:12px;opacity:.9}.body{padding:14px}.note,.err,.status{max-width:850px;border-radius:13px;padding:9px 11px;margin-bottom:12px;font-size:12px;font-weight:800}.note{background:#f3faff;border:1px solid #cfe3f2;color:#1f4f7a}.err{display:none;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}.err.on,.status.on{display:block}.status{display:none;background:#effcf8;border:1px solid #bdeee5;color:#134e4a}.section{max-width:850px;border:1px solid var(--line);border-radius:17px;padding:12px;margin-bottom:12px}.section h3{margin:0 0 9px;color:var(--b);font-size:15px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.field{display:block;border:1px solid #edf3f8;background:#fbfdff;border-radius:12px;padding:8px}.field.full{grid-column:1/-1}.field span,.label{display:block;font-size:12px;font-weight:900;margin-bottom:5px}.field em{color:var(--red);font-style:normal}input,textarea,select{width:100%;border:1px solid #cfdde9;border-radius:9px;padding:8px;font:12px inherit;background:#fff;color:#172033}textarea{min-height:58px;resize:vertical}.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:7px}.choice{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff;cursor:pointer;font-size:11px;font-weight:800}.choice.on{background:#eaf6fc;border-color:#73aecd}.choice input{width:15px;margin:0;accent-color:var(--b)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{border:1px solid var(--line);border-radius:17px;overflow:hidden;background:#fff}.card h3{margin:0;padding:10px 12px;color:var(--b);font-size:15px;background:#f8fbfd;border-bottom:1px solid #edf3f8}.tag{display:inline-block;margin:8px 10px 0;padding:3px 7px;border-radius:999px;background:#eef7fc;color:var(--b);font-size:10px;font-weight:900}.card .inside{padding:10px;display:grid;gap:8px}.bar{position:fixed;left:0;right:0;bottom:0;background:#f4f7fbeF;border-top:1px solid var(--line);backdrop-filter:blur(10px);z-index:20;padding:8px 12px}.barin{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.acts{display:flex;gap:7px}.btn{border:0;border-radius:10px;padding:8px 12px;font:800 12px inherit;cursor:pointer}.primary{background:var(--b);color:#fff}.secondary{background:#fff;color:var(--b);border:1px solid var(--line)}.btn:disabled{opacity:.55}.out{display:grid;gap:10px}.outcard{max-width:760px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}.outhead{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;background:#f8fbfd;border-bottom:1px solid var(--line)}.outhead h3{margin:0;color:var(--b);font-size:14px}.ready{color:var(--ok);font-size:11px;font-weight:900}.outbody{padding:11px 12px;font-size:12px;color:#334155}.copy{margin-top:8px}.empty{padding:20px;text-align:center;border:1px dashed #b8c9d8;border-radius:15px;color:var(--muted)}@media(max-width:800px){.grid,.cards{grid-template-columns:1fr 1fr}}@media(max-width:620px){.steps,.grid,.cards,.choices{grid-template-columns:1fr}.hero{padding-top:58px}.home{right:14px;left:auto}.barin,.acts{width:100%}.btn{flex:1}}
-</style></head><body><div class="app"><header class="hero"><a class="home" href="index.html" aria-label="חזרה לדף הבית">⌂</a><h1>מחולל פרומפטים למוצר שלנו</h1><p>פעילות קצרה וכיפית: בוחרים כמה מאפיינים, ואנחנו בונים פרומפטים מוכנים ל־3 תמונות של המוצר שלכם.</p><div class="steps"><div class="step on" data-step="1">1. המוצר שלנו</div><div class="step" data-step="2">2. איך נציג אותו</div><div class="step" data-step="3">3. הפרומפטים שלנו</div></div></header>
+</style>
+<style id="back-to-top-style">
+.back-to-top{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:9998;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(78,214,231,.48);
+  border-radius:50%;
+  background:rgba(5,22,43,.76);
+  color:rgba(229,253,255,.94);
+  box-shadow:0 3px 12px rgba(0,0,0,.14);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,visibility .18s ease,border-color .18s ease;
+}
+.back-to-top.is-visible{
+  opacity:.82;
+  visibility:visible;
+  transform:translateY(0);
+}
+.back-to-top:hover,
+.back-to-top:focus-visible{
+  opacity:1;
+  border-color:rgba(111,239,253,.82);
+  outline:none;
+}
+.back-to-top svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:560px){
+  .back-to-top{left:12px;width:30px;height:30px}
+}
+@media print{
+  .back-to-top{display:none!important}
+}
+</style>
+</head><body><div class="app"><header class="hero"><a class="home" href="index.html" aria-label="חזרה לדף הבית">⌂</a><h1>מחולל פרומפטים למוצר שלנו</h1><p>פעילות קצרה וכיפית: בוחרים כמה מאפיינים, ואנחנו בונים פרומפטים מוכנים ל־3 תמונות של המוצר שלכם.</p><div class="steps"><div class="step on" data-step="1">1. המוצר שלנו</div><div class="step" data-step="2">2. איך נציג אותו</div><div class="step" data-step="3">3. הפרומפטים שלנו</div></div></header>
 <section class="screen on" data-screen="1"><div class="head"><h2>שלב 1 — מאפיינים את המוצר</h2><p>מעט כתיבה, הרבה בחירה. הפרומפט המלא נבנה מאחורי הקלעים.</p></div><div class="body"><div id="e1" class="err"></div><div class="note">לא צריך לדעת לכתוב פרומפט. בחרו את מה שמתאים למוצר שלכם, והמערכת כבר תהפוך את הבחירות לפרומפט מפורט.</div>
 <div class="section"><h3>המוצר שלנו</h3><div class="grid"><label class="field"><span>שם המוצר <em>*</em></span><input data-f="name" maxlength="60" placeholder="שם קצר למוצר"></label><label class="field"><span>למי הוא מיועד? <em>*</em></span><select data-f="aud"><option value="">בחרו</option><option>ילדים/ות</option><option>תלמידים/ות</option><option>משפחות</option><option>מבוגרים/ות</option><option>צוותים / עובדים</option><option>קהילה</option></select></label><label class="field"><span>איזו בעיה הוא עוזר לפתור? <em>*</em></span><select data-f="problem"><option value="">בחרו</option><option>נוחות ושימוש יומיומי</option><option>בטיחות והגנה</option><option>חיסכון בזמן</option><option>בריאות ורווחה</option><option>למידה והבנה</option><option>נגישות ועזרה</option><option>סביבה וקיימות</option></select></label><label class="field full"><span>במשפט אחד — מה המוצר עושה? <em>*</em></span><textarea data-f="action" maxlength="180" placeholder="למשל: פיתחנו תיק חכם שעוזר לתלמידים לארגן ציוד ולשמור על הגב."></textarea></label><label class="field"><span>איזו טכנולוגיית חלל נתנה השראה? <em>*</em></span><select data-f="space"><option value="">בחרו</option><option>חיישנים ומדידה</option><option>סינון מים / ניקוי</option><option>אוויר / נשימה / אוורור</option><option>הגנה ובידוד</option><option>תקשורת ובקרה</option><option>אנרגיה / סוללות / סולארי</option><option>חומרים חכמים</option></select></label><label class="field"><span>חומר / אופי</span><select data-f="material"><option>שילוב חומרים</option><option>פלסטיק</option><option>מתכת</option><option>בד</option><option>עץ / קרטון</option><option>חומרים ממוחזרים</option><option>חומר רך וגמיש</option></select></label><label class="field"><span>צבעוניות</span><select data-f="colors"><option>כחול ולבן</option><option>ירוק וטורקיז</option><option>סגול וכחול</option><option>כתום ואפור</option><option>שחור וכסף</option><option>צבעוני ושמח</option><option>נקי ובהיר</option></select></label></div></div>
 <div class="section"><h3>איך המוצר ייראה? <small>(בחרו עד 2)</small></h3><div class="choices" data-group="style" data-max="2"><label class="choice"><input type="checkbox" value="מודרני">מודרני</label><label class="choice"><input type="checkbox" value="טכנולוגי">טכנולוגי</label><label class="choice"><input type="checkbox" value="עתידני">עתידני</label><label class="choice"><input type="checkbox" value="פשוט ונקי">פשוט ונקי</label><label class="choice"><input type="checkbox" value="ידידותי">ידידותי</label><label class="choice"><input type="checkbox" value="חדשני">חדשני</label></div></div>
@@ -22,4 +74,30 @@ function generate(){prompts=[['תמונה 1 — המוצר שלנו',p1()],['ת�
 async function copy(t,b){let old=b.textContent;try{await navigator.clipboard.writeText(t);b.textContent='הועתק ✓';setTimeout(()=>b.textContent=old,1300)}catch(e){alert('לא ניתן להעתיק אוטומטית. נסו שוב מהדפדפן.')}}function save(){let st={f:{},cards:{},g:{}};qa('[data-f]').forEach(x=>st.f[x.dataset.f]=x.value);qa('[data-group]').forEach(g=>st.g[g.dataset.group]=selected(g.dataset.group));qa('[data-card]').forEach(c=>{st.cards[c.dataset.card]={};qa('[data-n]',c).forEach(x=>st.cards[c.dataset.card][x.dataset.n]=x.value)});localStorage.setItem(KEY,JSON.stringify(st));q('#save').textContent='נשמר ✓';setTimeout(()=>q('#save').textContent='שמירה',1200)}function load(){try{let st=JSON.parse(localStorage.getItem(KEY)||'null');if(!st)return;Object.entries(st.f||{}).forEach(([k,v])=>{let x=q(`[data-f="${k}"]`);if(x)x.value=v});Object.entries(st.g||{}).forEach(([k,v])=>{let g=q(`[data-group="${k}"]`);if(g){qa('input',g).forEach(x=>x.checked=v.includes(x.value));qa('.choice',g).forEach(l=>l.classList.toggle('on',q('input',l).checked))}});Object.entries(st.cards||{}).forEach(([id,o])=>{let c=q(`[data-card="${id}"]`);Object.entries(o).forEach(([k,v])=>{let x=q(`[data-n="${k}"]`,c);if(x)x.value=v})})}catch(e){}}
 function clearAll(){if(!confirm('לנקות את כל הבחירות?'))return;localStorage.removeItem(KEY);qa('input,textarea').forEach(x=>x.type==='checkbox'?x.checked=false:x.value='');qa('select').forEach(x=>x.selectedIndex=0);qa('.choice').forEach(x=>x.classList.remove('on'));prompts=[];q('#copyAll').disabled=true;q('#out').innerHTML='<div class="empty">עדיין לא נוצרו פרומפטים.</div>';q('#status').classList.remove('on');go(1)}
 renderCards();bindGroups();load();go(1);q('#next').onclick=()=>valid1()&&go(2);q('#back').onclick=()=>go(step-1);q('#gen').onclick=generate;q('#save').onclick=save;q('#clear').onclick=clearAll;q('#copyAll').onclick=()=>copy(prompts.map(x=>x[0]+'\n\n'+x[1]).join('\n\n----------------\n\n'),q('#copyAll'));document.addEventListener('input',()=>q('#copyAll').disabled=true);document.addEventListener('change',()=>q('#copyAll').disabled=true);
-</script></body></html>
+</script>
+<button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>
+</button>
+<script id="back-to-top-script">
+(() => {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  const placeAboveBottomBar = () => {
+    const bars = [...document.querySelectorAll('.actions, .bar')];
+    const fixedBar = bars.find(el => getComputedStyle(el).position === 'fixed' && el.getBoundingClientRect().bottom >= window.innerHeight - 3);
+    btn.style.bottom = fixedBar ? (fixedBar.getBoundingClientRect().height + 12) + 'px' : '18px';
+  };
+
+  const update = () => {
+    btn.classList.toggle('is-visible', window.scrollY > 260);
+  };
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', placeAboveBottomBar);
+  placeAboveBottomBar();
+  update();
+})();
+</script>
+</body></html>
