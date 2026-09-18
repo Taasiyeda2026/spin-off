@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>פעילות ספינאוף | דף צוות</title>
+<style>
+:root{--b:#12355b;--b2:#2374a8;--bg:#eef3f8;--line:#d7e3ee;--muted:#64748b;--ok:#0f766e;--red:#b42318}
+*{box-sizing:border-box}
+html,body{margin:0;font-family:Arial,"Noto Sans Hebrew",sans-serif;background:var(--bg);color:#172033}
+.app{max-width:1000px;margin:auto;padding:14px 12px 90px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 12px;max-width:210mm}
+.topbar .title{font-weight:900;color:var(--b);font-size:16px}
+.topbar a{color:var(--b);text-decoration:none;font-weight:800;font-size:13px}
+.sheet{width:min(100%,210mm);min-height:297mm;margin:auto;background:#fff;border:1px solid #dce6ee;box-shadow:0 14px 38px #183b5a18;padding:11mm 12mm 10mm;border-radius:4px}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:3px solid var(--b);padding-bottom:7px;margin-bottom:8px}
+.sheet-head h1{margin:0;color:var(--b);font-size:25px}.sheet-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.badge{direction:ltr;color:var(--b2);font-weight:1000;font-size:17px;letter-spacing:.06em}
+.meta{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-bottom:9px}
+.field{display:block}.field span{display:block;font-size:11px;font-weight:900;color:var(--b);margin-bottom:4px}
+input[type="text"],textarea{width:100%;border:1px solid #bdcedd;border-radius:8px;padding:7px 9px;font:12px inherit;background:#fff;color:#172033}
+input[type="text"]{height:34px}
+textarea{resize:none;min-height:44px;line-height:1.45}
+.section-title{font-size:13px;font-weight:1000;color:var(--b);margin:5px 0 6px}
+.picker{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px}
+.product{border:1px solid var(--line);border-radius:10px;padding:5px;background:#fbfdff;cursor:pointer;text-align:center;transition:.15s}
+.product:hover,.product:focus-visible{border-color:#67a8cc;transform:translateY(-1px);outline:none}
+.product img{width:100%;height:62px;object-fit:contain;background:#fff;border-radius:7px}
+.product b{display:block;font-size:9.5px;margin-top:4px;color:#243b55}
+.selected-wrap{display:none;align-items:center;justify-content:center;gap:14px;border:1px solid #cfe3f2;background:#f7fbfe;border-radius:12px;padding:7px 10px;margin-bottom:8px;min-height:75px}
+.selected-wrap.on{display:flex}
+.selected-wrap img{width:92px;height:70px;object-fit:contain;background:#fff;border-radius:9px;padding:4px}
+.selected-wrap h2{margin:0 0 2px;font-size:16px;color:var(--b)}
+.selected-wrap p{margin:0;font-size:10px;color:var(--muted)}
+.change{border:1px solid var(--line);background:white;color:var(--b);border-radius:8px;padding:6px 9px;font-weight:800;font-size:10px;cursor:pointer;margin-top:5px}
+.questions{display:grid;gap:7px}
+.q{border:1px solid #dce6ee;border-radius:11px;padding:8px 10px;background:#fff}
+.qtitle{display:flex;align-items:flex-start;gap:7px;margin-bottom:6px;font-size:12px;font-weight:900;line-height:1.35}
+.num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--b);color:white;font-size:11px}
+.choice-list{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.choice{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:6px;background:#fbfdff;font-size:10px;font-weight:800;cursor:pointer}
+.choice input{accent-color:var(--b)}
+.q textarea{min-height:45px}
+.q.q4 textarea,.q.q5 textarea{min-height:51px}
+.helper{font-size:9px;color:var(--muted);margin-top:3px}
+.footer-note{margin-top:7px;border-top:1px solid var(--line);padding-top:6px;font-size:9.5px;color:#536579;text-align:center}
+.actions{position:fixed;left:0;right:0;bottom:0;background:#f4f7fbee;border-top:1px solid var(--line);backdrop-filter:blur(10px);padding:8px 12px;z-index:20}
+.actions-in{max-width:1000px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.buttons{display:flex;gap:7px}.btn{border:0;border-radius:10px;padding:9px 13px;font:900 12px inherit;cursor:pointer}.primary{background:var(--b);color:#fff}.secondary{background:white;color:var(--b);border:1px solid var(--line)}
+.status{font-size:11px;font-weight:800;color:var(--muted)}
+@page{size:A4;margin:0}
+@media(max-width:760px){.picker{grid-template-columns:repeat(3,1fr)}.choice-list{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.sheet{padding:8mm;border-radius:0}.actions-in{flex-wrap:wrap}.status{width:100%;order:2}}
+@media print{
+html,body{background:#fff}
+.app{padding:0;margin:0;max-width:none}
+.topbar,.actions,.no-print{display:none!important}
+.sheet{width:210mm;height:297mm;min-height:297mm;margin:0;border:0;border-radius:0;box-shadow:none;padding:10mm 12mm;overflow:hidden}
+.picker{display:none!important}
+.selected-wrap{display:flex!important}
+textarea,input[type="text"]{border-color:#aebdca}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar no-print">
+<div class="title">פעילות ספינאוף — דף צוות</div>
+<a href="spinoff.html">חזרה להסבר</a>
+</div>
+
+<main class="sheet" id="sheet">
+<header class="sheet-head">
+<div>
+<h1>פעילות ספינאוף</h1>
+<p>מזהים יכולת טכנולוגית וחושבים איפה עוד היא יכולה לעזור</p>
+</div>
+<div class="badge">SPIN-OFF</div>
+</header>
+
+<section class="meta">
+<label class="field">
+<span>שמות המשתתפים בקבוצה</span>
+<input type="text" id="members" placeholder="כתבו את שמות חברי הקבוצה">
+</label>
+<label class="field">
+<span>כיתה</span>
+<input type="text" id="className" placeholder="למשל ד2">
+</label>
+</section>
+
+<div class="section-title">בחרו מוצר אחד מתוך ששת המוצרים</div>
+<section class="picker no-print" id="picker" aria-label="בחירת מוצר">
+<button class="product" type="button" data-id="water"><img src="bingo/images/1.png" alt="קנקן סינון מים"><b>קנקן סינון מים</b></button>
+<button class="product" type="button" data-id="thermo"><img src="bingo/images/6.png" alt="מדחום אוזן"><b>מדחום אוזן</b></button>
+<button class="product" type="button" data-id="glasses"><img src="bingo/images/10.png" alt="משקפי ראייה"><b>משקפי ראייה</b></button>
+<button class="product" type="button" data-id="drill"><img src="bingo/images/2.png" alt="מקדחה אלחוטית"><b>מקדחה אלחוטית</b></button>
+<button class="product" type="button" data-id="blanket"><img src="bingo/images/3.png" alt="שמיכת חירום תרמית"><b>שמיכת חירום תרמית</b></button>
+<button class="product" type="button" data-id="helmet"><img src="bingo/images/15.png" alt="קסדת אופניים"><b>קסדת אופניים</b></button>
+</section>
+
+<section class="selected-wrap" id="selectedWrap">
+<img id="selectedImg" alt="">
+<div>
+<h2 id="selectedName">המוצר שבחרנו</h2>
+<p>עכשיו מפענחים מה הטכנולוגיה יודעת לעשות</p>
+<button class="change no-print" id="changeProduct" type="button">החלפת מוצר</button>
+</div>
+</section>
+
+<section class="questions">
+<div class="q">
+<div class="qtitle"><span class="num">1</span><span>מה היכולת הטכנולוגית של המוצר שבחרתם?</span></div>
+<div class="choice-list" id="q1Choices">
+<div class="helper">בחרו קודם מוצר כדי לראות את האפשרויות.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qtitle"><span class="num">2</span><span>מה הגיע למוצר הזה מעולם החלל?</span></div>
+<textarea id="q2" placeholder="כתבו בקצרה: ידע, חומר, טכנולוגיה או רעיון שפותח בעולם החלל"></textarea>
+</div>
+
+<div class="q">
+<div class="qtitle"><span class="num">3</span><span>למה היכולת הזאת שימושית במוצר שבחרתם?</span></div>
+<textarea id="q3" placeholder="הסבירו במשפט או שניים"></textarea>
+</div>
+
+<div class="q q4">
+<div class="qtitle"><span class="num">4</span><span>איפה עוד היכולת הזאת יכולה לעזור?</span></div>
+<textarea id="q4" placeholder="כתבו לפחות שני מקומות, מצבים או שימושים נוספים"></textarea>
+</div>
+
+<div class="q q5">
+<div class="qtitle"><span class="num">5</span><span>בחרו שימוש אחד שחשבתם עליו. למי הוא יכול לעזור ואיך?</span></div>
+<textarea id="q5" placeholder="לא צריך לתכנן עדיין מוצר — רק להסביר איך היכולת יכולה לעזור במקום החדש"></textarea>
+</div>
+</section>
+
+<div class="footer-note">המטרה היא להבין את היכולת — לא להמציא עדיין את המוצר שלכם.</div>
+</main>
+</div>
+
+<div class="actions no-print">
+<div class="actions-in">
+<div class="buttons">
+<button class="btn primary" id="pdfBtn" type="button">הפקת PDF</button>
+<button class="btn secondary" id="saveBtn" type="button">שמירה</button>
+<button class="btn secondary" id="clearBtn" type="button">ניקוי</button>
+</div>
+<div class="status" id="status">העבודה נשמרת בדפדפן במכשיר הזה</div>
+</div>
+</div>
+
+<script>
+const KEY='spinoff_team_sheet_v1';
+const products={
+water:{name:'קנקן סינון מים',img:'bingo/images/1.png',choices:['לסנן ולנקות מים','למדוד חום מרחוק','לשמור על חום']},
+thermo:{name:'מדחום אוזן',img:'bingo/images/6.png',choices:['למדוד חום מרחוק','לסנן ולנקות מים','לעבוד בלי חיבור קבוע לחשמל']},
+glasses:{name:'משקפי ראייה',img:'bingo/images/10.png',choices:['להגן על העדשות מפני שריטות','להפוך אור לחשמל','לשמור על חום הגוף']},
+drill:{name:'מקדחה אלחוטית',img:'bingo/images/2.png',choices:['לעבוד בלי חיבור קבוע לחשמל','למדוד חום מרחוק','לסנן מים']},
+blanket:{name:'שמיכת חירום תרמית',img:'bingo/images/3.png',choices:['להחזיר חום ולעזור לשמור עליו','להגן על עדשות מפני שריטות','לסנן ולנקות מים']},
+helmet:{name:'קסדת אופניים',img:'bingo/images/15.png',choices:['לאפשר לאוויר לזרום ולעזור לקרר את הראש','למדוד חום מרחוק','לעבוד בלי חיבור קבוע לחשמל']}
+};
+let selectedId='';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+function chooseProduct(id,keepAnswer=false){
+  const p=products[id]; if(!p)return;
+  selectedId=id;
+  $('#selectedImg').src=p.img; $('#selectedImg').alt=p.name; $('#selectedName').textContent=p.name;
+  $('#selectedWrap').classList.add('on'); $('#picker').style.display='none';
+  const old=keepAnswer?document.querySelector('input[name="ability"]:checked')?.value:'';
+  $('#q1Choices').innerHTML=p.choices.map((c,i)=>`<label class="choice"><input type="radio" name="ability" value="${c}"> <span>${c}</span></label>`).join('');
+  if(old){const r=[...document.querySelectorAll('input[name="ability"]')].find(x=>x.value===old);if(r)r.checked=true}
+  persist(false);
+}
+
+function showPicker(){
+  $('#picker').style.display='grid';
+  $('#selectedWrap').classList.remove('on');
+}
+
+function state(){
+  return {
+    selectedId,
+    members:$('#members').value,
+    className:$('#className').value,
+    ability:document.querySelector('input[name="ability"]:checked')?.value||'',
+    q2:$('#q2').value,q3:$('#q3').value,q4:$('#q4').value,q5:$('#q5').value
+  };
+}
+function persist(show=true){
+  localStorage.setItem(KEY,JSON.stringify(state()));
+  if(show){$('#status').textContent='נשמר ✓';setTimeout(()=>$('#status').textContent='העבודה נשמרת בדפדפן במכשיר הזה',1300)}
+}
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(!s)return;
+    $('#members').value=s.members||''; $('#className').value=s.className||'';
+    $('#q2').value=s.q2||'';$('#q3').value=s.q3||'';$('#q4').value=s.q4||'';$('#q5').value=s.q5||'';
+    if(s.selectedId&&products[s.selectedId]){
+      chooseProduct(s.selectedId);
+      const r=[...document.querySelectorAll('input[name="ability"]')].find(x=>x.value===s.ability); if(r)r.checked=true;
+    }
+  }catch(e){}
+}
+function clearAll(){
+  if(!confirm('לנקות את כל הדף ולהתחיל מחדש?'))return;
+  localStorage.removeItem(KEY);selectedId='';
+  $('#members').value='';$('#className').value='';$('#q2').value='';$('#q3').value='';$('#q4').value='';$('#q5').value='';
+  $('#q1Choices').innerHTML='<div class="helper">בחרו קודם מוצר כדי לראות את האפשרויות.</div>';
+  $('#selectedWrap').classList.remove('on');$('#picker').style.display='grid';
+}
+function producePdf(){
+  if(!selectedId){alert('בחרו קודם מוצר אחד מתוך ששת המוצרים.');return}
+  persist(false);
+  $('#status').textContent='בחלון ההדפסה בחרו שמירה כ-PDF';
+  setTimeout(()=>window.print(),80);
+}
+$$('.product').forEach(b=>b.addEventListener('click',()=>chooseProduct(b.dataset.id)));
+$('#changeProduct').addEventListener('click',showPicker);
+$('#saveBtn').addEventListener('click',()=>persist(true));
+$('#clearBtn').addEventListener('click',clearAll);
+$('#pdfBtn').addEventListener('click',producePdf);
+document.addEventListener('input',()=>persist(false));
+document.addEventListener('change',()=>persist(false));
+load();
+</script>
+</body>
+</html>
