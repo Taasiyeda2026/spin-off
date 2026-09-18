@@ -53,6 +53,58 @@ body::after{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:-4;
 .spaceBingoCelebration{position:fixed;inset:0;z-index:15000;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(0,234,255,.22) 0 8%,rgba(0,85,255,.16) 24%,rgba(112,45,255,.12) 44%,transparent 69%);animation:bingoScreen 3.4s ease forwards}.spaceBingoMessage{position:relative;z-index:3;text-align:center;direction:rtl;padding:28px 48px;border-radius:32px;border:2px solid rgba(178,255,255,.92);background:rgba(1,8,27,.86);box-shadow:0 0 12px #fff,0 0 34px #00eaff,0 0 80px #008cff,0 0 130px rgba(122,56,255,.62);animation:bingoMessagePop 3.4s cubic-bezier(.16,.75,.24,1) forwards}.spaceBingoTitle{font-size:clamp(54px,9vw,128px);font-weight:1000;line-height:.95;color:#f4ffff;white-space:nowrap;text-shadow:0 0 5px #fff,0 0 14px #fff,0 0 28px #00eaff,0 0 58px #008cff,0 0 95px #7138ff}.spaceBingoSub{margin-top:10px;font-size:clamp(20px,2.7vw,38px);font-weight:900;letter-spacing:3px;direction:ltr;color:#82f8ff}.spaceConfetti{position:absolute;left:50%;top:50%;width:var(--w);height:var(--h);border-radius:2px;opacity:0;box-shadow:0 0 8px currentColor;animation:confettiBlast var(--dur) cubic-bezier(.08,.58,.16,1) var(--delay) forwards}.spaceConfetti.round{border-radius:50%}.spaceConfetti.star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%)}@keyframes bingoScreen{0%{opacity:0}8%{opacity:1}76%{opacity:1}100%{opacity:0}}@keyframes bingoMessagePop{0%{opacity:0;transform:scale(.35)}12%{opacity:1;transform:scale(1.09)}22%{transform:scale(1)}78%{opacity:1}100%{opacity:0;transform:scale(1.12)}}@keyframes confettiBlast{0%{transform:translate(-50%,-50%) scale(.25) rotate(0);opacity:0}9%{opacity:1}58%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(var(--r1));opacity:1}100%{transform:translate(calc(-50% + var(--dx2)),calc(-50% + var(--fall))) scale(.75) rotate(var(--r2));opacity:0}}
 @media(max-width:1150px){.app{display:block}.drawPanel{width:min(720px,95vw);min-height:auto;margin:20px auto}#drawList{max-height:280px}}@media(max-width:760px){.wheelArea::before{opacity:.45}.controls{bottom:0;gap:7px}.header .subtitle{display:none}.button{min-width:100px;padding:7px 10px;font-size:14px}.spaceBingoMessage{padding:22px 24px}.spaceBingoTitle{white-space:normal}.hintText{font-size:20px}.imageWrap{width:240px;height:240px}}
 </style>
+
+<style id="back-to-top-style">
+.back-to-top{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:9998;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(78,214,231,.48);
+  border-radius:50%;
+  background:rgba(5,22,43,.76);
+  color:rgba(229,253,255,.94);
+  box-shadow:0 3px 12px rgba(0,0,0,.14);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,visibility .18s ease,border-color .18s ease;
+}
+.back-to-top.is-visible{
+  opacity:.82;
+  visibility:visible;
+  transform:translateY(0);
+}
+.back-to-top:hover,
+.back-to-top:focus-visible{
+  opacity:1;
+  border-color:rgba(111,239,253,.82);
+  outline:none;
+}
+.back-to-top svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:560px){
+  .back-to-top{left:12px;width:30px;height:30px}
+}
+@media print{
+  .back-to-top{display:none!important}
+}
+</style>
 </head>
 <body>
 <div class="spaceFog"></div>
@@ -128,6 +180,32 @@ function addToHistory(pick){const row=document.createElement("div");row.classNam
 spinButton.addEventListener("click",()=>{if(spinning||popupPhase!=="idle")return;if(remaining.length===0){alert("כל 16 המוצרים כבר נחשפו!");return}getAudio();spinning=true;spinButton.disabled=true;spinButton.textContent="הגלגל מסתובב...";roundNumber++;roundText.textContent=`סיבוב ${roundNumber}`;playSpinStart();startSpinTicks(SPIN_DURATION);wheelArea.classList.add("spin-active");const randomIndex=Math.floor(Math.random()*remaining.length),pick=remaining[randomIndex],selectedAngle=(pick-1)*anglePerItem,currentMod=((currentRotation%360)+360)%360,targetMod=(360-selectedAngle)%360;let delta=targetMod-currentMod;if(delta<0)delta+=360;delta+=360*8;currentRotation+=delta;wheel.style.transform=`rotate(${currentRotation}deg)`;setTimeout(()=>{clearTimeout(tickTimer);wheelArea.classList.remove("spin-active");createFlash();beginHints(pick)},SPIN_DURATION+140)});
 newGame.addEventListener("click",()=>{if(confirm("להתחיל משחק חדש? כל ההגרלות יתאפסו.")){clearInterval(countdownTimer);location.reload()}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&popupPhase==="answer")hidePopup()});
+</script>
+
+<button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>
+</button>
+<script id="back-to-top-script">
+(() => {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  const placeAboveBottomBar = () => {
+    const bars = [...document.querySelectorAll('.actions, .bar')];
+    const fixedBar = bars.find(el => getComputedStyle(el).position === 'fixed' && el.getBoundingClientRect().bottom >= window.innerHeight - 3);
+    btn.style.bottom = fixedBar ? (fixedBar.getBoundingClientRect().height + 12) + 'px' : '18px';
+  };
+
+  const update = () => {
+    btn.classList.toggle('is-visible', window.scrollY > 260);
+  };
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', placeAboveBottomBar);
+  placeAboveBottomBar();
+  update();
+})();
 </script>
 </body>
 </html>
