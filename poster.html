@@ -121,6 +121,58 @@ body.panel-open #wrap{padding-right:344px}
 #c-slogan .counter{position:absolute;left:0;top:50%;transform:translateY(-50%)}
 #c-slogan textarea,#c-slogan textarea::placeholder{text-align:center!important}
 </style>
+
+<style id="back-to-top-style">
+.back-to-top{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:9998;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(78,214,231,.48);
+  border-radius:50%;
+  background:rgba(5,22,43,.76);
+  color:rgba(229,253,255,.94);
+  box-shadow:0 3px 12px rgba(0,0,0,.14);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(6px);
+  transition:opacity .18s ease,transform .18s ease,visibility .18s ease,border-color .18s ease;
+}
+.back-to-top.is-visible{
+  opacity:.82;
+  visibility:visible;
+  transform:translateY(0);
+}
+.back-to-top:hover,
+.back-to-top:focus-visible{
+  opacity:1;
+  border-color:rgba(111,239,253,.82);
+  outline:none;
+}
+.back-to-top svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:560px){
+  .back-to-top{left:12px;width:30px;height:30px}
+}
+@media print{
+  .back-to-top{display:none!important}
+}
+</style>
 </head>
 <body class="panel-open">
 <div id="toolbar"><div class="tb-brand"><div class="tb-mark">✦</div><div><strong>SpaceTech | פוסטר משימת פיתוח</strong><small>מהחלל לכדור הארץ</small></div></div><div class="tb-acts"><button class="tbb" onclick="togglePanel()">☰ עריכה</button><button class="tbb" onclick="openTab('design')">עיצוב</button><button class="tbb sec" onclick="producePdf()">📄 הפקת PDF</button><a href="index.html" class="tbb hm home-emoji" title="חזרה לדף הבית" aria-label="חזרה לדף הבית">🏠</a></div></div>
@@ -162,6 +214,32 @@ function applyDesign(){const bg=G('bg-color').value,border=G('border-color').val
 function chSz(type,delta){const ranges={h:[24,54],q:[10,20],t:[9,17]};SZ[type]=clamp((SZ[type]||12)+delta,ranges[type][0],ranges[type][1]);G(type+'-v').textContent=SZ[type];applyDesign()}function wireDesign(){['bg-color','border-color','q-color','t-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));G('bg-up').addEventListener('change',function(){if(!this.files?.[0])return;const r=new FileReader();r.onload=e=>{G('bg-layer').style.backgroundImage=`url("${e.target.result}")`;G('bg-layer').style.opacity='1';scheduleAutosave()};r.readAsDataURL(this.files[0])})}function clearBg(){G('bg-layer').style.backgroundImage='none';G('bg-layer').style.opacity='.28';G('bg-up').value='';scheduleAutosave()}function loadImg(inp,imgId,phId){if(!inp.files?.[0])return;const r=new FileReader();r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave()};r.readAsDataURL(inp.files[0])}function loadLogo(inp){if(!inp.files?.[0])return;const r=new FileReader();r.onload=e=>{G('logo-img').src=e.target.result;G('logo-img').style.display='block';G('logo-txt').style.display='none';scheduleAutosave()};r.readAsDataURL(inp.files[0])}function autoWidth(inp){const m=document.createElement('span');m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove()}
 function setParts(n,names=[],skipSync=false){n=clamp(parseInt(n)||1,1,8);G('pc-cnt').value=String(n);const wrap=G('pcf');wrap.innerHTML='';const prev=qs('.prow input').map(i=>i.value.trim()),vals=names.length?names:prev;for(let i=1;i<=n;i++){const row=document.createElement('div');row.className='prow';row.innerHTML=`<span>ת${i}</span><input type="text" placeholder="שם" value="${esc(vals[i-1]||'')}">`;row.querySelector('input').addEventListener('input',syncNames);wrap.appendChild(row)}if(!skipSync)syncNames()}function syncNames(){const text=qs('.prow input').map(i=>i.value.trim()).filter(Boolean).join(', ');G('poster-students').value=text}function syncNamesToPanel(){const names=G('poster-students').value.split(/[,،;\n]+/).map(s=>s.trim()).filter(Boolean);setParts(Math.max(1,names.length||1),names,true)}function clearPoster(){if(!confirm('לנקות את כל התוכן?'))return;qs('input[type=text], textarea').forEach(el=>{if(el.id!=='poster-students')el.value=''});G('poster-students').value='';qs('#poster img').forEach(img=>{img.removeAttribute('src');img.classList.remove('show');if(img.id==='logo-img')img.style.display='none'});qs('.iph').forEach(ph=>ph.style.display='flex');G('logo-txt').style.display='block';setParts(1,[]);updateAllCombinedFields();renderFillPanel();clearAutosave()}
 setParts(1);bindLimits();wireDesign();applyDesign();applyAllGlow();updateAllCombinedFields();renderFillPanel();wireAutosave();window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1'});window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});applyLayout();autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();
+</script>
+
+<button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>
+</button>
+<script id="back-to-top-script">
+(() => {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  const placeAboveBottomBar = () => {
+    const bars = [...document.querySelectorAll('.actions, .bar')];
+    const fixedBar = bars.find(el => getComputedStyle(el).position === 'fixed' && el.getBoundingClientRect().bottom >= window.innerHeight - 3);
+    btn.style.bottom = fixedBar ? (fixedBar.getBoundingClientRect().height + 12) + 'px' : '18px';
+  };
+
+  const update = () => {
+    btn.classList.toggle('is-visible', window.scrollY > 260);
+  };
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', placeAboveBottomBar);
+  placeAboveBottomBar();
+  update();
+})();
 </script>
 </body>
 </html>
