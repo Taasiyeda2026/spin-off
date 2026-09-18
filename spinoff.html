@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ספינאוף | טכנולוגיות החלל</title>
+<style>
+:root{--b:#12355b;--b2:#2374a8;--bg:#f4f7fb;--line:#d7e3ee;--muted:#64748b;--ok:#0f766e}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans Hebrew",sans-serif;background:radial-gradient(circle at top right,#dceef8,transparent 34%),var(--bg);color:#172033;min-height:100vh}
+.app{max-width:980px;margin:auto;padding:18px 14px 60px}
+.hero,.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 32px #183b5a14}
+.hero{position:relative;padding:22px 56px 20px 22px;margin-bottom:14px}
+.home{position:absolute;left:14px;top:14px;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--b);font-size:21px}
+.kicker{font-size:12px;font-weight:900;color:var(--b2);letter-spacing:.08em;margin-bottom:5px}
+h1{margin:0;color:var(--b);font-size:34px}
+.hero p{margin:7px 0 0;color:var(--muted);font-size:15px}
+.card{padding:24px;margin-top:14px}
+.definition{max-width:760px;margin:auto;text-align:center}
+.definition h2{margin:0 0 12px;color:var(--b);font-size:24px}
+.definition .big{margin:0 auto 18px;max-width:720px;font-size:23px;line-height:1.65;font-weight:900;color:#1e3a5f}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px auto;max-width:740px}
+.step{padding:15px 12px;border:1px solid var(--line);border-radius:15px;background:#fbfdff}
+.step strong{display:block;color:var(--b);font-size:15px;margin-bottom:4px}.step span{font-size:12px;color:var(--muted)}
+.note{max-width:720px;margin:16px auto 0;padding:12px 14px;border-radius:14px;background:#eef8fd;border:1px solid #cfe3f2;color:#234c6f;font-weight:800;font-size:13px}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:900;font-size:14px}
+.primary{background:linear-gradient(135deg,var(--b),var(--b2));color:white;box-shadow:0 8px 18px #12355b24}
+.secondary{background:white;color:var(--b);border:1px solid var(--line)}
+@media(max-width:650px){.flow{grid-template-columns:1fr}.hero{padding-top:58px}.home{right:14px;left:auto}.definition .big{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+<a class="home" href="index.html" aria-label="חזרה לדף הבית">⌂</a>
+<div class="kicker">SPIN-OFF</div>
+<h1>ספינאוף</h1>
+<p>מהחלל אל החיים שלנו בכדור הארץ</p>
+</header>
+
+<section class="card definition">
+<h2>מה זה ספינאוף?</h2>
+<p class="big">ספינאוף הוא כשפיתוח מעולם החלל מקבל שימוש חדש בחיים שלנו בכדור הארץ.</p>
+
+<div class="flow" aria-label="שלבי החשיבה">
+<div class="step"><strong>מזהים מוצר</strong><span>מוצר שפגשנו במשחק הבינגו</span></div>
+<div class="step"><strong>מגלים את היכולת</strong><span>מה הטכנולוגיה יודעת לעשות</span></div>
+<div class="step"><strong>חושבים הלאה</strong><span>איפה עוד היכולת הזאת יכולה לעזור</span></div>
+</div>
+
+<div class="note">בפעילות הבאה כל צוות יבחר מוצר אחד, יפענח את היכולת שלו ויחשוב איפה עוד היא יכולה להיות שימושית.</div>
+
+<div class="actions">
+<a class="btn primary" href="spinoff-work.html">לפעילות ספינאוף ←</a>
+<a class="btn secondary" href="bingo/bingo.html">חזרה לבינגו</a>
+</div>
+</section>
+</div>
+</body>
+</html>
