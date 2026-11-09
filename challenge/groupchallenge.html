@@ -665,6 +665,24 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
 #group-auth-gate button:disabled{opacity:.6;cursor:wait}
 #group-auth-gate a{display:block;color:#84e4ff;margin-top:17px;text-decoration:underline}
 
+/* School and class fields on mission setup screen */
+#setup .setup-box{width:min(465px,100%);margin-top:21px;padding:21px 24px 19px}
+#setup .setup-details{display:grid;gap:12px;text-align:right}
+#setup .setup-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+#setup .setup-field label{font-size:14px;font-weight:750;color:#f5fcff}
+#setup .setup-field .required-indicator{color:#92efff}
+#setup .setup-field .optional-indicator{color:#aac6da;font-size:12px;font-weight:500}
+#setup .setup-field input{display:block;width:100%;height:43px;min-width:0;padding:9px 13px;background:#f7fcff;border:1px solid #a7d5eb;border-radius:11px;color:#122d4b;font-size:16px;text-align:right;box-shadow:inset 0 1px 3px #0e254414}
+#setup .setup-field input::placeholder{color:#72889d;font-size:14px}
+#setup .number-row{margin-top:16px;gap:12px}
+#setup .number-row label{font-size:15px}
+#setup .number-row input{width:84px;font-size:26px;padding:6px}
+#setup .setup-box .primary{margin-top:12px}
+#setup #error{margin-top:7px;min-height:0}
+#summary .summary-school{font-size:clamp(14px,1.5vw,17px);font-weight:750;color:#d8f5ff;margin:5px 0 0;text-align:center;text-shadow:0 0 9px #1baee955}
+@media(max-height:650px){#setup{padding:4px 8px 12px}#setup .setup-emblem{width:51px;height:51px;margin-bottom:10px}#setup .setup-emblem svg{width:34px;height:34px}#setup h1{font-size:clamp(27px,3vw,34px);margin-bottom:5px}#setup .intro p{font-size:15px}#setup .setup-box{margin-top:12px;padding:12px 19px}#setup .setup-details{gap:7px}#setup .setup-field input{height:37px}#setup .number-row{margin-top:8px}#setup .setup-box .primary{margin-top:8px}}
+@media(max-width:480px){#setup .setup-box{padding:17px 16px}#setup .number-row{gap:8px}#summary .summary-school{font-size:14px}}
+@media print{#summary .summary-school{color:#244868!important;text-shadow:none!important}}
 </style>
 </head>
 <body>
@@ -686,6 +704,10 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
  <div class="setup-emblem" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="11" stroke="currentColor" stroke-width="2.4"/><ellipse cx="32" cy="32" rx="27" ry="13" transform="rotate(-25 32 32)" stroke="currentColor" stroke-width="2"/><path d="M48 7v8m-4-4h8M12 45v7m-3.5-3.5h7" stroke="currentColor" stroke-linecap="round" stroke-width="2"/></svg></div>
  <div class="intro"><h1>באיזה צוות תהיו?</h1><p>בחרו קלף וגלו לאיזה צוות משימה תצטרפו</p></div>
  <form class="setup-box" id="setupForm">
+  <div class="setup-details">
+   <div class="setup-field"><label for="schoolName">שם בית הספר <span class="required-indicator" aria-hidden="true">*</span></label><input id="schoolName" name="schoolName" type="text" maxlength="100" placeholder="הקלידו את שם בית הספר" autocomplete="organization" required aria-describedby="error"></div>
+   <div class="setup-field"><label for="classGroup">כיתה / קבוצה <span class="optional-indicator">(לא חובה)</span></label><input id="classGroup" name="classGroup" type="text" maxlength="60" placeholder="לדוגמה: ד׳2 או קבוצה א׳" autocomplete="off"></div>
+  </div>
   <div class="number-row"><label for="count">מספר התלמידים המשתתפים</label><input id="count" type="number" value="24" min="3" max="40" step="1" inputmode="numeric" required aria-describedby="error"></div>
   <div id="error" role="alert"></div>
   <button class="primary" type="submit">פיזור הקלפים</button>
@@ -703,6 +725,7 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
    <div class="summary-status"><span class="status-check" aria-hidden="true">✓</span> כל התלמידים שובצו לצוותים</div>
    <h1 id="summaryHeading">הצוותים מוכנים למשימה!</h1>
    <p class="summary-subtitle">אלה צוותי הפרויקט שלכם</p>
+   <p class="summary-school" id="summarySchool" hidden></p>
   </div>
   <div class="summary-metrics" aria-label="סיכום החלוקה">
    <div class="summary-metric"><strong id="summaryTeamTotal">0</strong><span>צוותים</span></div>
@@ -846,6 +869,9 @@ function teamMembers(teamId){
  return state.cards.filter(c=>c.team===teamId&&c.name).sort((a,b)=>a.chosenAt-b.chosenAt);
 }
 function renderSummary(){
+ const schoolDetails=[state.schoolName||'',state.classGroup||''].filter(Boolean).join(' · ');
+ $('summarySchool').textContent=schoolDetails;
+ $('summarySchool').hidden=!schoolDetails;
  $('summaryStudentTotal').textContent=state.n;
  $('summaryTeamTotal').textContent=state.teamIds.length;
  const teamCount=state.teamIds.length;
@@ -871,16 +897,20 @@ function renderSummary(){
 }
 $('setupForm').addEventListener('submit',event=>{
  event.preventDefault();const n=Number($('count').value),sizes=planTeams(n);
+ const schoolName=$('schoolName').value.replace(/\s+/g,' ').trim();
+ const classGroup=$('classGroup').value.replace(/\s+/g,' ').trim();
+ if(!schoolName){$('error').textContent='יש להזין את שם בית הספר.';$('schoolName').focus();return}
  if(!sizes){$('error').textContent='יש להזין מספר שלם בין 3 ל־40.';return}
  $('error').textContent='';
  const teamIds=shuffle(Array.from({length:8},(_,i)=>i)).slice(0,sizes.length).sort((a,b)=>a-b);
  const assignments=shuffle(sizes.flatMap((size,t)=>Array(size).fill(teamIds[t])));
  const numbers=shuffle(Array.from({length:n},(_,i)=>i+1));
  if(numbers.every((v,i)=>v===i+1)&&n>1)[numbers[0],numbers[1]]=[numbers[1],numbers[0]];
- state={n,sizes,teamIds,cards:assignments.map((team,i)=>({team,displayNumber:numbers[i],open:false,name:'',chosenAt:0,rotation:randomInt(5)-2,offset:randomInt(5)-2}))};
+ state={n,sizes,teamIds,schoolName,classGroup,cards:assignments.map((team,i)=>({team,displayNumber:numbers[i],open:false,name:'',chosenAt:0,rotation:randomInt(5)-2,offset:randomInt(5)-2}))};
  save();renderBoard();showView('game');
 });
 $('count').addEventListener('input',()=>$('error').textContent='');
+$('schoolName').addEventListener('input',()=>$('error').textContent='');
 $('nameForm').addEventListener('submit',saveStudentName);
 $('studentName').addEventListener('input',()=>$('nameError').textContent='');
 $('revealDialog').addEventListener('cancel',event=>event.preventDefault());
@@ -913,6 +943,8 @@ function createPdfCanvas(){
  ctx.fillStyle='#daf8ff';ctx.font='bold 28px Arial';ctx.direction='rtl';ctx.textAlign='right';ctx.fillText('טכנולוגיות החלל  |  צוותי המשימה',W-62,62);
  drawRtl(ctx,'חלוקת צוותים - סיכום תלמידים',W-62,119,'bold 50px Arial','#ffffff');
  drawRtl(ctx,`${state.n} תלמידים  •  ${state.teamIds.length} צוותים`,W-62,176,'bold 27px Arial','#a8e8ff');
+ const schoolDetails=[state.schoolName||'',state.classGroup||''].filter(Boolean).join(' · ');
+ if(schoolDetails) {ctx.font='bold 23px Arial';ctx.direction='rtl';ctx.textAlign='right';ctx.fillStyle='#ffffff';ctx.fillText(schoolDetails,W-62,210,W-124);}
  const cols=2,gapX=22,gapY=17,left=54,right=54,startY=273;
  const rows=Math.ceil(state.teamIds.length/2);
  const areaH=H-startY-114;
@@ -979,6 +1011,8 @@ function downloadTeamsPdf(){
 }
 
 function validState(s){
+ // Older saved allocations without school metadata must remain accessible.
+ if(s && ((s.schoolName!==undefined&&(typeof s.schoolName!=='string'||s.schoolName.length>100))||(s.classGroup!==undefined&&(typeof s.classGroup!=='string'||s.classGroup.length>60))))return false;
  if(!s||!Number.isInteger(s.n)||s.n<3||s.n>40||!Array.isArray(s.sizes)||!Array.isArray(s.teamIds)||!Array.isArray(s.cards)||s.cards.length!==s.n||s.teamIds.length!==s.sizes.length||s.teamIds.length>8)return false;
  if(s.sizes.reduce((a,b)=>a+b,0)!==s.n||s.sizes.some(v=>!Number.isInteger(v)||v<3||v>5))return false;
  if(new Set(s.teamIds).size!==s.teamIds.length||s.teamIds.some(v=>!Number.isInteger(v)||v<0||v>=8))return false;
@@ -989,7 +1023,7 @@ function validState(s){
  if(new Set(s.cards.filter(c=>c.open).map(c=>c.chosenAt)).size!==s.cards.filter(c=>c.open).length)return false;
  return s.sizes.every((v,t)=>s.cards.filter(c=>c.team===s.teamIds[t]).length===v);
 }
-try{const saved=JSON.parse(localStorage.getItem(storageKey));if(validState(saved)){state=saved;$('count').value=state.n;renderBoard();if(state.cards.every(c=>c.name)){renderSummary();showView('summary')}else{showView('game');const pending=state.cards.findIndex(c=>c.open&&!c.name);if(pending>=0)requestAnimationFrame(()=>showReveal(pending))}}}catch(e){}
+try{const saved=JSON.parse(localStorage.getItem(storageKey));if(validState(saved)){state=saved;$('count').value=state.n;$('schoolName').value=state.schoolName||'';$('classGroup').value=state.classGroup||'';renderBoard();if(state.cards.every(c=>c.name)){renderSummary();showView('summary')}else{showView('game');const pending=state.cards.findIndex(c=>c.open&&!c.name);if(pending>=0)requestAnimationFrame(()=>showReveal(pending))}}}catch(e){}
 </script>
 <script type="module" src="group-auth.js?v=20261110"></script>
 </body>
