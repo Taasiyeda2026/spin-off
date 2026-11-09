@@ -84,3 +84,12 @@ html[lang="ar"] .back,html[lang="ar"] .read-more,html[lang="ar"] .space-hint sum
 .article-section p,.hint-content p{overflow-wrap:break-word;white-space:normal}
 .topbar{flex-wrap:wrap}
 @media(max-width:600px){.article-figure{max-inline-size:min(220px,100%)}.topbar .eyebrow{display:none}.lang-switch a{min-height:40px}}
+
+/* Compact home and team icons in the challenges landing-page header. */
+.quick-links{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-icon{display:inline-grid;place-items:center;width:46px;height:46px;padding:0;flex-shrink:0;border:1px solid rgba(91,221,255,.5);border-radius:12px;background:rgba(10,35,68,.88);color:#e9fcff;box-shadow:0 0 16px rgba(0,169,255,.13)}
+a.nav-icon{text-decoration:none;transition:background .18s,transform .18s,border-color .18s,box-shadow .18s}
+a.nav-icon:hover{background:rgba(11,67,115,.9);border-color:#70efff;box-shadow:0 0 19px rgba(43,194,255,.26);transform:translateY(-2px)}
+.nav-icon svg{display:block;width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.team-icon{color:#8defff;border-color:rgba(91,221,255,.33);background:rgba(10,35,68,.66)}
+@media(max-width:600px){.quick-links{gap:7px}.nav-icon{width:43px;height:43px}.nav-icon svg{width:22px;height:22px}}
