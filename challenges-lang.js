@@ -5,18 +5,16 @@
   var KEY = "spin-off-challenges-language";
   var root = document.documentElement;
   var pageLanguage = root.getAttribute("lang") === "ar" ? "ar" : "he";
-  var requested;
-  try {
-    var explicit = new URLSearchParams(window.location.search).get("lang");
-    if (explicit === "he" || explicit === "ar") {
-      requested = explicit;
-      window.localStorage.setItem(KEY, explicit);
-    } else {
+  var explicit = new URLSearchParams(window.location.search).get("lang");
+  var requested = pageLanguage;
+  if (explicit === "he" || explicit === "ar") {
+    requested = explicit;
+    try { window.localStorage.setItem(KEY, explicit); } catch (_error) { /* Explicit links work without storage. */ }
+  } else {
+    try {
       var saved = window.localStorage.getItem(KEY);
-      requested = saved === "ar" || saved === "he" ? saved : pageLanguage;
-    }
-  } catch (_error) {
-    requested = pageLanguage;
+      if (saved === "ar" || saved === "he") requested = saved;
+    } catch (_error) { /* Direct pages remain usable without storage. */ }
   }
   if (requested !== pageLanguage) {
     var filename = window.location.pathname.split("/").pop() || "challenges.html";
