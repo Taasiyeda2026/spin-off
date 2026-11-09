@@ -224,6 +224,11 @@ h1{
   .stage::before,.stage::after{opacity:.35}
   .top{margin-bottom:12px}
 }
+
+/* Official organization logo next to the activity title. */
+.brand{display:inline-flex;align-items:center;gap:11px}
+.brand img{display:block;width:52px;height:56px;object-fit:contain}
+@media(max-width:560px){.brand img{width:44px;height:48px}}
 </style>
 
 <style id="back-to-top-style">
@@ -282,7 +287,7 @@ h1{
 <main class="page">
   <div class="top">
     <a class="home" href="index.html" aria-label="חזרה לדף הבית">⌂</a>
-    <div class="brand">SPIN-OFF</div>
+    <div class="brand"><img src="images/logo-1.png?v=20261110" width="52" height="56" alt="תעשיידע"><span>SPIN-OFF</span></div>
   </div>
 
   <section class="stage">

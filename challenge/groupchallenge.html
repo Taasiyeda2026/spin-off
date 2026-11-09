@@ -645,12 +645,19 @@ button.secondary {box-shadow:inset 0 0 10px #1d88fd1a,0 0 10px #2582ff1d}
 @media(max-width:480px){#summary .teams{grid-template-columns:repeat(1,minmax(0,1fr));gap:11px}#summary .team-detail{padding:12px}#revealDialog{padding:15px 18px}#revealDialog .reveal-orbit{width:115px;height:115px}}
 @media print{#summary .teams{grid-template-columns:repeat(2,minmax(0,1fr))!important}#summary .student-list li{color:#112d49!important}#summary .team-domain{color:#112d49!important}}
 
+
+/* Replace the generic space badge in the game header with the official logo. */
+.brand-badge{width:56px;height:58px;border:0;background:transparent;box-shadow:none;padding:0;border-radius:0}
+.brand-badge img{display:block;width:100%;height:100%;object-fit:contain}
+@media(max-width:680px){.brand-badge{width:43px;height:46px}}
+@media(max-height:600px){.brand-badge{width:38px;height:40px}}
+
 </style>
 </head>
 <body>
 <header id="gameHeader" hidden>
   <div class="brand">
-    <div class="brand-badge" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="12" stroke="currentColor" stroke-width="3"/><ellipse cx="32" cy="32" rx="28" ry="13" transform="rotate(-28 32 32)" stroke="currentColor" stroke-width="2.6"/><circle cx="50" cy="15" r="3.4" fill="currentColor"/><path d="M12 9v9M7.5 13.5h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <div class="brand-badge"><img src="../images/logo-1.png?v=20261110" alt="לוגו תעשיידע" width="56" height="58"></div>
     <div class="brand-text"><small>טכנולוגיות החלל</small><strong>צוותי המשימה</strong></div>
   </div>
   <nav class="toolbar" aria-label="כלי המדריך"><button type="button" class="secondary" id="fullscreen">מסך מלא</button><button type="button" class="secondary" id="restart">חלוקה חדשה</button></nav>
