@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;600;700;800&display=swap');
 :root{--bg:#020918;--panel:#07172d;--panel2:#0a2140;--cyan:#4beeff;--blue:#2f83ff;--text:#ecf8ff;--muted:#b9d3e5;--border:rgba(86,213,255,.28)}
 *{box-sizing:border-box}
 html{min-width:320px;scroll-behavior:smooth}
@@ -61,3 +61,19 @@ a{color:inherit}a:focus-visible{outline:3px solid var(--cyan);outline-offset:4px
 @media(max-width:600px){.reading-time{font-size:14px}.space-hint summary{font-size:19px;padding:15px 16px}.space-hint .hint-content{padding:16px}.space-hint .hint-content p{font-size:19px}}
 
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* Hebrew/Arabic language switcher; readable Arabic without changing the rest of the site. */
+.lang-switch{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:5px;padding:4px;border:1px solid rgba(91,221,255,.38);border-radius:12px;background:rgba(5,25,52,.85);box-shadow:0 0 15px rgba(5,163,246,.09);direction:ltr}
+.lang-switch a{display:inline-flex;justify-content:center;align-items:center;min-height:32px;padding:4px 10px;border-radius:8px;color:#c7e7f7;text-decoration:none;font-size:14px;font-weight:800;white-space:nowrap}
+.lang-switch a:hover,.lang-switch a:focus-visible{background:rgba(40,123,178,.3);color:white}
+.lang-switch a[aria-current="true"]{background:linear-gradient(135deg,#06a6d8,#145dbd);color:#fff;box-shadow:0 0 10px rgba(17,162,233,.22)}
+.lang-separator{color:#71a4b9;font-size:14px}
+.header-tools{display:flex;align-items:center;gap:14px}
+html[lang="ar"] body{font-family:'Noto Naskh Arabic','Tajawal','Arial',sans-serif}
+html[lang="ar"] .article-title,html[lang="ar"] .card-body h2,html[lang="ar"] .bank-heading h1{font-weight:800;line-height:1.4}
+html[lang="ar"] .article-section h2{line-height:1.55}
+html[lang="ar"] .article-section p,html[lang="ar"] .space-hint .hint-content p{line-height:1.95}
+html[lang="ar"] .card-description{line-height:1.85}
+html[lang="ar"] .back,html[lang="ar"] .read-more,html[lang="ar"] .space-hint summary{line-height:1.6}
+@media(max-width:620px){.topbar{flex-wrap:wrap;row-gap:10px}.header-tools{gap:8px}.lang-switch a{font-size:13px;padding:4px 7px}.bank-wrap .topbar{justify-content:space-between}}
