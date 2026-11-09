@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" class="group-auth-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -652,9 +652,28 @@ button.secondary {box-shadow:inset 0 0 10px #1d88fd1a,0 0 10px #2582ff1d}
 @media(max-width:680px){.brand-badge{width:43px;height:46px}}
 @media(max-height:600px){.brand-badge{width:38px;height:40px}}
 
+
+/* Authentication gate for the SPIN-OFF team game. No login credentials enter this page. */
+html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important;pointer-events:none!important}
+#group-auth-gate[hidden]{display:none!important}
+#group-auth-gate{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 20%,#183968,#071222 72%);font:16px Arial,sans-serif;color:#eaf9ff;direction:rtl}
+#group-auth-gate .access-card{width:min(390px,100%);text-align:center;padding:25px;border:1px solid #58d6ec;border-radius:20px;background:#102b4e;box-shadow:0 16px 45px #0007}
+#group-auth-gate img{width:92px;height:106px;object-fit:contain}
+#group-auth-gate h1{font-size:24px;line-height:1.4;margin:8px 0}
+#group-auth-gate p{font-size:15px;color:#d3e9f8;line-height:1.65}
+#group-auth-gate button{margin-top:8px;padding:12px 20px;background:#1687c2;color:white;border:1px solid #70d9f4;border-radius:12px;font:bold 15px Arial,sans-serif;cursor:pointer}
+#group-auth-gate button:disabled{opacity:.6;cursor:wait}
+#group-auth-gate a{display:block;color:#84e4ff;margin-top:17px;text-decoration:underline}
+
 </style>
 </head>
 <body>
+<div id="group-auth-gate" role="region" aria-label="כניסה למשחק חברי צוות">
+<div class="access-card"><img src="../images/logo-1.png" alt="תעשיידע">
+<h1>כניסה לחברי צוות</h1><p>הכניסה פתוחה לכל משתמש פעיל בדשבורד תעשיידע. התחברו בחלון הדשבורד עם פרטי הכניסה הרגילים.</p>
+<button type="button" data-group-access>התחברות לדשבורד</button>
+<p id="group-auth-status" role="status" aria-live="polite">בודקים הרשאת כניסה…</p>
+<a href="challenges.html">חזרה לאתגרים</a></div></div>
 <header id="gameHeader" hidden>
   <div class="brand">
     <div class="brand-badge"><img src="../images/logo-1.png?v=20261110" alt="לוגו תעשיידע" width="56" height="58"></div>
@@ -972,5 +991,6 @@ function validState(s){
 }
 try{const saved=JSON.parse(localStorage.getItem(storageKey));if(validState(saved)){state=saved;$('count').value=state.n;renderBoard();if(state.cards.every(c=>c.name)){renderSummary();showView('summary')}else{showView('game');const pending=state.cards.findIndex(c=>c.open&&!c.name);if(pending>=0)requestAnimationFrame(()=>showReveal(pending))}}}catch(e){}
 </script>
+<script type="module" src="group-auth.js?v=20261110"></script>
 </body>
 </html>
