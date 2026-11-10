@@ -1180,6 +1180,13 @@
     .content-card.is-practicing .badge { width: 44px; height: 44px; font-size: 1.75rem; }
     .content-card.is-practicing .content-title-wrap h2 { font-size: 1.55rem; }
   }
+  @media screen {
+    .summary p + p { margin-top: 12px; }
+    .summary .summary-emphasis { font-weight: 950; color: #0b78b5; }
+    .summary .summary-finale { font-weight: 900; color: #123044; }
+    .is-summary-view .summary { padding: 23px 25px; }
+    .is-summary-view .summary p { line-height: 1.48; font-size: 1.08rem; }
+  }
   </style>
 </head>
 <body>
@@ -1268,10 +1275,10 @@
 
     <section class="summary is-hidden" id="summarySection">
       <h2>סיכום קתימב״ה</h2>
-      <p>
-        לא צריך להיות מושלמים. צריך להיות ברורים, נוכחים ומחוברים למה שמציגים.
-        כשזוכרים את קתימב״ה, ההצגה לא נשארת רק טקסט שנאמר בקול — היא הופכת לרגע שבו עומדים מאחורי הרעיון ומראים שיש לו ערך.
-      </p>
+      <p>קתימב״ה לימדה אותנו שהצגה טובה היא הרבה יותר מלדבר מול קהל. למדנו להשתמש בקול, בתנועה, בידיים ובמבט, להציג בביטחון ולהעביר התלהבות.</p>
+      <p class="summary-emphasis">לא צריך להיות מושלמים כדי להציג בצורה טובה!</p>
+      <p>כשאנחנו מכירים את הרעיון שלנו, מתכוננים ומתרגלים, אנחנו מרגישים בטוחים יותר ומצליחים להעביר את המסר בצורה ברורה ומעניינת.</p>
+      <p class="summary-finale">עכשיו אתם מוכנים להציג את הרעיונות שלכם!</p>
       <div class="print-row">
         <button class="small-action" type="button" onclick="window.print()">הדפסה</button>
       </div>
