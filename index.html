@@ -65,35 +65,17 @@
     <!--
       ניווט ראשי:
       השורה העליונה מחוברת מימין לשמאל: בינגו, ספינאוף, פרומפט.
-      פוסטר עבר לשורה השנייה; בנק האתגרים מחובר לעמוד הכתבות; כפתור נוסף נשאר בקרוב.
+      פוסטר עבר לשורה השנייה; בנק האתגרים מחובר לעמוד הכתבות; כפתור פרזנטציה מוביל לפעילות קתימב״ה.
     -->
     <nav class="home-nav" aria-label="ניווט ראשי בקורס">
       <a class="nav-card" href="prompt.html"><span style="color:#ffffff">פרומפט</span></a>
       <a class="nav-card" href="spinoff.html"><span style="color:#ffffff">ספינאוף</span></a>
       <a class="nav-card" href="bingo/bingo.html"><span style="color:#ffffff">בינגו</span></a>
       <a class="nav-card" href="challenge/challenges.html"><span style="color:#ffffff">אתגרים</span></a>
-      <a class="nav-card is-coming" href="#" data-coming-soon><span>בקרוב</span></a>
+      <a class="nav-card" href="presentation.html"><span style="color:#ffffff">פרזנטציה</span></a>
       <a class="nav-card" href="poster.html"><span style="color:#ffffff">פוסטר</span></a>
     </nav>
   </main>
-
-  <div class="status-toast" id="status-toast" role="status" aria-live="polite">העמוד ייפתח בקרוב</div>
-
-  <script>
-    (() => {
-      const toast = document.getElementById('status-toast');
-      let timer;
-
-      document.querySelectorAll('[data-coming-soon]').forEach((link) => {
-        link.addEventListener('click', (event) => {
-          event.preventDefault();
-          clearTimeout(timer);
-          toast.classList.add('is-visible');
-          timer = setTimeout(() => toast.classList.remove('is-visible'), 1400);
-        });
-      });
-    })();
-  </script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>
