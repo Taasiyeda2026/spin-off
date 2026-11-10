@@ -1304,7 +1304,6 @@
       document.body.classList.remove("is-summary-view");
       contentCard.classList.remove("is-hidden");
       lessonStepLabel.hidden = false;
-      visitedRules.add(rule.key);
       summarySection.classList.add("is-hidden");
       updateProgress();
       currentSentenceIndex = 0;
@@ -1340,14 +1339,14 @@
       }
 
       document.querySelectorAll(".progress-dot").forEach((dot, index) => {
-        dot.classList.toggle("done", index < currentRuleIndex);
+        dot.classList.toggle("done", visitedRules.has(rules[index].key));
         dot.classList.toggle("current", index === currentRuleIndex);
       });
     }
 
     function focusCurrentView() {
       // A letter change starts at the top of the compact page; do not crop its navigation.
-      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
     }
 
     renderButtons();
@@ -1381,12 +1380,15 @@
     });
 
     nextButton.addEventListener("click", () => {
+      visitedRules.add(rules[currentRuleIndex].key);
       const nextIndex = Math.min(currentRuleIndex + 1, rules.length - 1);
       renderRule(rules[nextIndex]);
       focusCurrentView(contentCard);
     });
 
     summaryButton.addEventListener("click", () => {
+      visitedRules.add(rules[currentRuleIndex].key);
+      updateProgress();
       summarySection.classList.remove("is-hidden");
       document.body.classList.add("is-summary-view");
       lessonStepLabel.textContent = "סיימנו את ששת הכללים!";
