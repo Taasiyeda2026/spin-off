@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>קתימב״ה | פעילות פרזנטציה</title>
+  <style>
+    :root {
+      --ink: #123044;
+      --muted: #5e7280;
+      --bg-a: #f8fbff;
+      --bg-b: #eef8ff;
+      --blue: #1593d1;
+      --cyan: #22c7b8;
+      --pink: #e84d8a;
+      --purple: #6557d6;
+      --orange: #f47a4d;
+      --green: #29b77a;
+      --card: rgba(255, 255, 255, 0.78);
+      --border: rgba(18, 48, 68, 0.12);
+      --shadow: 0 20px 45px rgba(25, 68, 104, 0.14);
+      --soft-shadow: 0 12px 28px rgba(25, 68, 104, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "Assistant", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(34, 199, 184, 0.18), transparent 28%),
+        radial-gradient(circle at 86% 18%, rgba(21, 147, 209, 0.13), transparent 30%),
+        radial-gradient(circle at 70% 88%, rgba(21, 147, 209, 0.14), transparent 32%),
+        linear-gradient(135deg, var(--bg-a), var(--bg-b));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(90deg, rgba(18, 48, 68, 0.05) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(18, 48, 68, 0.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at center, black, transparent 75%);
+    }
+
+    @media screen {
+      body {
+        zoom: 0.85;
+      }
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 42px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 250px;
+      padding: 34px 28px 30px;
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(21, 147, 209, 0.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.74), transparent),
+        linear-gradient(135deg, rgba(21, 147, 209, 0.06), rgba(34, 199, 184, 0.05), rgba(101, 87, 214, 0.04));
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(4.2rem, 10vw, 8.4rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      font-weight: 950;
+      color: #061f2f;
+      -webkit-text-stroke: 4px #ffffff;
+      paint-order: stroke fill;
+      text-shadow:
+        0 3px 0 rgba(34, 199, 184, 0.22),
+        0 10px 24px rgba(18, 48, 68, 0.28);
+    }
+
+    .subtitle {
+      margin: 16px auto 0;
+      max-width: 720px;
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.55;
+      color: #334c5c;
+      font-weight: 700;
+    }
+
+    .letters-panel {
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--soft-shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .progress-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: -10px 0 22px;
+      color: #385466;
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+
+    .progress-dots {
+      display: inline-flex;
+      gap: 6px;
+      direction: ltr;
+    }
+
+    .progress-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(18, 48, 68, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .progress-dot.done {
+      background: var(--cyan);
+    }
+
+    .progress-dot.current {
+      background: var(--blue);
+      transform: scale(1.25);
+    }
+
+    .content-card .progress-line {
+      margin: -8px 0 22px;
+      padding: 0 22px;
+    }
+
+    .letters-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(112px, 1fr));
+      gap: 14px;
+    }
+
+    .letter-card {
+      position: relative;
+      min-height: 142px;
+      padding: 16px 12px;
+      border: 0;
+      border-radius: 26px;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 16px 28px rgba(35, 70, 100, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transform: translateY(0);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      overflow: hidden;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .letter-card::before {
+      content: "";
+      position: absolute;
+      inset: -40% -30%;
+      background: radial-gradient(circle, rgba(255,255,255,0.34), transparent 42%);
+      transform: translateY(-18px);
+      pointer-events: none;
+    }
+
+    .letter-card:hover,
+    .letter-card:focus-visible {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 34px rgba(35, 70, 100, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.38);
+      filter: saturate(1.05);
+      outline: none;
+    }
+
+    .letter-card.active {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 24px 40px rgba(35, 70, 100, 0.28), 0 0 0 4px rgba(255,255,255,0.8);
+    }
+
+    .letter-card[data-key="voice"] { background: linear-gradient(135deg, #0f73bd, #21bfd0); }
+    .letter-card[data-key="movement"] { background: linear-gradient(135deg, #e84d8a, #f47855); }
+    .letter-card[data-key="hands"] { background: linear-gradient(135deg, #5d56d7, #1593d1); }
+    .letter-card[data-key="eyes"] { background: linear-gradient(135deg, #22a56e, #22c7b8); }
+    .letter-card[data-key="confidence"] { background: linear-gradient(135deg, #923cba, #e84d8a); }
+    .letter-card[data-key="energy"] { background: linear-gradient(135deg, #f0992e, #f05c71); }
+
+    .letter {
+      position: relative;
+      display: block;
+      font-size: 3.8rem;
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .letter-title {
+      position: relative;
+      display: block;
+      margin-top: 8px;
+      font-size: 1.12rem;
+      font-weight: 900;
+    }
+
+    .letter-hint {
+      position: relative;
+      display: block;
+      margin-top: 6px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      opacity: 0.62;
+      letter-spacing: 0;
+    }
+
+    .content-card {
+      margin-top: 18px;
+      border-radius: 30px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .content-card.is-hidden {
+      display: none;
+    }
+
+    .content-header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) 218px;
+      gap: 16px;
+      align-items: center;
+      padding: 22px 24px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.78), rgba(255,255,255,0.36));
+      border-bottom: 1px solid rgba(18, 48, 68, 0.08);
+    }
+
+    .badge {
+      width: 76px;
+      height: 76px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 3rem;
+      font-weight: 950;
+      box-shadow: 0 12px 26px rgba(25, 68, 104, 0.2);
+      background: linear-gradient(135deg, #0f73bd, #21bfd0);
+    }
+
+    .content-title-wrap h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.15;
+    }
+
+    .content-title-wrap p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .rule-visual {
+      margin: 0;
+      width: 218px;
+      aspect-ratio: 1 / 1;
+      border-radius: 26px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(18, 48, 68, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.82), 0 12px 26px rgba(25,68,104,0.10);
+      overflow: hidden;
+      justify-self: end;
+    }
+
+    .rule-visual img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .content-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      padding: 22px;
+    }
+
+    .deep-box {
+      border-radius: 24px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(18, 48, 68, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 24px rgba(25,68,104,0.08);
+    }
+
+    .deep-box h3 {
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+      color: #17394b;
+    }
+
+    .main-list,
+    .avoid-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .main-list li,
+    .avoid-list li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-size: 1.02rem;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .main-list li {
+      background: rgba(34, 199, 184, 0.1);
+    }
+
+    .avoid-list li {
+      background: rgba(232, 77, 138, 0.1);
+    }
+
+    .mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.9rem;
+      flex: none;
+    }
+
+    .yes .mark { background: var(--cyan); }
+    .no .mark { background: var(--pink); }
+
+    .step-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 0 22px 24px;
+    }
+
+    .next-button,
+    .summary-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 28px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(21, 147, 209, 0.22);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .next-button.is-hidden,
+    .summary-button.is-hidden {
+      display: none;
+    }
+
+    .next-button:hover,
+    .next-button:focus-visible,
+    .summary-button:hover,
+    .summary-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(21, 147, 209, 0.28);
+      outline: none;
+    }
+
+    .summary {
+      margin-top: 42px;
+      padding: 24px 26px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(255,255,255,0.82);
+      box-shadow: var(--soft-shadow);
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .summary.is-hidden {
+      display: none;
+    }
+
+    .summary h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+    }
+
+    .summary p {
+      margin: 0 auto;
+      max-width: 740px;
+      font-size: clamp(1.08rem, 2vw, 1.35rem);
+      line-height: 1.7;
+      color: #334c5c;
+      font-weight: 800;
+    }
+
+    .summary::before {
+      content: "";
+      display: block;
+      width: min(180px, 45%);
+      height: 4px;
+      margin: -6px auto 20px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      opacity: 0.75;
+    }
+
+    .print-row {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-action {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      color: #fff;
+      background: #123044;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(18, 48, 68, 0.16);
+    }
+
+    @media (max-width: 940px) {
+      .letters-grid {
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+      }
+
+      .content-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 18px;
+      }
+
+      .hero {
+        padding: 28px 16px;
+        border-radius: 26px;
+      }
+
+      .letters-panel {
+        padding: 14px;
+      }
+
+      .letters-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .letter-card {
+        min-height: 126px;
+        border-radius: 22px;
+      }
+
+      .letter {
+        font-size: 3.2rem;
+      }
+
+      .content-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .badge {
+        margin: 0 auto;
+      }
+
+      .rule-visual {
+        width: min(248px, 80vw);
+        justify-self: center;
+      }
+
+      .content-body {
+        padding: 14px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 16mm;
+      }
+
+      body {
+        background: #fff;
+        color: #123044;
+      }
+
+      body::before,
+      .site-nav,
+      .hero,
+      .letters-panel,
+      .content-card,
+      .summary,
+      .print-row {
+        display: none !important;
+      }
+
+      .page {
+        width: 100%;
+        padding: 0;
+      }
+
+      .print-only {
+        display: block !important;
+      }
+
+      .print-summary h1 {
+        margin: 0 0 18mm;
+        text-align: center;
+        font-size: 54pt;
+        line-height: 1;
+        font-weight: 950;
+        color: #123044;
+        text-shadow: none;
+        letter-spacing: 0.02em;
+      }
+
+      .print-list {
+        display: grid;
+        gap: 8mm;
+      }
+
+      .print-list div {
+        display: grid;
+        grid-template-columns: 34mm 1fr;
+        gap: 8mm;
+        align-items: start;
+        padding: 6mm 7mm;
+        border: 1px solid #d8e1e7;
+        border-radius: 8mm;
+        break-inside: avoid;
+      }
+
+      .print-list strong {
+        font-size: 18pt;
+        line-height: 1.2;
+        color: #0b5f89;
+      }
+
+      .print-list p {
+        margin: 0;
+        font-size: 13.5pt;
+        line-height: 1.55;
+        font-weight: 600;
+        color: #263f4d;
+      }
+    }
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom: 1px solid rgba(21, 147, 209, 0.18);
+    backdrop-filter: blur(12px);
+  }
+
+  .home-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 999px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 12px rgba(18, 48, 68, 0.08);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .home-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(18, 48, 68, 0.14);
+  }
+
+  .print-only {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-nav" aria-label="ניווט ראשי">
+    <a href="index.html" class="home-btn" aria-label="חזרה לעמוד הראשי" title="חזרה לעמוד הראשי">⌂</a>
+  </header>
+  <main class="page">
+    <section class="hero" aria-labelledby="main-title">
+      <div class="hero-content">
+        <h1 id="main-title">ק.ת.י.מ.ב.ה</h1>
+        <p class="subtitle">כללי זהב להצגה טובה מול קהל</p>
+      </div>
+    </section>
+
+    <section class="letters-panel" aria-label="בחירת כלל מתוך קתימבה">
+      <div class="letters-grid" id="lettersGrid"></div>
+    </section>
+
+    <section class="content-card is-hidden" id="contentCard" aria-live="polite">
+      <div class="content-header">
+        <div class="badge" id="contentBadge">ק</div>
+        <div class="content-title-wrap">
+          <h2 id="contentTitle">קול</h2>
+          <p id="contentLead">הקול הוא הדבר הראשון שהקהל שומע. המטרה היא לדבר בקול ברור, יציב ונעים.</p>
+        </div>
+        <figure class="rule-visual">
+          <img id="contentImage" src="images/1.png" alt="איור קול" />
+        </figure>
+      </div>
+      <div class="content-body">
+        <div class="deep-box yes">
+          <h3>מה כדאי לעשות?</h3>
+          <ul class="main-list" id="doList"></ul>
+        </div>
+        <div class="deep-box no">
+          <h3>מה פחות כדאי?</h3>
+          <ul class="avoid-list" id="avoidList"></ul>
+        </div>
+      </div>
+      <div class="step-actions" id="stepActions">
+        <button class="next-button is-hidden" type="button" id="nextButton">המשך לאות הבאה</button>
+        <button class="summary-button is-hidden" type="button" id="summaryButton">סיכום</button>
+      </div>
+      <div class="progress-line" id="progressLine" aria-live="polite">
+        <span id="progressText">בחרו אות כדי להתחיל</span>
+        <span class="progress-dots" id="progressDots" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <section class="summary is-hidden" id="summarySection">
+      <h2>סיכום קתימב״ה</h2>
+      <p>
+        לא צריך להיות מושלמים. צריך להיות ברורים, נוכחים ומחוברים למה שמציגים.
+        כשזוכרים את קתימב״ה, ההצגה לא נשארת רק טקסט שנאמר בקול — היא הופכת לרגע שבו עומדים מאחורי הרעיון ומראים שיש לו ערך.
+      </p>
+      <div class="print-row">
+        <button class="small-action" type="button" onclick="window.print()">הדפסה</button>
+      </div>
+    </section>
+
+    <section class="print-only print-summary" aria-label="גרסת הדפסה">
+      <h1>ק.ת.י.מ.ב.ה</h1>
+      <div class="print-list">
+        <div><strong>ק — קול</strong><p>הקול הוא הדבר הראשון שהקהל שומע. המטרה היא לדבר בקול ברור, יציב ונעים.</p></div>
+        <div><strong>ת — תנועה</strong><p>התנועה משדרת ביטחון. היא צריכה לעזור לקהל להבין — לא להסיח את הדעת.</p></div>
+        <div><strong>י — ידיים</strong><p>הידיים הן חלק מההסבר. הן יכולות לעזור להראות מעבר בין רעיונות ולהדגיש נקודות חשובות.</p></div>
+        <div><strong>מ — מבט</strong><p>קשר עין גורם לקהל להרגיש שמדברים אליו. מספיק להעביר מבט בין כמה נקודות בחדר.</p></div>
+        <div><strong>ב — ביטחון</strong><p>ביטחון לא אומר שאין התרגשות. ביטחון נבנה מתרגול ומהיכולת להמשיך גם אם הייתה טעות קטנה.</p></div>
+        <div><strong>ה — התלהבות</strong><p>התלהבות עוזרת לקהל להתחבר לרעיון. היא לא צריכה להיות מוגזמת — רק אמיתית וברורה.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const rules = [
+      {
+        key: "voice",
+        letter: "ק",
+        title: "קול",
+        lead: "הקול הוא הדבר הראשון שהקהל שומע. המטרה היא לדבר בקול ברור, יציב ונעים.",
+        image: "images/1.png",
+        color: "linear-gradient(135deg, #0f73bd, #21bfd0)",
+        do: [
+          "לדבר בקול ברור ובטוח",
+          "לשמור על קול יציב ונעים",
+          "להדגיש מילים חשובות",
+          "לעצור רגע בין משפטים",
+          "לדבר כך שכולם יבינו"
+        ],
+        avoid: [
+          "לא ללחוש בזמן ההצגה",
+          "לא לבלוע מילים חשובות",
+          "לא לדבר מהר מדי",
+          "לא לדבר עם הגב לקהל",
+          "לא לדבר בלי שינוי בקול"
+        ]
+      },
+      {
+        key: "movement",
+        letter: "ת",
+        title: "תנועה",
+        lead: "התנועה משדרת ביטחון. היא צריכה לעזור לקהל להבין — לא להסיח את הדעת.",
+        image: "images/2.png",
+        color: "linear-gradient(135deg, #e84d8a, #f47855)",
+        do: [
+          "לעמוד מול הקהל בביטחון",
+          "לזוז מעט כשמסבירים",
+          "להצביע על הפוסטר כשצריך",
+          "לעמוד במקום שלא מסתיר",
+          "לנוע בצורה רגועה וטבעית"
+        ],
+        avoid: [
+          "לא לזוז בלי מטרה",
+          "לא לעמוד קפואים לגמרי",
+          "לא להסתיר את הפוסטר",
+          "לא להסתובב בזמן הסבר",
+          "לא להתנדנד מצד לצד"
+        ]
+      },
+      {
+        key: "hands",
+        letter: "י",
+        title: "ידיים",
+        lead: "הידיים הן חלק מההסבר. הן יכולות לעזור להראות מעבר בין רעיונות ולהדגיש נקודות חשובות.",
+        image: "images/3.png",
+        color: "linear-gradient(135deg, #5d56d7, #1593d1)",
+        do: [
+          "להשתמש בידיים להסבר",
+          "להצביע על חלק חשוב",
+          "להראות מעבר בין רעיונות",
+          "לשמור על תנועות פתוחות",
+          "לתת לידיים לחזק מסר"
+        ],
+        avoid: [
+          "לא לשים ידיים בכיסים",
+          "לא לשחק בחפצים ביד",
+          "לא להצביע בלי להסביר",
+          "לא לכסות את הפנים",
+          "לא לעשות תנועות גדולות מדי"
+        ]
+      },
+      {
+        key: "eyes",
+        letter: "מ",
+        title: "מבט",
+        lead: "קשר עין גורם לקהל להרגיש שמדברים אליו. מספיק להעביר מבט בין כמה נקודות בחדר.",
+        image: "images/4.png",
+        color: "linear-gradient(135deg, #22a56e, #22c7b8)",
+        do: [
+          "להסתכל על הקהל בנחת",
+          "להעביר מבט בין אנשים",
+          "ליצור קשר עין קצר",
+          "להביט קדימה בביטחון",
+          "להראות נוכחות בחדר"
+        ],
+        avoid: [
+          "לא להביט רק לרצפה",
+          "לא לקרוא בלי להרים מבט",
+          "לא להסתכל רק על חבר",
+          "לא להיצמד לדף או למסך",
+          "לא לנעוץ מבט או לבהות"
+        ]
+      },
+      {
+        key: "confidence",
+        letter: "ב",
+        title: "ביטחון",
+        lead: "ביטחון לא אומר שאין התרגשות. ביטחון נבנה מתרגול ומהיכולת להמשיך גם אם הייתה טעות קטנה.",
+        image: "images/5.png",
+        color: "linear-gradient(135deg, #923cba, #e84d8a)",
+        do: [
+          "להתכונן טוב מראש",
+          "לתרגל את הפיץ׳ בקול",
+          "לדבר ברור גם כשמתרגשים",
+          "להמשיך גם אם יש טעות",
+          "לזכור שביטחון נבנה"
+        ],
+        avoid: [
+          "לא להתנצל בלי סיבה",
+          "לא להגיע בלי הכנה",
+          "לא לעצור בגלל טעות",
+          "לא לומר מראש שלא יודעים",
+          "לא לצחוק מלחץ בהצגה"
+        ]
+      },
+      {
+        key: "energy",
+        letter: "ה",
+        title: "התלהבות",
+        lead: "התלהבות עוזרת לקהל להתחבר לרעיון. היא לא צריכה להיות מוגזמת — רק אמיתית וברורה.",
+        image: "images/6.png",
+        color: "linear-gradient(135deg, #f0992e, #f05c71)",
+        do: [
+          "לדבר עם עניין ואנרגיה",
+          "להראות שאכפת מהרעיון",
+          "לתת לקול להביע עניין",
+          "לשמור על שפת גוף חיה",
+          "לשדר שהמיזם חשוב"
+        ],
+        avoid: [
+          "לא לדבר בלי הבעה",
+          "לא להישמע חסרי עניין",
+          "לא להקריא כמו רשימה",
+          "לא לוותר על חיוך רגוע",
+          "לא להתלהב בצורה מוגזמת"
+        ]
+      }
+    ];
+
+    const grid = document.getElementById("lettersGrid");
+    const badge = document.getElementById("contentBadge");
+    const title = document.getElementById("contentTitle");
+    const lead = document.getElementById("contentLead");
+    const contentImage = document.getElementById("contentImage");
+    const doList = document.getElementById("doList");
+    const avoidList = document.getElementById("avoidList");
+    const contentCard = document.getElementById("contentCard");
+    const summarySection = document.getElementById("summarySection");
+    const nextButton = document.getElementById("nextButton");
+    const summaryButton = document.getElementById("summaryButton");
+    const progressText = document.getElementById("progressText");
+    const progressDots = document.getElementById("progressDots");
+    const visitedRules = new Set();
+    let currentRuleIndex = -1;
+
+    function renderButtons() {
+      grid.innerHTML = rules.map((rule) => `
+        <button class="letter-card" data-key="${rule.key}" type="button" aria-label="פתיחת כלל ${rule.title}">
+          <span class="letter">${rule.letter}</span>
+          <span class="letter-title">${rule.title}</span>
+          <span class="letter-hint">לחיצה לפתיחה</span>
+        </button>
+      `).join("");
+
+      progressDots.innerHTML = rules.map(() => `<span class="progress-dot"></span>`).join("");
+    }
+
+    function renderRule(rule) {
+      currentRuleIndex = rules.findIndex(item => item.key === rule.key);
+      contentCard.classList.remove("is-hidden");
+      visitedRules.add(rule.key);
+      summarySection.classList.add("is-hidden");
+      nextButton.classList.toggle("is-hidden", currentRuleIndex === rules.length - 1);
+      summaryButton.classList.toggle("is-hidden", currentRuleIndex !== rules.length - 1);
+      updateProgress();
+
+      badge.textContent = rule.letter;
+      badge.style.background = rule.color;
+      title.textContent = rule.title;
+      lead.textContent = rule.lead;
+      contentImage.src = rule.image;
+      contentImage.alt = `איור ${rule.title}`;
+
+      doList.innerHTML = rule.do.map(item => `
+        <li><span class="mark">✓</span><span>${item}</span></li>
+      `).join("");
+
+      avoidList.innerHTML = rule.avoid.map(item => `
+        <li><span class="mark">×</span><span>${item}</span></li>
+      `).join("");
+
+      document.querySelectorAll(".letter-card").forEach(button => {
+        button.classList.toggle("active", button.dataset.key === rule.key);
+      });
+    }
+
+    function updateProgress() {
+      if (currentRuleIndex < 0) {
+        progressText.textContent = "בחרו אות כדי להתחיל";
+      } else {
+        progressText.textContent = `${rules[currentRuleIndex].title} · ${currentRuleIndex + 1} מתוך ${rules.length}`;
+      }
+
+      document.querySelectorAll(".progress-dot").forEach((dot, index) => {
+        dot.classList.toggle("done", index < currentRuleIndex);
+        dot.classList.toggle("current", index === currentRuleIndex);
+      });
+    }
+
+    renderButtons();
+
+    grid.addEventListener("click", (event) => {
+      const button = event.target.closest(".letter-card");
+      if (!button) return;
+      const rule = rules.find(item => item.key === button.dataset.key);
+      if (!rule) return;
+      renderRule(rule);
+      contentCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    nextButton.addEventListener("click", () => {
+      const nextIndex = Math.min(currentRuleIndex + 1, rules.length - 1);
+      renderRule(rules[nextIndex]);
+      contentCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    summaryButton.addEventListener("click", () => {
+      summarySection.classList.remove("is-hidden");
+      summarySection.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  </script>
+</body>
+</html>
