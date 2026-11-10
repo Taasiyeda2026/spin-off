@@ -955,46 +955,76 @@ function roundBox(ctx,x,y,w,h,r,fill,stroke){
 function drawRtl(ctx,text,x,y,font,color){
  ctx.font=font;ctx.textAlign='right';ctx.direction='rtl';ctx.fillStyle=color;ctx.fillText(String(text),x,y);
 }
+// The Arabic activity produces a bilingual Hebrew/Arabic roster for Hebrew-speaking managers.
 function createPdfCanvas(){
  const canvas=document.createElement('canvas');canvas.width=1240;canvas.height=1754;
  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height;
+ const hebrewDomains=[
+  'חימום וקירור','זיהוי תקלות','צמחים וחקלאות','צילום מרחוק',
+  'ניווט ואיתור','תקשורת מרחוק','חיסכון במשאבים','בדיקת מקומות'
+ ];
+ const left=54,right=54,gapX=22,gapY=17;
+ const twoColW=(W-left-right-gapX)/2;
+ const rightEdge=W-62,leftColumnRight=left+twoColW-7;
+ const rtlText=(text,x,y,font,color,maxWidth)=>{
+  ctx.font=font;ctx.direction='rtl';ctx.textAlign='right';ctx.fillStyle=color;
+  if(maxWidth)ctx.fillText(String(text),x,y,maxWidth);
+  else ctx.fillText(String(text),x,y);
+ };
  ctx.fillStyle='#f4f8fe';ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#081c3c';ctx.fillRect(0,0,W,235);
- const grad=ctx.createLinearGradient(0,0,W,235);grad.addColorStop(0,'#0068ba');grad.addColorStop(.48,'#43d8ff');grad.addColorStop(1,'#9b59ff');
- ctx.fillStyle=grad;ctx.fillRect(0,228,W,7);
- ctx.fillStyle='#daf8ff';ctx.font='bold 28px Arial';ctx.direction='rtl';ctx.textAlign='right';ctx.fillText('تقنيات الفضاء  |  فرق المهمّة',W-62,62);
- ctx.font='bold 50px Arial';ctx.direction='rtl';ctx.textAlign='right';ctx.fillStyle='#ffffff';ctx.fillText('توزيع الفرق - ملخّص الطلاب',W-62,119,W-124);
- drawRtl(ctx,`${state.n} طلاب  •  ${state.teamIds.length} فرق`,W-62,176,'bold 27px Arial','#a8e8ff');
- const schoolDetails=[state.schoolName||'',state.classGroup||''].filter(Boolean).join(' · ');
- if(schoolDetails) {ctx.font='bold 23px Arial';ctx.direction='rtl';ctx.textAlign='right';ctx.fillStyle='#ffffff';ctx.fillText(schoolDetails,W-62,210,W-124);}
- const cols=2,gapX=22,gapY=17,left=54,right=54,startY=273;
+ ctx.fillStyle='#081c3c';ctx.fillRect(0,0,W,276);
+ const gradient=ctx.createLinearGradient(0,0,W,276);
+ gradient.addColorStop(0,'#0068ba');gradient.addColorStop(.48,'#43d8ff');gradient.addColorStop(1,'#9b59ff');
+ ctx.fillStyle=gradient;ctx.fillRect(0,269,W,7);
+ // Two distinct columns avoid mixed-direction punctuation and keep both languages legible.
+ rtlText('تقنيات الفضاء | فرق المهمّة',rightEdge,51,'bold 26px Arial','#daf8ff',twoColW-40);
+ rtlText('טכנולוגיות החלל | צוותי המשימה',leftColumnRight,51,'bold 26px Arial','#daf8ff',twoColW-40);
+ rtlText('توزيع الفرق - ملخّص الطلاب',rightEdge,108,'bold 39px Arial','#ffffff',twoColW-32);
+ rtlText('חלוקת צוותים - סיכום תלמידים',leftColumnRight,108,'bold 39px Arial','#ffffff',twoColW-32);
+ rtlText(`${state.n} طلاب  •  ${state.teamIds.length} فرق`,rightEdge,157,'bold 26px Arial','#a8e8ff',twoColW-40);
+ rtlText(`${state.n} תלמידים  •  ${state.teamIds.length} צוותים`,leftColumnRight,157,'bold 26px Arial','#a8e8ff',twoColW-40);
+ if(state.schoolName){
+  rtlText('اسم المدرسة: '+state.schoolName,rightEdge,204,'bold 23px Arial','#ffffff',twoColW-40);
+  rtlText('בית הספר: '+state.schoolName,leftColumnRight,204,'bold 23px Arial','#ffffff',twoColW-40);
+ }
+ if(state.classGroup){
+  rtlText('الصفّ / المجموعة: '+state.classGroup,rightEdge,241,'bold 22px Arial','#d3eafb',twoColW-40);
+  rtlText('כיתה / קבוצה: '+state.classGroup,leftColumnRight,241,'bold 22px Arial','#d3eafb',twoColW-40);
+ }
+ const startY=302;
  const rows=Math.ceil(state.teamIds.length/2);
- const areaH=H-startY-114;
- const cardH=Math.min(365,Math.floor((areaH-gapY*(rows-1))/rows));
- const cardW=(W-left-right-gapX)/2;
+ const cardH=Math.min(365,Math.floor((H-startY-93-gapY*(rows-1))/rows));
+ const cardW=twoColW;
  state.teamIds.forEach((teamId,i)=>{
   const col=i%2,row=Math.floor(i/2),x=left+col*(cardW+gapX),y=startY+row*(cardH+gapY);
   const color=palette[teamId];
-  roundBox(ctx,x,y,cardW,cardH,22,'#ffffff','#d1e2f2');
-  ctx.save();ctx.beginPath();ctx.roundRect(x,y,cardW,cardH,22);ctx.clip();ctx.fillStyle=color;ctx.fillRect(x+cardW-10,y,10,cardH);ctx.restore();
-  ctx.fillStyle=color;ctx.beginPath();ctx.arc(x+cardW-55,y+53,35,0,Math.PI*2);ctx.fill();
-  ctx.textAlign='center';ctx.direction='ltr';ctx.font='bold 39px Arial';ctx.fillStyle='#061c38';ctx.fillText(String(teamId+1),x+cardW-55,y+67);
-  drawRtl(ctx,'فريق',x+cardW-104,y+39,'bold 22px Arial','#607993');
-  ctx.font='bold 30px Arial';ctx.fillStyle='#09274c';ctx.textAlign='right';ctx.direction='rtl';ctx.fillText(domains[teamId],x+cardW-104,y+79,cardW-158);
+  roundBox(ctx,x,y,cardW,cardH,20,'#ffffff','#d1e2f2');
+  ctx.save();ctx.beginPath();ctx.roundRect(x,y,cardW,cardH,20);ctx.clip();
+  ctx.fillStyle=color;ctx.fillRect(x+cardW-10,y,10,cardH);ctx.restore();
+  ctx.fillStyle=color;ctx.beginPath();ctx.arc(x+cardW-51,y+48,33,0,Math.PI*2);ctx.fill();
+  ctx.textAlign='center';ctx.direction='ltr';ctx.font='bold 37px Arial';ctx.fillStyle='#061c38';
+  ctx.fillText(String(teamId+1),x+cardW-51,y+61);
+  const textRight=x+cardW-99;
+  const textWidth=cardW-133;
+  rtlText('צוות / فريق',textRight,y+36,'bold 21px Arial','#607993',textWidth);
+  rtlText(hebrewDomains[teamId],textRight,y+72,'bold 29px Arial','#09274c',textWidth);
+  rtlText(domains[teamId],textRight,y+106,'bold 26px Arial','#174e72',textWidth);
   const members=teamMembers(teamId);
-  drawRtl(ctx,`${members.length} مشاركون`,x+cardW-35,y+124,'bold 22px Arial','#55728f');
-  ctx.strokeStyle='#dceafa';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+25,y+147);ctx.lineTo(x+cardW-25,y+147);ctx.stroke();
-  const listStart=y+180;
+  rtlText(`${members.length} משתתפים / ${members.length} مشاركون`,x+cardW-30,y+149,'bold 21px Arial','#55728f',cardW-58);
+  ctx.strokeStyle='#dceafa';ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(x+25,y+169);ctx.lineTo(x+cardW-25,y+169);ctx.stroke();
+  const listStart=y+197,step=25;
   members.forEach((card,j)=>{
-   const yy=listStart+j*32;
+   const yy=listStart+j*step;
    const numberX=x+cardW-46;
-   ctx.textAlign='center';ctx.direction='ltr';ctx.fillStyle='#e8f2fc';ctx.beginPath();ctx.arc(numberX,yy-8,14,0,Math.PI*2);ctx.fill();
-   ctx.fillStyle='#1b496b';ctx.font='bold 18px Arial';ctx.fillText(String(j+1),numberX,yy-2);
-   ctx.font='25px Arial';ctx.textAlign='right';ctx.direction='rtl';ctx.fillStyle='#112f53';ctx.fillText(card.name,x+cardW-77,yy,cardW-135);
+   ctx.textAlign='center';ctx.direction='ltr';ctx.fillStyle='#e8f2fc';
+   ctx.beginPath();ctx.arc(numberX,yy-8,12,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle='#1b496b';ctx.font='bold 16px Arial';ctx.fillText(String(j+1),numberX,yy-2);
+   rtlText(card.name,x+cardW-76,yy,'23px Arial','#112f53',cardW-126);
   });
  });
- ctx.fillStyle='#6c8299';ctx.textAlign='center';ctx.direction='rtl';ctx.font='21px Arial';
- ctx.fillText('تقنيات الفضاء • توزيع فرق المهمّة',W/2,H-46);
+ rtlText('تقنيات الفضاء • فرق المهمّة   |   טכנולוגיות החלל • צוותי המשימה',
+  W-56,H-42,'21px Arial','#6c8299',W-112);
  return canvas;
 }
 function imageToPdfBytes(canvas){
