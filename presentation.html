@@ -1005,6 +1005,75 @@
     .badge-stack .lesson-step-label { font-size: .69rem; padding: 2px 5px; }
     .step-actions .practice-cta-button, .step-actions .next-button, .step-actions .summary-button { max-width: 100%; }
   }
+
+  /* Interactive comparison activity: one sentence, two performances, one takeaway. */
+  @media screen {
+    .practice-panel { padding: 12px 14px 10px; }
+    .practice-intro h3 { font-size: 1.18rem; margin: 0 0 2px; }
+    .practice-intro p { font-size: .9rem; }
+    .practice-quote { margin: 8px auto 7px; padding: 10px 14px; }
+    .practice-sentence { font-size: clamp(1.3rem, 2.1vw, 1.7rem); line-height: 1.28; }
+    .another-sentence-button { padding: 5px 14px; font-size: .86rem; }
+    .practice-comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 10px;
+      text-align: right;
+    }
+    .practice-way {
+      border-radius: 14px;
+      padding: 10px 13px;
+      border: 1px solid rgba(18,48,68,.07);
+    }
+    .practice-way-poor { background: rgba(232,77,138,.10); }
+    .practice-way-better { background: rgba(34,199,184,.13); }
+    .practice-way h4 {
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #173a50;
+    }
+    .practice-number {
+      display: inline-grid;
+      place-items: center;
+      flex: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      font-size: .83rem;
+      font-weight: 900;
+      color: #fff;
+      background: #dd4e88;
+    }
+    .practice-way-better .practice-number { background: #16a99b; }
+    .practice-way p {
+      margin: 0;
+      color: #203c4e;
+      font-size: 1rem;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .practice-discovery {
+      margin-top: 9px;
+      padding: 8px 13px;
+      text-align: right;
+      border-radius: 11px;
+      border: 1px solid rgba(21,147,209,.17);
+      background: rgba(255,255,255,.7);
+    }
+    .practice-discovery strong { font-size: .98rem; color: #0b699e; }
+    .practice-discovery p { display: inline; margin: 0 6px 0 0; font-size: .96rem; font-weight: 650; line-height: 1.3; }
+    .has-open-rule .practice-panel { margin: 6px 12px 5px; }
+  }
+  @media screen and (max-width: 650px) {
+    .practice-comparison { grid-template-columns: 1fr; }
+    .practice-way p { font-size: .96rem; }
+    .practice-way { padding: 10px; }
+    .practice-discovery p { display: block; margin: 3px 0 0; }
+  }
   </style>
 </head>
 <body>
@@ -1054,15 +1123,27 @@
       </div>
       <section class="practice-panel" id="practicePanel" aria-labelledby="practiceHeading" hidden>
         <div class="practice-intro">
-          <h3 id="practiceHeading">מתנסים יחד!</h3>
-          <p>קראו את המשפט בקול ועשו את הפעולה שמופיעה מתחתיו.</p>
+          <h3 id="practiceHeading">עכשיו תורכם!</h3>
+          <p>אותו משפט בשתי דרכים. מדגימים בכוונה ולומדים מההבדל!</p>
         </div>
         <div class="practice-quote" aria-live="polite" aria-atomic="true">
           <p class="practice-sentence" id="practiceSentence"></p>
         </div>
-        <p class="practice-instruction" id="practiceInstruction"></p>
         <button type="button" class="another-sentence-button" id="anotherSentenceButton" aria-label="הצגת משפט אחר">↻ משפט אחר</button>
-        
+        <div class="practice-comparison" aria-label="שני סיבובי התרגול">
+          <div class="practice-way practice-way-poor">
+            <h4><span class="practice-number">1</span> סיבוב ראשון – פחות טוב</h4>
+            <p id="practicePoor"></p>
+          </div>
+          <div class="practice-way practice-way-better">
+            <h4><span class="practice-number">2</span> סיבוב שני – טוב יותר</h4>
+            <p id="practiceBetter"></p>
+          </div>
+        </div>
+        <div class="practice-discovery">
+          <strong>מה גילינו?</strong>
+          <p id="practiceTakeaway"></p>
+        </div>
       </section>
       <div class="step-actions" id="stepActions">
         <button class="practice-cta-button" type="button" id="practiceModeButton">עכשיו תורכם! <span aria-hidden="true">←</span></button>
@@ -1116,7 +1197,9 @@
         image: "presentation/1.png",
         practice: {
           sentences: ["מצאתי כוכב שעשוי כולו משוקולד!","החללית שלנו יכולה לטוס עד השמש!","גילינו במאדים אגם של מיץ תות!"],
-          instruction: "קראו פעם אחת מהר ובקול חלש. אחר כך קראו שוב בקול ברור ובקצב נוח. הדגישו את המילה המפתיעה בסוף!"
+          poor: "אמרו את המשפט מהר מאוד ובקול חלש, בלי להדגיש אף מילה.",
+          better: "אמרו שוב בקול ברור ובקצב נוח. הדגישו את המילה המפתיעה במשפט.",
+          takeaway: "כשמשנים את הקצב, את העוצמה ואת ההדגשה, לקהל קל יותר להבין את המסר."
         },
         color: "linear-gradient(135deg, #0f73bd, #21bfd0)",
         do: [
@@ -1140,7 +1223,9 @@
         image: "presentation/2.png",
         practice: {
           sentences: ["החללית כאן והירח מחכה ממש שם!","הרובוט יצא מהמעבדה והגיע עד מאדים!","מצד אחד הר געש ומצד שני עיר של חייזרים!"],
-          instruction: "עמדו בנוחות מול הקהל. קראו את המשפט וזוזו צעד אחד רק כשהתנועה עוזרת להמחיש לאן אתם מתכוונים."
+          poor: "אמרו את המשפט תוך כדי הליכה הלוך ושוב, בלי סיבה.",
+          better: "עמדו יציב. כשמתארים מעבר ממקום למקום, הוסיפו צעד קטן ומכוון.",
+          takeaway: "תנועה טובה עוזרת לקהל לעקוב אחרי הסיפור. לא צריך לזוז כל הזמן."
         },
         color: "linear-gradient(135deg, #e84d8a, #f47855)",
         do: [
@@ -1164,7 +1249,9 @@
         image: "presentation/3.png",
         practice: {
           sentences: ["הרובוט שבנינו גבוה כמעט כמו הבית!","מצאנו ביצה ענקית על הירח!","החללית שלנו מתקפלת לגודל של תיק!"],
-          instruction: "קראו את המשפט והשתמשו בידיים כדי להראות גודל או צורה. עכשיו קראו שוב בלי מחוות. מה היה ברור יותר?"
+          poor: "הכניסו את הידיים לכיסים ואמרו את המשפט בלי להמחיש דבר.",
+          better: "הוציאו את הידיים והראו בעזרתן את הגודל או הצורה שאתם מתארים.",
+          takeaway: "מחוות ידיים פשוטות יכולות להמחיש רעיון ולעזור לקהל להבין אותו."
         },
         color: "linear-gradient(135deg, #5d56d7, #1593d1)",
         do: [
@@ -1188,7 +1275,9 @@
         image: "presentation/4.png",
         practice: {
           sentences: ["יש לי סוד: מצאנו משהו מוזר על מאדים!","אתם לא תאמינו מה ראינו בחלון החללית!","מי רוצה לשמוע מה החייזר אמר לי?"],
-          instruction: "קראו את המשפט והפנו את המבט לשלושה אזורים שונים בקהל. לא צריך לנעוץ מבט באף אחד."
+          poor: "אמרו את המשפט כשאתם מביטים רק ברצפה או בדף.",
+          better: "הכירו את המשפט, הרימו את הראש ואמרו אותו תוך הפניית מבט לאזורים שונים בקהל.",
+          takeaway: "כשפונים אל הקהל במבט, הוא מרגיש שמדברים אליו ולא רק מקריאים טקסט."
         },
         color: "linear-gradient(135deg, #22a56e, #22c7b8)",
         do: [
@@ -1212,7 +1301,9 @@
         image: "presentation/5.png",
         practice: {
           sentences: ["המצאתי מכונה שמכינה פיצה על הירח!","הבאתי לכם רובוט שמנקה את כל הבית!","בניתי חללית קטנה שעושה פרצופים מצחיקים!"],
-          instruction: "התחילו לקרוא ועצרו בכוונה באמצע המשפט. קחו נשימה קטנה והמשיכו בנחת עד הסוף. גם כשנעצרים אפשר להמשיך!"
+          poor: "עצרו בכוונה באמצע המשפט, התנצלו כמה פעמים ונסו להתחיל הכול מחדש.",
+          better: "עצרו באותו מקום, קחו נשימה והמשיכו בנחת מאותה נקודה.",
+          takeaway: "גם אם מתבלבלים, לא חייבים להתחיל מחדש. אפשר לנשום ולהמשיך."
         },
         color: "linear-gradient(135deg, #923cba, #e84d8a)",
         do: [
@@ -1236,7 +1327,9 @@
         image: "presentation/6.png",
         practice: {
           sentences: ["לא תאמינו! גילינו איך מכינים גלידה בחלל!","וואו! הרובוט שלי יודע לרקוד סלסה!","יש! הצלחנו לגדל אבטיח על הירח!"],
-          instruction: "קראו פעם אחת בלי הבעה. אחר כך קראו שוב כאילו אתם ממש מתרגשים מהגילוי. אפשר לחייך ולהביע עניין בקול."
+          poor: "אמרו את המשפט באדישות, כאילו מדובר במשהו שלא מעניין אתכם.",
+          better: "דמיינו שהגילוי באמת משמח אתכם. חייכו והראו לקהל למה זה כל כך מסקרן.",
+          takeaway: "התלהבות היא לא צעקה. היא עוזרת לקהל להרגיש למה הסיפור חשוב לכם."
         },
         color: "linear-gradient(135deg, #f0992e, #f05c71)",
         do: [
@@ -1272,7 +1365,9 @@
     const startLessonButton = document.getElementById("startLessonButton");
     const lessonStepLabel = document.getElementById("lessonStepLabel");
     const practiceSentence = document.getElementById("practiceSentence");
-    const practiceInstruction = document.getElementById("practiceInstruction");
+    const practicePoor = document.getElementById("practicePoor");
+    const practiceBetter = document.getElementById("practiceBetter");
+    const practiceTakeaway = document.getElementById("practiceTakeaway");
     const anotherSentenceButton = document.getElementById("anotherSentenceButton");
     const contentCard = document.getElementById("contentCard");
     const summarySection = document.getElementById("summarySection");
@@ -1300,7 +1395,9 @@
       const current = rules[currentRuleIndex];
       if (!current) return;
       practiceSentence.textContent = current.practice.sentences[currentSentenceIndex];
-      practiceInstruction.textContent = current.practice.instruction;
+      practicePoor.textContent = current.practice.poor;
+      practiceBetter.textContent = current.practice.better;
+      practiceTakeaway.textContent = current.practice.takeaway;
     }
 
     function renderButtons() {
