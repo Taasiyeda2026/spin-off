@@ -941,16 +941,28 @@
       margin: 0 1px 6px 0;
     }
     .lesson-step-label[hidden] { display: none !important; }
+    .badge-stack { position: relative; display: grid; place-items: center; width: max-content; }
+    .badge-stack .lesson-step-label {
+      position: absolute;
+      bottom: calc(100% + 5px);
+      right: 0;
+      z-index: 1;
+      white-space: nowrap;
+      margin: 0;
+      padding: 2px 8px;
+      font-size: .78rem;
+      line-height: 1.25;
+    }
     /* The large welcome title is for entry only. Lessons get the full screen. */
     .has-open-rule .hero { display: none; }
     .has-open-rule .letters-panel { margin-top: 0; padding: 6px 10px; }
     .has-open-rule .start-action { display: none; }
-    .has-open-rule .lesson-step-label { margin-bottom: 5px; padding: 2px 10px; font-size: .79rem; }
+    .has-open-rule .lesson-step-label { margin: 0; padding: 2px 8px; font-size: .78rem; }
     .has-open-rule .letter-card { min-height: 51px; padding: 4px 6px; }
     .has-open-rule .letter { font-size: 1.8rem; }
     .has-open-rule .letter-title { margin-top: 1px; font-size: .8rem; }
     .has-open-rule .content-card { margin-top: 8px; }
-    .has-open-rule .content-header { padding: 9px 13px; }
+    .has-open-rule .content-header { padding: 23px 13px 9px; }
     .has-open-rule .rule-visual { width: 116px; }
     .has-open-rule .content-title-wrap p { font-size: 1.01rem; line-height: 1.35; }
     .has-open-rule .content-body { padding: 9px 12px 10px; }
@@ -990,6 +1002,7 @@
     .letter-card { min-height: 90px; }
     .has-open-rule .letter-card { min-height: 54px; }
     .has-open-rule .rule-visual { width: 82px; }
+    .badge-stack .lesson-step-label { font-size: .69rem; padding: 2px 5px; }
     .step-actions .practice-cta-button, .step-actions .next-button, .step-actions .summary-button { max-width: 100%; }
   }
   </style>
@@ -1007,7 +1020,6 @@
     </section>
 
     <section class="letters-panel" aria-label="בחירת כלל מתוך קתימבה">
-      <div class="lesson-step-label" id="lessonStepLabel" hidden>מכירים את הכלל</div>
       <div class="letters-grid" id="lettersGrid"></div>
       <div class="start-action">
         <button class="start-lesson-button" id="startLessonButton" type="button">מתחילים <span aria-hidden="true">←</span></button>
@@ -1016,7 +1028,10 @@
 
     <section class="content-card is-hidden" id="contentCard" aria-live="polite">
       <div class="content-header">
-        <div class="badge" id="contentBadge">ק</div>
+        <div class="badge-stack">
+          <span class="lesson-step-label" id="lessonStepLabel">מכירים את הכלל</span>
+          <div class="badge" id="contentBadge">ק</div>
+        </div>
         <div class="content-title-wrap">
           <h2 id="contentTitle">קול</h2>
           <p id="contentLead">הקול הוא הדבר הראשון שהקהל שומע. המטרה היא לדבר בקול ברור, יציב ונעים.</p>
