@@ -1138,10 +1138,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      min-height: 40px;
-      padding: 8px 14px;
+      min-height: 42px;
+      padding: 9px 14px;
       list-style: none;
+      background: linear-gradient(90deg, rgba(231,247,254,.95), rgba(226,250,245,.92));
       color: #086a9d;
       font-size: 1.05rem;
       font-weight: 900;
@@ -1149,10 +1149,10 @@
       user-select: none;
     }
     .practice-discovery summary::-webkit-details-marker { display: none; }
-    .practice-discovery summary:hover { background: rgba(21,147,209,.08); }
+    .practice-discovery summary::marker { content: ""; }
+    .practice-discovery summary:hover { background: rgba(21,147,209,.13); }
     .practice-discovery summary:focus-visible { outline: 3px solid #107cad; outline-offset: -3px; }
-    .discovery-chevron { display: inline-block; transition: transform .16s ease; font-size: 1.3rem; line-height: 1; }
-    .practice-discovery[open] .discovery-chevron { transform: rotate(180deg); }
+    .practice-discovery[open] summary { background: rgba(226,250,245,.92); }
     .practice-discovery-answer {
       border-top: 1px solid rgba(21,147,209,.15);
       padding: 10px 14px 12px;
@@ -1247,7 +1247,7 @@
           </div>
         </div>
         <details class="practice-discovery" id="practiceDiscovery">
-          <summary>מה גילינו? <span class="discovery-chevron" aria-hidden="true">⌄</span></summary>
+          <summary>מה גילינו?</summary>
           <div class="practice-discovery-answer">
             <p class="practice-reflection" id="practiceReflection"></p>
             <p id="practiceTakeaway"></p>
