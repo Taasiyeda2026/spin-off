@@ -1096,6 +1096,90 @@
     .practice-way { padding: 10px; }
     .practice-discovery p { display: block; margin: 3px 0 0; }
   }
+
+  /* Practice: show the current letter and rule name, not the long lesson header. */
+  @media screen {
+    .content-card.is-practicing .content-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+    }
+    .content-card.is-practicing .badge-stack {
+      width: auto;
+      min-width: 0;
+      display: block;
+    }
+    .content-card.is-practicing .badge {
+      width: 50px; height: 50px;
+      margin: 0; border-radius: 15px; font-size: 2rem;
+    }
+    .content-card.is-practicing .content-title-wrap h2 {
+      font-size: 1.8rem;
+      line-height: 1.15;
+      margin: 0;
+    }
+    .content-card.is-practicing .lesson-step-label,
+    .content-card.is-practicing .content-title-wrap p,
+    .content-card.is-practicing .rule-visual { display: none !important; }
+
+    /* Initially closed; revealing the learning outcome enables continuation. */
+    .practice-discovery {
+      margin-top: 9px;
+      padding: 0;
+      text-align: right;
+      border-radius: 11px;
+      border: 1px solid rgba(21,147,209,.25);
+      background: rgba(255,255,255,.79);
+      overflow: hidden;
+    }
+    .practice-discovery summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 8px 14px;
+      list-style: none;
+      color: #086a9d;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+    }
+    .practice-discovery summary::-webkit-details-marker { display: none; }
+    .practice-discovery summary:hover { background: rgba(21,147,209,.08); }
+    .practice-discovery summary:focus-visible { outline: 3px solid #107cad; outline-offset: -3px; }
+    .discovery-chevron { display: inline-block; transition: transform .16s ease; font-size: 1.3rem; line-height: 1; }
+    .practice-discovery[open] .discovery-chevron { transform: rotate(180deg); }
+    .practice-discovery-answer {
+      border-top: 1px solid rgba(21,147,209,.15);
+      padding: 10px 14px 12px;
+      text-align: center;
+    }
+    .practice-discovery .practice-reflection {
+      display: block;
+      margin: 0 0 6px;
+      color: #185574;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .practice-discovery .practice-discovery-answer #practiceTakeaway {
+      display: block;
+      margin: 0;
+      color: #284554;
+      font-size: .98rem;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+  }
+  @media screen and (max-width: 560px) {
+    .content-card.is-practicing .content-header { padding: 9px 12px; gap: 9px; }
+    .content-card.is-practicing .badge { width: 44px; height: 44px; font-size: 1.75rem; }
+    .content-card.is-practicing .content-title-wrap h2 { font-size: 1.55rem; }
+  }
   </style>
 </head>
 <body>
@@ -1146,7 +1230,7 @@
       <section class="practice-panel" id="practicePanel" aria-labelledby="practiceHeading" hidden>
         <div class="practice-intro">
           <h3 id="practiceHeading">עכשיו תורכם!</h3>
-          <p>אותו משפט בשתי דרכים. מדגימים בכוונה ולומדים מההבדל!</p>
+          <p>אותו משפט, שתי הצגות שונות לגמרי. בואו נראה מה עובד טוב יותר!</p>
         </div>
         <div class="practice-quote" aria-live="polite" aria-atomic="true">
           <p class="practice-sentence" id="practiceSentence"></p>
@@ -1162,10 +1246,13 @@
             <p id="practiceBetter"></p>
           </div>
         </div>
-        <div class="practice-discovery">
-          <strong>מה גילינו?</strong>
-          <p id="practiceTakeaway"></p>
-        </div>
+        <details class="practice-discovery" id="practiceDiscovery">
+          <summary>מה גילינו? <span class="discovery-chevron" aria-hidden="true">⌄</span></summary>
+          <div class="practice-discovery-answer">
+            <p class="practice-reflection" id="practiceReflection"></p>
+            <p id="practiceTakeaway"></p>
+          </div>
+        </details>
       </section>
       <div class="step-actions" id="stepActions">
         <button class="practice-cta-button" type="button" id="practiceModeButton">עכשיו תורכם! <span aria-hidden="true">←</span></button>
@@ -1220,8 +1307,9 @@
         practice: {
           sentences: ["מצאתי כוכב שעשוי כולו משוקולד!","החללית שלנו יכולה לטוס עד השמש!","גילינו במאדים אגם של מיץ תות!"],
           poor: "אמרו את המשפט מהר מאוד ובקול חלש, בלי להדגיש אף מילה.",
-          better: "אמרו שוב בקול ברור ובקצב נוח. הדגישו את המילה המפתיעה במשפט.",
-          takeaway: "כשמשנים את הקצב, את העוצמה ואת ההדגשה, לקהל קל יותר להבין את המסר."
+          better: "אמרו שוב בקול ברור ובקצב נוח. הדגישו את החלק הכי מפתיע במשפט!",
+          reflection: "איזה סיבוב היה ברור ומעניין יותר?",
+          takeaway: "אותן מילים יכולות להישמע אחרת לגמרי! קול ברור, קצב נוח והדגשה עוזרים לקהל להבין ולהתעניין."
         },
         color: "linear-gradient(135deg, #0f73bd, #21bfd0)",
         do: [
@@ -1247,6 +1335,7 @@
           sentences: ["החללית כאן והירח מחכה ממש שם!","הרובוט יצא מהמעבדה והגיע עד מאדים!","מצד אחד הר געש ומצד שני עיר של חייזרים!"],
           poor: "אמרו את המשפט תוך כדי הליכה הלוך ושוב, בלי סיבה.",
           better: "עמדו יציב. כשמתארים מעבר ממקום למקום, הוסיפו צעד קטן ומכוון.",
+          reflection: "מתי התנועה עזרה לקהל להבין את הסיפור?",
           takeaway: "תנועה טובה עוזרת לקהל לעקוב אחרי הסיפור. לא צריך לזוז כל הזמן."
         },
         color: "linear-gradient(135deg, #e84d8a, #f47855)",
@@ -1273,6 +1362,7 @@
           sentences: ["הרובוט שבנינו גבוה כמעט כמו הבית!","מצאנו ביצה ענקית על הירח!","החללית שלנו מתקפלת לגודל של תיק!"],
           poor: "הכניסו את הידיים לכיסים ואמרו את המשפט בלי להמחיש דבר.",
           better: "הוציאו את הידיים והראו בעזרתן את הגודל או הצורה שאתם מתארים.",
+          reflection: "באיזה סיבוב היה קל יותר לדמיין את מה שמתארים?",
           takeaway: "מחוות ידיים פשוטות יכולות להמחיש רעיון ולעזור לקהל להבין אותו."
         },
         color: "linear-gradient(135deg, #5d56d7, #1593d1)",
@@ -1299,6 +1389,7 @@
           sentences: ["יש לי סוד: מצאנו משהו מוזר על מאדים!","אתם לא תאמינו מה ראינו בחלון החללית!","מי רוצה לשמוע מה החייזר אמר לי?"],
           poor: "אמרו את המשפט כשאתם מביטים רק ברצפה או בדף.",
           better: "הכירו את המשפט, הרימו את הראש ואמרו אותו תוך הפניית מבט לאזורים שונים בקהל.",
+          reflection: "מתי הקהל הרגיש שהמציג באמת פונה אליו?",
           takeaway: "כשפונים אל הקהל במבט, הוא מרגיש שמדברים אליו ולא רק מקריאים טקסט."
         },
         color: "linear-gradient(135deg, #22a56e, #22c7b8)",
@@ -1325,6 +1416,7 @@
           sentences: ["המצאתי מכונה שמכינה פיצה על הירח!","הבאתי לכם רובוט שמנקה את כל הבית!","בניתי חללית קטנה שעושה פרצופים מצחיקים!"],
           poor: "עצרו בכוונה באמצע המשפט, התנצלו כמה פעמים ונסו להתחיל הכול מחדש.",
           better: "עצרו באותו מקום, קחו נשימה והמשיכו בנחת מאותה נקודה.",
+          reflection: "באיזה סיבוב הצלחנו להמשיך גם אחרי העצירה?",
           takeaway: "גם אם מתבלבלים, לא חייבים להתחיל מחדש. אפשר לנשום ולהמשיך."
         },
         color: "linear-gradient(135deg, #923cba, #e84d8a)",
@@ -1351,6 +1443,7 @@
           sentences: ["לא תאמינו! גילינו איך מכינים גלידה בחלל!","וואו! הרובוט שלי יודע לרקוד סלסה!","יש! הצלחנו לגדל אבטיח על הירח!"],
           poor: "אמרו את המשפט באדישות, כאילו מדובר במשהו שלא מעניין אתכם.",
           better: "דמיינו שהגילוי באמת משמח אתכם. חייכו והראו לקהל למה זה כל כך מסקרן.",
+          reflection: "באיזה סיבוב היה לקהל יותר חשק להקשיב?",
           takeaway: "התלהבות היא לא צעקה. היא עוזרת לקהל להרגיש למה הסיפור חשוב לכם."
         },
         color: "linear-gradient(135deg, #f0992e, #f05c71)",
@@ -1389,7 +1482,9 @@
     const practiceSentence = document.getElementById("practiceSentence");
     const practicePoor = document.getElementById("practicePoor");
     const practiceBetter = document.getElementById("practiceBetter");
+    const practiceReflection = document.getElementById("practiceReflection");
     const practiceTakeaway = document.getElementById("practiceTakeaway");
+    const practiceDiscovery = document.getElementById("practiceDiscovery");
     const anotherSentenceButton = document.getElementById("anotherSentenceButton");
     const contentCard = document.getElementById("contentCard");
     const summarySection = document.getElementById("summarySection");
@@ -1401,16 +1496,23 @@
     let currentRuleIndex = -1;
     let currentSentenceIndex = 0;
 
+    function updateCompletionButton() {
+      const canContinue = !practicePanel.hidden && practiceDiscovery.open;
+      nextButton.classList.toggle("is-hidden", !canContinue || currentRuleIndex === rules.length - 1);
+      summaryButton.classList.toggle("is-hidden", !canContinue || currentRuleIndex !== rules.length - 1);
+    }
+
     function showLessonMode(mode) {
       const showingPractice = mode === "practice";
+      contentCard.classList.toggle("is-practicing", showingPractice);
       tipsPanel.hidden = showingPractice;
       practicePanel.hidden = !showingPractice;
-      // One primary action at a time: learn → practice → next rule/summary.
+      if (showingPractice) practiceDiscovery.open = false;
+      // Learn → perform twice → reveal discovery → continue.
       practiceModeButton.hidden = showingPractice;
       learnModeButton.hidden = !showingPractice;
-      nextButton.classList.toggle("is-hidden", !showingPractice || currentRuleIndex === rules.length - 1);
-      summaryButton.classList.toggle("is-hidden", !showingPractice || currentRuleIndex !== rules.length - 1);
-      lessonStepLabel.textContent = showingPractice ? "עכשיו מתנסים!" : "מכירים את הכלל";
+      lessonStepLabel.textContent = "מכירים את הכלל";
+      updateCompletionButton();
     }
 
     function updatePracticeSentence() {
@@ -1419,6 +1521,7 @@
       practiceSentence.textContent = current.practice.sentences[currentSentenceIndex];
       practicePoor.textContent = current.practice.poor;
       practiceBetter.textContent = current.practice.better;
+      practiceReflection.textContent = current.practice.reflection;
       practiceTakeaway.textContent = current.practice.takeaway;
     }
 
@@ -1495,6 +1598,7 @@
       showLessonMode("learn");
       focusCurrentView();
     });
+    practiceDiscovery.addEventListener("toggle", updateCompletionButton);
     practiceModeButton.addEventListener("click", () => {
       showLessonMode("practice");
       focusCurrentView();
@@ -1503,7 +1607,9 @@
       if (currentRuleIndex < 0) return;
       const sentences = rules[currentRuleIndex].practice.sentences;
       currentSentenceIndex = (currentSentenceIndex + 1) % sentences.length;
+      practiceDiscovery.open = false;
       updatePracticeSentence();
+      updateCompletionButton();
     });
 
     grid.addEventListener("click", (event) => {
