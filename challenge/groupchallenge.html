@@ -703,6 +703,41 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
 @media(max-width:480px){.setup-language-switch{top:7px;inset-inline-start:7px}.setup-language-switch a{font-size:12px;padding:4px 7px}}
 @media print{.setup-language-switch{display:none!important}}
 
+
+/* Compact, centered roster cards regardless of the number of teams. */
+#summary .teams{
+  width:100%;
+  max-width:1150px;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),280px));
+  justify-content:center;
+  align-items:start;
+  gap:14px;
+  margin:10px auto 8px;
+}
+#summary .team-detail{
+  width:100%;
+  max-width:280px;
+  min-width:0;
+  justify-self:center;
+}
+#summary .summary-actions .finish-game{
+  background:linear-gradient(105deg,#50d8fb,#a9e5ff);
+  border:1px solid #a3ecff;
+  color:#082743;
+  box-shadow:0 0 20px #3acbff43;
+}
+@media(max-width:600px){
+  #summary .teams{grid-template-columns:minmax(0,min(100%,320px));}
+  #summary .team-detail{max-width:320px;}
+}
+@media print{
+  #summary .teams{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    max-width:none!important;
+  }
+  #summary .team-detail{max-width:none!important;width:100%;}
+}
+
 </style>
 </head>
 <body>
@@ -754,7 +789,7 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
   </div>
   <div class="teams" id="teams" aria-label="רשימת הצוותים"></div>
   <div class="summary-foot"><span class="next-step">השלב הבא</span><p>שמות חברי הצוות נשמרו. בהמשך המפגש תחקרו יחד בעיה ותפתחו רעיון לפתרון בהשראת החלל.</p></div>
-  <div class="actions summary-actions"><button type="button" class="secondary" id="backToCards">חזרה לקלפים</button><button type="button" class="primary" id="print">הורדת PDF</button></div>
+  <div class="actions summary-actions"><button type="button" class="primary finish-game" id="finishGame">סיום</button><button type="button" class="secondary" id="backToCards">חזרה לקלפים</button><button type="button" class="primary" id="print">הורדת PDF</button></div>
  </div>
 </section>
 </main>
@@ -938,6 +973,7 @@ $('revealDialog').addEventListener('cancel',event=>event.preventDefault());
 $('revealDialog').addEventListener('close',afterReveal);
 $('restart').onclick=()=>$('resetDialog').showModal();$('cancelReset').onclick=()=>$('resetDialog').close();$('confirmReset').onclick=()=>{$('resetDialog').close();state=null;try{localStorage.removeItem(storageKey)}catch(e){}showView('setup');$('count').focus()};
 $('showSummary').onclick=()=>{renderSummary();showView('summary')};$('backToCards').onclick=()=>showView('game');$('print').onclick=()=>downloadTeamsPdf();
+$('finishGame').onclick=()=>{window.location.assign('challenges.html?lang=he')};
 $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){$('fullscreen').textContent='להגדלה: F11'}};
 document.addEventListener('fullscreenchange',()=>{$('fullscreen').textContent=document.fullscreenElement?'יציאה ממסך מלא':'מסך מלא';requestAnimationFrame(fitBoard)});
 window.addEventListener('resize',()=>requestAnimationFrame(fitBoard));
