@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#020817" />
   <title>קתימב״ה | פעילות פרזנטציה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" media="screen" />
   <style>
     :root {
       --ink: #123044;
@@ -1421,6 +1424,207 @@
     .hero::after { width: 180px; height: 180px; left: -60px; top: -80px; }
     .practice-way h4 { font-size: 1rem; }
   }
+
+  /* KATIMBA visual refinement: screen-only typography, color identity and control hierarchy. */
+  @media screen {
+    body {
+      font-family: "Heebo", Arial, sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    /* Strong headings, normal-weight explanation and instructions. */
+    .hero h1 { font-weight: 900; }
+    .subtitle { font-size: 1.12rem; font-weight: 400; line-height: 1.5; }
+    .space-brand { font-weight: 800; }
+    .letter { font-weight: 900; }
+    .letter-title { font-weight: 600; }
+    .content-title-wrap h2, .content-card.is-practicing .content-title-wrap h2 {
+      font-weight: 800; letter-spacing: -.012em;
+    }
+    .content-title-wrap p, .has-open-rule .content-title-wrap p {
+      font-weight: 400; font-size: 1.03rem; line-height: 1.5; color: #c8ddee;
+    }
+    .lesson-step-label, .has-open-rule .lesson-step-label,
+    .badge-stack .lesson-step-label { font-weight: 600; }
+    .badge { font-weight: 800; }
+    .progress-line { font-weight: 500; font-size: .9rem; }
+
+    /* Six distinct colors retained across navigation and the selected letter. */
+    .letter-card[data-key="voice"] { --letter-glow: 42, 216, 239; background: linear-gradient(135deg, #0f73bd, #21bfd0); }
+    .letter-card[data-key="movement"] { --letter-glow: 255, 111, 146; background: linear-gradient(135deg, #e84d8a, #f47855); }
+    .letter-card[data-key="hands"] { --letter-glow: 125, 116, 255; background: linear-gradient(135deg, #5d56d7, #1593d1); }
+    .letter-card[data-key="eyes"] { --letter-glow: 65, 220, 169; background: linear-gradient(135deg, #22a56e, #22c7b8); }
+    .letter-card[data-key="confidence"] { --letter-glow: 217, 97, 220; background: linear-gradient(135deg, #923cba, #e84d8a); }
+    .letter-card[data-key="energy"] { --letter-glow: 255, 170, 80; background: linear-gradient(135deg, #f0992e, #f05c71); }
+    .letter-card { border: 1px solid rgba(255,255,255,.24); }
+    .letter-card.active {
+      border-color: rgba(var(--letter-glow), .9);
+      box-shadow: 0 0 0 2px rgba(var(--letter-glow), .65),
+                  0 0 19px rgba(var(--letter-glow), .30),
+                  0 11px 23px rgba(0, 6, 24, .35);
+    }
+    .letter-card:hover, .letter-card:focus-visible {
+      border-color: rgba(var(--letter-glow), .8);
+      box-shadow: 0 0 15px rgba(var(--letter-glow), .26),
+                  0 11px 22px rgba(0, 6, 24, .31);
+    }
+
+    /* Layered cards and lighter paragraphs for comfortable classroom reading. */
+    .deep-box {
+      box-shadow: inset 0 1px 0 rgba(230, 248, 255, .06), 0 6px 18px rgba(0, 5, 25, .13);
+    }
+    .deep-box.yes {
+      background: linear-gradient(160deg, rgba(12, 46, 76, .97), rgba(8, 32, 65, .94));
+      border-color: rgba(55, 213, 169, .30);
+    }
+    .deep-box.no {
+      background: linear-gradient(160deg, rgba(29, 34, 70, .97), rgba(17, 31, 64, .94));
+      border-color: rgba(234, 96, 140, .30);
+    }
+    .deep-box h3 { font-weight: 800; font-size: 1.15rem; line-height: 1.35; margin-bottom: 9px; }
+    .deep-box.yes h3 { color: #d8fff0; }
+    .deep-box.no h3 { color: #ffe5ef; }
+    .main-list li, .avoid-list li,
+    .has-open-rule .main-list li, .has-open-rule .avoid-list li {
+      font-weight: 400; line-height: 1.44; gap: 10px; color: #eff7ff;
+    }
+    .main-list li {
+      background: rgba(12, 143, 119, .13);
+      border: 1px solid rgba(80, 220, 186, .08);
+    }
+    .avoid-list li {
+      background: rgba(172, 63, 109, .14);
+      border: 1px solid rgba(253, 120, 164, .07);
+    }
+    /* Circular green/red neon is modest, limited to the actual symbols. */
+    .has-open-rule .mark, .mark {
+      width: 23px; height: 23px; font-size: .84rem; font-weight: 800;
+      border-radius: 50%; flex: 0 0 auto;
+    }
+    .yes .mark {
+      color: #f4fff9; background: #0a9674;
+      border: 1px solid rgba(120, 255, 190, .86);
+      box-shadow: 0 0 0 2px rgba(33, 235, 141, .10),
+                  0 0 10px rgba(36, 245, 145, .35),
+                  inset 0 0 6px rgba(179, 255, 208, .18);
+    }
+    .no .mark {
+      color: #fff5f7; background: #bd416b;
+      border: 1px solid rgba(255, 124, 156, .86);
+      box-shadow: 0 0 0 2px rgba(255, 63, 113, .10),
+                  0 0 10px rgba(255, 70, 113, .32),
+                  inset 0 0 6px rgba(255, 173, 193, .16);
+    }
+
+    /* Practice screen: sentence is the hero, instructions remain normal weight. */
+    .practice-intro h3 { font-weight: 800; font-size: 1.21rem; line-height: 1.32; }
+    .practice-intro p { font-weight: 400; font-size: .99rem; line-height: 1.46; color: #c1d8e9; }
+    .practice-quote {
+      background: linear-gradient(110deg, rgba(5, 23, 54, .92), rgba(6, 27, 59, .94));
+      border-color: rgba(104, 217, 255, .26);
+    }
+    .practice-sentence { font-weight: 800; letter-spacing: -.01em; line-height: 1.38; }
+    .practice-way { box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+    .practice-way-poor { border-color: rgba(241, 110, 163, .24); }
+    .practice-way-better { border-color: rgba(70, 228, 194, .25); }
+    .practice-way h4 { font-weight: 800; font-size: 1.04rem; line-height: 1.3; margin-bottom: 6px; }
+    .practice-way p { font-weight: 400; font-size: 1.01rem; line-height: 1.5; }
+    .practice-number { font-weight: 800; }
+    .practice-discovery .practice-reflection { font-weight: 600; }
+    .practice-discovery .practice-discovery-answer #practiceTakeaway {
+      font-weight: 400; font-size: 1.01rem; line-height: 1.55;
+    }
+    /* Conclusion uses a 400/800 rhythm, not one uniform bold weight. */
+    .summary h2 { font-weight: 800; }
+    .summary p, .is-summary-view .summary p {
+      font-weight: 400; font-size: 1.07rem; line-height: 1.58; max-width: 760px;
+    }
+    .summary .summary-emphasis { font-weight: 800; color: #91f0ff; }
+    .summary .summary-finale { font-weight: 700; color: #f5fbff; }
+
+    /* Three distinct control roles rather than oversized identical capsules. */
+    .start-lesson-button, .practice-cta-button,
+    .step-actions .next-button, .step-actions .summary-button,
+    .another-sentence-button, .back-to-rule-button, .small-action {
+      font-family: "Heebo", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+    .start-lesson-button {
+      min-width: 132px; min-height: 39px; width: auto;
+      padding: 7px 20px; font-size: .98rem; font-weight: 750; line-height: 1.25;
+      border-radius: 13px;
+      box-shadow: 0 0 11px rgba(25, 216, 250, .16), 0 5px 11px rgba(0, 6, 31, .23);
+    }
+    .practice-cta-button {
+      min-width: 145px; min-height: 39px; width: auto;
+      padding: 7px 20px; font-size: .98rem; font-weight: 750; line-height: 1.25;
+      border-radius: 13px;
+      box-shadow: 0 0 11px rgba(25, 216, 250, .15), 0 5px 11px rgba(0, 6, 31, .23);
+    }
+    .step-actions .next-button, .step-actions .summary-button {
+      min-width: 0; min-height: 38px; width: auto; max-width: 100%;
+      padding: 7px 18px; font-size: .93rem; font-weight: 700; line-height: 1.22;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0b679e, #155cb3);
+      box-shadow: 0 5px 13px rgba(0, 5, 28, .24);
+    }
+    .start-lesson-button:hover, .practice-cta-button:hover,
+    .step-actions .next-button:hover, .step-actions .summary-button:hover {
+      box-shadow: 0 0 14px rgba(31, 220, 255, .22), 0 6px 14px rgba(0, 6, 31, .27);
+    }
+    .another-sentence-button { font-weight: 600; padding: 5px 13px; }
+    .back-to-rule-button { font-weight: 500; font-size: .83rem; text-underline-offset: 4px; }
+    .small-action { font-weight: 600; }
+    .step-actions { gap: 4px; }
+
+    /* The discovery is not a huge full-width button: a small disclosure trigger
+       expands a separate answer panel only after the click. No arrow icon. */
+    .practice-discovery {
+      width: min(100%, 770px); margin: 9px auto 0;
+      padding: 0; border: 0; background: transparent; overflow: visible;
+    }
+    .practice-discovery summary {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: max-content; max-width: 100%; min-width: 168px; min-height: 38px;
+      margin: 0 auto; padding: 5px 16px;
+      gap: 0; border: 1px solid rgba(119, 226, 250, .57);
+      border-radius: 12px; background: rgba(10, 58, 105, .92);
+      color: #b7f8ff; font-size: .99rem; font-weight: 700; line-height: 1.2;
+      box-shadow: 0 3px 9px rgba(0, 7, 30, .14);
+    }
+    .discovery-hint {
+      display: block; font-size: .68rem; font-weight: 400;
+      line-height: 1.25; color: #b9d5e6;
+    }
+    .practice-discovery[open] .discovery-hint { display: none; }
+    .practice-discovery summary:hover, .practice-discovery[open] summary {
+      border-color: rgba(122, 239, 255, .72);
+      background: rgba(19, 79, 126, .97);
+    }
+    .practice-discovery-answer {
+      margin-top: 8px; padding: 10px 14px 12px;
+      border: 1px solid rgba(110, 222, 253, .26);
+      border-radius: 13px; background: rgba(6, 27, 63, .92);
+      box-shadow: 0 5px 13px rgba(0, 8, 31, .11);
+    }
+    .image-lightbox p { font-weight: 500; }
+  }
+  @media screen and (max-width: 940px) {
+    .practice-way p { font-size: .98rem; }
+    .practice-discovery { width: min(100%, 680px); }
+  }
+  @media screen and (max-width: 560px) {
+    .practice-sentence { font-size: 1.35rem; }
+    .practice-way p { font-size: .96rem; line-height: 1.45; }
+    .start-lesson-button { min-width: 124px; min-height: 39px; padding: 7px 17px; }
+    .practice-cta-button { min-width: 128px; min-height: 39px; padding: 7px 15px; }
+    .step-actions .next-button, .step-actions .summary-button {
+      min-height: 39px; padding: 7px 15px;
+    }
+    .has-open-rule .content-title-wrap p { font-size: .91rem; }
+  }
   </style>
 </head>
 <body>
@@ -1492,7 +1696,7 @@
           </div>
         </div>
         <details class="practice-discovery" id="practiceDiscovery">
-          <summary>מה גילינו?</summary>
+          <summary><span>מה גילינו?</span><span class="discovery-hint">לחצו כדי לגלות</span></summary>
           <div class="practice-discovery-answer">
             <p class="practice-reflection" id="practiceReflection"></p>
             <p id="practiceTakeaway"></p>
@@ -1556,7 +1760,7 @@
           reflection: "איזה סיבוב היה ברור ומעניין יותר?",
           takeaway: "אותן מילים יכולות להישמע אחרת לגמרי! קול ברור, קצב נוח והדגשה עוזרים לקהל להבין ולהתעניין."
         },
-        color: "linear-gradient(135deg, #075b9a, #149bb8)",
+        color: "linear-gradient(135deg, #0f73bd, #21bfd0)",
         do: [
           "לדבר כך שגם מי שיושב רחוק ישמע.",
           "לבחור קצב שמאפשר לקהל לעקוב.",
@@ -1583,7 +1787,7 @@
           reflection: "מתי התנועה עזרה לקהל להבין את הסיפור?",
           takeaway: "תנועה טובה עוזרת לקהל לעקוב אחרי הסיפור. לא צריך לזוז כל הזמן."
         },
-        color: "linear-gradient(135deg, #174d9c, #6557bd)",
+        color: "linear-gradient(135deg, #e84d8a, #f47855)",
         do: [
           "לעמוד במקום שבו כולם רואים את הפוסטר.",
           "לנוע כשצריך להציג חלק אחר.",
@@ -1610,7 +1814,7 @@
           reflection: "באיזה סיבוב היה קל יותר לדמיין את מה שמתארים?",
           takeaway: "מחוות ידיים פשוטות יכולות להמחיש רעיון ולעזור לקהל להבין אותו."
         },
-        color: "linear-gradient(135deg, #4838a6, #1675bc)",
+        color: "linear-gradient(135deg, #5d56d7, #1593d1)",
         do: [
           "להצביע על החלק שמסבירים.",
           "להמחיש גודל או כיוון באמצעות הידיים.",
@@ -1637,7 +1841,7 @@
           reflection: "מתי הקהל הרגיש שהמציג באמת פונה אליו?",
           takeaway: "כשפונים אל הקהל במבט, הוא מרגיש שמדברים אליו ולא רק מקריאים טקסט."
         },
-        color: "linear-gradient(135deg, #086778, #1b9e9e)",
+        color: "linear-gradient(135deg, #22a56e, #22c7b8)",
         do: [
           "להפנות מבט לכמה אזורים בקהל.",
           "להרים את הראש כשמגיעים למסר חשוב.",
@@ -1664,7 +1868,7 @@
           reflection: "מה עזר לכם להרגיש בטוחים יותר בסיבוב השני?",
           takeaway: "ביטחון מתחיל בידע ובהכנה ולא בכך שלעולם לא טועים. כשמכירים את הנושא ומתרגלים מראש, קל יותר להציג בביטחון ולהמשיך גם אחרי טעות."
         },
-        color: "linear-gradient(135deg, #563b9c, #9b49b0)",
+        color: "linear-gradient(135deg, #923cba, #e84d8a)",
         do: [
           "להתאמן בקול לפני שמציגים.",
           "להתחיל בנשימה רגועה ובעמידה נוחה.",
@@ -1691,7 +1895,7 @@
           reflection: "באיזה סיבוב היה לקהל יותר חשק להקשיב?",
           takeaway: "התלהבות היא לא צעקה. היא עוזרת לקהל להרגיש למה הסיפור חשוב לכם."
         },
-        color: "linear-gradient(135deg, #85509d, #bb4f90)",
+        color: "linear-gradient(135deg, #f0992e, #f05c71)",
         do: [
           "להסביר למה הרעיון חשוב לכם.",
           "לספר מה הפתיע או סיקרן אתכם.",
