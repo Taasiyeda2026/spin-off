@@ -912,7 +912,7 @@
     .hero { min-height: 0; padding: 16px 18px 19px; }
     .hero h1 { font-size: clamp(3.6rem, 6.2vw, 5.5rem); }
     .subtitle { margin-top: 6px; }
-    .start-instruction { margin: 7px 0 12px; color: #365c70; font-size: 1rem; font-weight: 650; }
+    .start-action { display: flex; justify-content: center; margin-top: 16px; }
     .start-lesson-button, .practice-cta-button {
       border: 0; border-radius: 999px; color: #fff;
       background: linear-gradient(110deg, #0b78cf, #15bdaf);
@@ -944,6 +944,7 @@
     /* The large welcome title is for entry only. Lessons get the full screen. */
     .has-open-rule .hero { display: none; }
     .has-open-rule .letters-panel { margin-top: 0; padding: 6px 10px; }
+    .has-open-rule .start-action { display: none; }
     .has-open-rule .lesson-step-label { margin-bottom: 5px; padding: 2px 10px; font-size: .79rem; }
     .has-open-rule .letter-card { min-height: 51px; padding: 4px 6px; }
     .has-open-rule .letter { font-size: 1.8rem; }
@@ -984,7 +985,7 @@
     .has-open-rule .hero { display: none; }
   }
   @media screen and (max-width: 560px) {
-    .start-instruction { padding: 0 8px; font-size: .95rem; }
+    .start-action { margin-top: 12px; }
     .start-lesson-button { width: min(100%, 230px); }
     .letter-card { min-height: 90px; }
     .has-open-rule .letter-card { min-height: 54px; }
@@ -1002,14 +1003,15 @@
       <div class="hero-content">
         <h1 id="main-title">ק.ת.י.מ.ב.ה</h1>
         <p class="subtitle">כללי זהב להצגה טובה מול קהל</p>
-        <p class="start-instruction">לומדים שישה כללים קצרים ואז מתנסים במשפטים מצחיקים. מוכנים?</p>
-        <button class="start-lesson-button" id="startLessonButton" type="button">מתחילים <span aria-hidden="true">←</span></button>
       </div>
     </section>
 
     <section class="letters-panel" aria-label="בחירת כלל מתוך קתימבה">
       <div class="lesson-step-label" id="lessonStepLabel" hidden>מכירים את הכלל</div>
       <div class="letters-grid" id="lettersGrid"></div>
+      <div class="start-action">
+        <button class="start-lesson-button" id="startLessonButton" type="button">מתחילים <span aria-hidden="true">←</span></button>
+      </div>
     </section>
 
     <section class="content-card is-hidden" id="contentCard" aria-live="polite">
