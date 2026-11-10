@@ -904,6 +904,93 @@
     .practice-sentence { font-size: 1.38rem; }
     .practice-instruction { font-size: 1rem; }
   }
+
+  /* Clear learning sequence and compact, stable desktop viewport. Screen only. */
+  @media screen {
+    body { zoom: .80; }
+    .page { padding-top: 12px; padding-bottom: 16px; }
+    .hero { min-height: 0; padding: 16px 18px 19px; }
+    .hero h1 { font-size: clamp(3.6rem, 6.2vw, 5.5rem); }
+    .subtitle { margin-top: 6px; }
+    .start-instruction { margin: 7px 0 12px; color: #365c70; font-size: 1rem; font-weight: 650; }
+    .start-lesson-button, .practice-cta-button {
+      border: 0; border-radius: 999px; color: #fff;
+      background: linear-gradient(110deg, #0b78cf, #15bdaf);
+      box-shadow: 0 9px 19px rgba(0,117,180,.24);
+      font: 900 1.07rem Arial, "Assistant", sans-serif;
+      padding: 11px 32px;
+      cursor: pointer;
+    }
+    .start-lesson-button { font-size: 1.2rem; padding: 12px 42px; }
+    .start-lesson-button:hover, .practice-cta-button:hover { filter: brightness(1.08); }
+    .start-lesson-button:focus-visible, .practice-cta-button:focus-visible,
+    .back-to-rule-button:focus-visible { outline: 3px solid #076bb0; outline-offset: 3px; }
+    .letters-panel { margin-top: 10px; padding: 10px 12px; }
+    .letter-card { min-height: 94px; padding: 8px; }
+    .letter { font-size: 2.75rem; }
+    .lesson-step-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,132,181,.19);
+      background: rgba(223,244,253,.7);
+      color: #265870;
+      font-size: .85rem;
+      font-weight: 750;
+      margin: 0 1px 6px 0;
+    }
+    .lesson-step-label[hidden] { display: none !important; }
+    /* The large welcome title is for entry only. Lessons get the full screen. */
+    .has-open-rule .hero { display: none; }
+    .has-open-rule .letters-panel { margin-top: 0; padding: 6px 10px; }
+    .has-open-rule .lesson-step-label { margin-bottom: 5px; padding: 2px 10px; font-size: .79rem; }
+    .has-open-rule .letter-card { min-height: 51px; padding: 4px 6px; }
+    .has-open-rule .letter { font-size: 1.8rem; }
+    .has-open-rule .letter-title { margin-top: 1px; font-size: .8rem; }
+    .has-open-rule .content-card { margin-top: 8px; }
+    .has-open-rule .content-header { padding: 9px 13px; }
+    .has-open-rule .rule-visual { width: 116px; }
+    .has-open-rule .content-title-wrap p { font-size: 1.01rem; line-height: 1.35; }
+    .has-open-rule .content-body { padding: 9px 12px 10px; }
+    .has-open-rule .step-actions { padding: 7px 12px 6px; }
+    .has-open-rule .progress-line { margin-bottom: 7px; }
+    .step-actions { align-items: center; flex-direction: column; gap: 5px; }
+    .step-actions button[hidden] { display: none !important; }
+    .step-actions .next-button, .step-actions .summary-button {
+      border: 0; border-radius: 999px;
+      background: linear-gradient(110deg, #0878c7, #18b6af);
+      box-shadow: 0 7px 17px rgba(0,119,172,.22);
+      font-size: 1.03rem; padding: 11px 28px;
+    }
+    .back-to-rule-button {
+      border: 0;
+      color: #386e88;
+      background: transparent;
+      cursor: pointer;
+      font: 700 .87rem Arial, "Assistant", sans-serif;
+      padding: 5px 12px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .practice-panel { margin: 9px 12px 7px; }
+    .practice-quote { margin: 8px auto; }
+    .content-body[hidden], .practice-panel[hidden] { display: none !important; }
+    .is-summary-view .letters-panel { display: none; }
+    .is-summary-view .summary { margin-top: 8px; }
+  }
+  @media screen and (max-width: 940px) {
+    body { zoom: 1; }
+    .has-open-rule .hero { display: none; }
+  }
+  @media screen and (max-width: 560px) {
+    .start-instruction { padding: 0 8px; font-size: .95rem; }
+    .start-lesson-button { width: min(100%, 230px); }
+    .letter-card { min-height: 90px; }
+    .has-open-rule .letter-card { min-height: 54px; }
+    .has-open-rule .rule-visual { width: 82px; }
+    .step-actions .practice-cta-button, .step-actions .next-button, .step-actions .summary-button { max-width: 100%; }
+  }
   </style>
 </head>
 <body>
@@ -915,10 +1002,13 @@
       <div class="hero-content">
         <h1 id="main-title">ק.ת.י.מ.ב.ה</h1>
         <p class="subtitle">כללי זהב להצגה טובה מול קהל</p>
+        <p class="start-instruction">לומדים שישה כללים קצרים ואז מתנסים במשפטים מצחיקים. מוכנים?</p>
+        <button class="start-lesson-button" id="startLessonButton" type="button">מתחילים <span aria-hidden="true">←</span></button>
       </div>
     </section>
 
     <section class="letters-panel" aria-label="בחירת כלל מתוך קתימבה">
+      <div class="lesson-step-label" id="lessonStepLabel" hidden>מכירים את הכלל</div>
       <div class="letters-grid" id="lettersGrid"></div>
     </section>
 
@@ -934,10 +1024,6 @@
             <img id="contentImage" src="presentation/1.png" alt="איור קול" />
           </button>
         </figure>
-      </div>
-      <div class="learning-mode-switch" role="group" aria-label="חלקי הפעילות">
-        <button type="button" class="mode-button is-active" id="learnModeButton" aria-pressed="true" aria-controls="tipsPanel">מכירים את הכלל</button>
-        <button type="button" class="mode-button" id="practiceModeButton" aria-pressed="false" aria-controls="practicePanel">עכשיו תורכם!</button>
       </div>
       <div class="content-body" id="tipsPanel">
         <div class="deep-box yes">
@@ -962,8 +1048,10 @@
         <p class="practice-note">אפשר לתרגל יחד בכיתה או בזוגות. אין צורך להקליד או להקליט.</p>
       </section>
       <div class="step-actions" id="stepActions">
-        <button class="next-button is-hidden" type="button" id="nextButton">המשך לאות הבאה</button>
-        <button class="summary-button is-hidden" type="button" id="summaryButton">סיכום</button>
+        <button class="practice-cta-button" type="button" id="practiceModeButton">עכשיו תורכם! <span aria-hidden="true">←</span></button>
+        <button class="next-button is-hidden" type="button" id="nextButton">המשך לאות הבאה <span aria-hidden="true">←</span></button>
+        <button class="summary-button is-hidden" type="button" id="summaryButton">לסיכום הפעילות <span aria-hidden="true">←</span></button>
+        <button class="back-to-rule-button" id="learnModeButton" type="button" hidden>חזרה לכלל</button>
       </div>
       <div class="progress-line" id="progressLine" aria-live="polite">
         <span id="progressText">בחרו אות כדי להתחיל</span>
@@ -1164,6 +1252,8 @@
     const practicePanel = document.getElementById("practicePanel");
     const learnModeButton = document.getElementById("learnModeButton");
     const practiceModeButton = document.getElementById("practiceModeButton");
+    const startLessonButton = document.getElementById("startLessonButton");
+    const lessonStepLabel = document.getElementById("lessonStepLabel");
     const practiceSentence = document.getElementById("practiceSentence");
     const practiceInstruction = document.getElementById("practiceInstruction");
     const anotherSentenceButton = document.getElementById("anotherSentenceButton");
@@ -1181,10 +1271,12 @@
       const showingPractice = mode === "practice";
       tipsPanel.hidden = showingPractice;
       practicePanel.hidden = !showingPractice;
-      learnModeButton.classList.toggle("is-active", !showingPractice);
-      practiceModeButton.classList.toggle("is-active", showingPractice);
-      learnModeButton.setAttribute("aria-pressed", String(!showingPractice));
-      practiceModeButton.setAttribute("aria-pressed", String(showingPractice));
+      // One primary action at a time: learn → practice → next rule/summary.
+      practiceModeButton.hidden = showingPractice;
+      learnModeButton.hidden = !showingPractice;
+      nextButton.classList.toggle("is-hidden", !showingPractice || currentRuleIndex === rules.length - 1);
+      summaryButton.classList.toggle("is-hidden", !showingPractice || currentRuleIndex !== rules.length - 1);
+      lessonStepLabel.textContent = showingPractice ? "עכשיו מתנסים!" : "מכירים את הכלל";
     }
 
     function updatePracticeSentence() {
@@ -1211,10 +1303,9 @@
       document.body.classList.add("has-open-rule");
       document.body.classList.remove("is-summary-view");
       contentCard.classList.remove("is-hidden");
+      lessonStepLabel.hidden = false;
       visitedRules.add(rule.key);
       summarySection.classList.add("is-hidden");
-      nextButton.classList.toggle("is-hidden", currentRuleIndex === rules.length - 1);
-      summaryButton.classList.toggle("is-hidden", currentRuleIndex !== rules.length - 1);
       updateProgress();
       currentSentenceIndex = 0;
       updatePracticeSentence();
@@ -1254,25 +1345,25 @@
       });
     }
 
-    function focusCurrentView(section) {
-      // Desktop: keep the condensed learning screen in view, without automatic jumps.
-      // Small screens: keep native scrolling rather than clipping any learning content.
-      requestAnimationFrame(() => {
-        if (window.matchMedia("(max-width: 940px)").matches) {
-          section.scrollIntoView({
-            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-            block: "start"
-          });
-        } else if (window.scrollY > 0) {
-          window.scrollTo({ top: 0, behavior: "auto" });
-        }
-      });
+    function focusCurrentView() {
+      // A letter change starts at the top of the compact page; do not crop its navigation.
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
     }
 
     renderButtons();
 
-    learnModeButton.addEventListener("click", () => showLessonMode("learn"));
-    practiceModeButton.addEventListener("click", () => showLessonMode("practice"));
+    startLessonButton.addEventListener("click", () => {
+      renderRule(rules[0]);
+      focusCurrentView();
+    });
+    learnModeButton.addEventListener("click", () => {
+      showLessonMode("learn");
+      focusCurrentView();
+    });
+    practiceModeButton.addEventListener("click", () => {
+      showLessonMode("practice");
+      focusCurrentView();
+    });
     anotherSentenceButton.addEventListener("click", () => {
       if (currentRuleIndex < 0) return;
       const sentences = rules[currentRuleIndex].practice.sentences;
@@ -1298,7 +1389,8 @@
     summaryButton.addEventListener("click", () => {
       summarySection.classList.remove("is-hidden");
       document.body.classList.add("is-summary-view");
-      focusCurrentView(summarySection);
+      lessonStepLabel.textContent = "סיימנו את ששת הכללים!";
+      focusCurrentView();
     });
 
     imageEnlargeButton.addEventListener("click", () => {
