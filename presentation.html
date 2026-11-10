@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#020817" />
   <title>קתימב״ה | פעילות פרזנטציה</title>
   <style>
     :root {
@@ -1187,11 +1188,248 @@
     .is-summary-view .summary { padding: 23px 25px; }
     .is-summary-view .summary p { line-height: 1.48; font-size: 1.08rem; }
   }
+
+  /* SPIN-OFF space design system. All overrides are screen-only: A4 print is unchanged. */
+  @media screen {
+    :root {
+      --ink: #f3fbff;
+      --muted: #b7d0e6;
+      --card: rgba(5, 22, 47, .93);
+      --border: rgba(101, 228, 255, .26);
+      --shadow: 0 18px 46px rgba(0, 4, 20, .40), 0 0 20px rgba(31, 184, 255, .07);
+      --soft-shadow: 0 12px 32px rgba(0, 4, 23, .34);
+    }
+    html { background: #020817; }
+    body {
+      font-family: Arial, "Heebo", "Assistant", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 14% 19%, rgba(12, 99, 229, .29), transparent 31%),
+        radial-gradient(ellipse at 82% 14%, rgba(19, 221, 248, .15), transparent 30%),
+        radial-gradient(ellipse at 69% 81%, rgba(108, 63, 255, .19), transparent 33%),
+        linear-gradient(180deg, #01040e 0%, #07152f 53%, #020817 100%);
+      background-attachment: fixed;
+    }
+    body::before {
+      opacity: .56;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.85) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(116,235,255,.72) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(189,167,255,.63) 0 1px, transparent 1.7px);
+      background-size: 107px 113px, 173px 159px, 229px 211px;
+      background-position: 0 0, 48px 71px, 103px 31px;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .site-nav {
+      justify-content: space-between;
+      padding: 4px 16px;
+      min-height: 53px;
+      background: rgba(2, 12, 32, .88);
+      border-bottom: 1px solid rgba(91, 226, 255, .24);
+      box-shadow: 0 4px 22px rgba(0, 7, 23, .25);
+    }
+    .space-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      direction: ltr;
+      text-decoration: none;
+      color: #87f5ff;
+      font-size: .95rem;
+      font-weight: 950;
+      letter-spacing: .09em;
+      text-shadow: 0 0 14px rgba(40, 213, 255, .22);
+    }
+    .space-brand img { display: block; width: 38px; height: 42px; object-fit: contain; }
+    .home-btn {
+      color: #e7fbff;
+      background: rgba(6, 26, 57, .95);
+      border: 1px solid rgba(111, 231, 255, .57);
+      border-radius: 12px;
+      box-shadow: 0 0 14px rgba(24, 231, 255, .13);
+    }
+    .home-btn:hover, .home-btn:focus-visible {
+      box-shadow: 0 0 20px rgba(24, 231, 255, .27);
+      border-color: #8cf7ff;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(10, 40, 83, .95), rgba(4, 19, 45, .96));
+      border: 1px solid rgba(106, 224, 255, .38);
+      box-shadow: var(--shadow), inset 0 0 35px rgba(23, 120, 224, .07);
+    }
+    .hero::before {
+      background:
+        radial-gradient(circle at 17% 45%, rgba(25, 209, 250, .13), transparent 38%),
+        linear-gradient(115deg, rgba(68, 42, 165, .15), transparent 50%, rgba(19, 140, 243, .09));
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -52px;
+      top: -100px;
+      width: 270px;
+      height: 270px;
+      border: 1px solid rgba(125, 211, 255, .12);
+      border-radius: 50%;
+      box-shadow: 0 0 0 30px rgba(31, 156, 255, .025), 0 0 0 64px rgba(129, 97, 255, .025);
+      pointer-events: none;
+    }
+    .hero h1 {
+      color: #f5fdff;
+      -webkit-text-stroke: 0;
+      text-shadow: 0 0 14px rgba(117, 239, 255, .32), 0 7px 24px rgba(1, 6, 28, .50);
+    }
+    .subtitle { color: #c2e6f4; }
+    .letters-panel {
+      background: rgba(7, 25, 56, .85);
+      border: 1px solid rgba(96, 219, 255, .27);
+      box-shadow: var(--soft-shadow), inset 0 1px 0 rgba(135, 237, 255, .07);
+    }
+    .letter-card {
+      border: 1px solid rgba(153, 236, 255, .36);
+      box-shadow: 0 9px 22px rgba(0, 7, 27, .32), inset 0 1px 0 rgba(223, 250, 255, .15);
+    }
+    .letter-card[data-key="voice"] { background: linear-gradient(135deg, #075b9a, #149bb8); }
+    .letter-card[data-key="movement"] { background: linear-gradient(135deg, #174d9c, #6557bd); }
+    .letter-card[data-key="hands"] { background: linear-gradient(135deg, #4838a6, #1675bc); }
+    .letter-card[data-key="eyes"] { background: linear-gradient(135deg, #086778, #1b9e9e); }
+    .letter-card[data-key="confidence"] { background: linear-gradient(135deg, #563b9c, #9b49b0); }
+    .letter-card[data-key="energy"] { background: linear-gradient(135deg, #85509d, #bb4f90); }
+    .letter-card:hover, .letter-card:focus-visible {
+      box-shadow: 0 14px 25px rgba(0, 7, 27, .42), 0 0 18px rgba(59, 221, 255, .21);
+    }
+    .letter-card.active {
+      box-shadow: 0 12px 23px rgba(0, 7, 27, .42), 0 0 0 2px #83efff, 0 0 19px rgba(42, 216, 255, .30);
+    }
+    .content-card {
+      background: rgba(5, 20, 46, .95);
+      border: 1px solid rgba(95, 221, 255, .31);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(184, 240, 255, .04);
+    }
+    .content-header {
+      background: linear-gradient(100deg, rgba(13, 48, 92, .88), rgba(5, 24, 54, .95));
+      border-bottom: 1px solid rgba(88, 212, 255, .20);
+    }
+    .content-title-wrap h2 { color: #f9fdff; }
+    .content-title-wrap p { color: #c8ddef; }
+    .lesson-step-label,
+    .badge-stack .lesson-step-label {
+      color: #a0f4ff;
+      background: rgba(16, 73, 110, .9);
+      border: 1px solid rgba(116, 225, 248, .32);
+    }
+    .badge { box-shadow: 0 5px 19px rgba(16, 182, 243, .19); }
+    .rule-visual {
+      background: rgba(16, 45, 78, .82);
+      border: 1px solid rgba(121, 217, 247, .32);
+      box-shadow: 0 6px 18px rgba(0, 6, 28, .21);
+    }
+    .deep-box {
+      background: rgba(8, 34, 67, .88);
+      border: 1px solid rgba(87, 197, 246, .22);
+      box-shadow: inset 0 1px 0 rgba(210, 246, 255, .05);
+    }
+    .deep-box h3 { color: #e9faff; }
+    .main-list li, .avoid-list li { color: #edf8ff; }
+    .main-list li { background: rgba(22, 180, 167, .15); }
+    .avoid-list li { background: rgba(232, 77, 138, .15); }
+    .yes .mark { background: #0caa9b; }
+    .no .mark { background: #c74b83; }
+    .progress-line { color: #b8d7ed; }
+    .progress-dot { background: rgba(148, 192, 217, .24); }
+    .progress-dot.current { background: #77f0ff; box-shadow: 0 0 9px rgba(89, 234, 255, .85); }
+    .progress-dot.done { background: #56d0ce; }
+    .start-lesson-button, .practice-cta-button,
+    .step-actions .next-button, .step-actions .summary-button {
+      background: linear-gradient(180deg, #16c8ee, #0a79dd 54%, #3a35c9);
+      border: 1px solid rgba(142, 246, 255, .84);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(25, 216, 250, .22), 0 8px 18px rgba(0, 6, 31, .30);
+    }
+    .start-lesson-button:hover, .practice-cta-button:hover,
+    .step-actions .next-button:hover, .step-actions .summary-button:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 0 24px rgba(31, 220, 255, .37), 0 9px 20px rgba(0, 6, 31, .32);
+    }
+    .back-to-rule-button { color: #9eefff; }
+    .practice-panel {
+      color: #edf8ff;
+      background: linear-gradient(145deg, rgba(10, 41, 81, .88), rgba(6, 25, 59, .95));
+      border: 1px solid rgba(106, 220, 255, .23);
+    }
+    .practice-intro h3 { color: #83ecff; }
+    .practice-intro p { color: #c6dff1; }
+    .practice-quote {
+      background: rgba(4, 18, 45, .81);
+      border: 1px solid rgba(99, 224, 255, .31);
+      box-shadow: 0 0 14px rgba(23, 183, 255, .06);
+    }
+    .practice-sentence { color: #f7fdff; }
+    .another-sentence-button {
+      color: #98f5ff;
+      background: rgba(5, 31, 69, .93);
+      border: 1px solid rgba(110, 230, 252, .42);
+    }
+    .another-sentence-button:hover { background: rgba(19, 78, 122, .9); }
+    .practice-way { border: 1px solid rgba(112, 202, 241, .17); }
+    .practice-way-poor { background: rgba(143, 44, 106, .25); }
+    .practice-way-better { background: rgba(9, 123, 128, .25); }
+    .practice-way h4 { color: #f2fcff; }
+    .practice-way p { color: #e5f4ff; }
+    .practice-number { background: #b3437a; }
+    .practice-way-better .practice-number { background: #0b9c9e; }
+    .practice-discovery {
+      background: rgba(7, 29, 65, .95);
+      border: 1px solid rgba(103, 231, 255, .39);
+    }
+    .practice-discovery summary {
+      color: #adf6ff;
+      background: linear-gradient(95deg, rgba(12, 62, 111, .95), rgba(6, 41, 86, .96));
+    }
+    .practice-discovery summary:hover,
+    .practice-discovery[open] summary { background: rgba(25, 90, 134, .95); }
+    .practice-discovery-answer { border-top: 1px solid rgba(118, 230, 250, .26); }
+    .practice-discovery .practice-reflection { color: #a4efff; }
+    .practice-discovery .practice-discovery-answer #practiceTakeaway { color: #e1f2ff; }
+    .summary {
+      background: linear-gradient(145deg, rgba(12, 42, 84, .95), rgba(4, 20, 51, .96));
+      border: 1px solid rgba(103, 224, 255, .35);
+      box-shadow: var(--shadow), 0 0 22px rgba(22, 164, 255, .08);
+    }
+    .summary h2 { color: #f2fdff; }
+    .summary p { color: #d7eaf9; }
+    .summary .summary-emphasis { color: #8cefff; }
+    .summary .summary-finale { color: #fff; text-shadow: 0 0 13px rgba(49, 214, 255, .16); }
+    .small-action {
+      color: #effeff;
+      background: rgba(11, 65, 112, .93);
+      border: 1px solid rgba(131, 235, 255, .5);
+      box-shadow: 0 0 13px rgba(22, 192, 254, .10);
+    }
+    .image-lightbox {
+      background: #091a37;
+      color: #e9faff;
+      border: 1px solid rgba(122, 225, 255, .6);
+    }
+  }
+  @media screen and (max-width: 560px) {
+    .site-nav { padding: 3px 10px; min-height: 49px; }
+    .space-brand { font-size: .78rem; gap: 6px; }
+    .space-brand img { width: 32px; height: 36px; }
+    .home-btn { width: 2.18rem; height: 2.18rem; }
+    .hero::after { width: 180px; height: 180px; left: -60px; top: -80px; }
+    .practice-way h4 { font-size: 1rem; }
+  }
   </style>
 </head>
 <body>
   <header class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html" class="home-btn" aria-label="חזרה לעמוד הראשי" title="חזרה לעמוד הראשי">⌂</a>
+    <a href="index.html" class="space-brand" aria-label="SPIN-OFF — חזרה לעמוד הראשי">
+      <img src="images/logo-1.png?v=20261110" width="38" height="42" alt="לוגו תעשיידע" />
+      <span lang="en">SPIN-OFF</span>
+    </a>
   </header>
   <main class="page">
     <section class="hero" aria-labelledby="main-title">
@@ -1318,7 +1556,7 @@
           reflection: "איזה סיבוב היה ברור ומעניין יותר?",
           takeaway: "אותן מילים יכולות להישמע אחרת לגמרי! קול ברור, קצב נוח והדגשה עוזרים לקהל להבין ולהתעניין."
         },
-        color: "linear-gradient(135deg, #0f73bd, #21bfd0)",
+        color: "linear-gradient(135deg, #075b9a, #149bb8)",
         do: [
           "לדבר כך שגם מי שיושב רחוק ישמע.",
           "לבחור קצב שמאפשר לקהל לעקוב.",
@@ -1345,7 +1583,7 @@
           reflection: "מתי התנועה עזרה לקהל להבין את הסיפור?",
           takeaway: "תנועה טובה עוזרת לקהל לעקוב אחרי הסיפור. לא צריך לזוז כל הזמן."
         },
-        color: "linear-gradient(135deg, #e84d8a, #f47855)",
+        color: "linear-gradient(135deg, #174d9c, #6557bd)",
         do: [
           "לעמוד במקום שבו כולם רואים את הפוסטר.",
           "לנוע כשצריך להציג חלק אחר.",
@@ -1372,7 +1610,7 @@
           reflection: "באיזה סיבוב היה קל יותר לדמיין את מה שמתארים?",
           takeaway: "מחוות ידיים פשוטות יכולות להמחיש רעיון ולעזור לקהל להבין אותו."
         },
-        color: "linear-gradient(135deg, #5d56d7, #1593d1)",
+        color: "linear-gradient(135deg, #4838a6, #1675bc)",
         do: [
           "להצביע על החלק שמסבירים.",
           "להמחיש גודל או כיוון באמצעות הידיים.",
@@ -1399,7 +1637,7 @@
           reflection: "מתי הקהל הרגיש שהמציג באמת פונה אליו?",
           takeaway: "כשפונים אל הקהל במבט, הוא מרגיש שמדברים אליו ולא רק מקריאים טקסט."
         },
-        color: "linear-gradient(135deg, #22a56e, #22c7b8)",
+        color: "linear-gradient(135deg, #086778, #1b9e9e)",
         do: [
           "להפנות מבט לכמה אזורים בקהל.",
           "להרים את הראש כשמגיעים למסר חשוב.",
@@ -1426,7 +1664,7 @@
           reflection: "מה עזר לכם להרגיש בטוחים יותר בסיבוב השני?",
           takeaway: "ביטחון מתחיל בידע ובהכנה ולא בכך שלעולם לא טועים. כשמכירים את הנושא ומתרגלים מראש, קל יותר להציג בביטחון ולהמשיך גם אחרי טעות."
         },
-        color: "linear-gradient(135deg, #923cba, #e84d8a)",
+        color: "linear-gradient(135deg, #563b9c, #9b49b0)",
         do: [
           "להתאמן בקול לפני שמציגים.",
           "להתחיל בנשימה רגועה ובעמידה נוחה.",
@@ -1453,7 +1691,7 @@
           reflection: "באיזה סיבוב היה לקהל יותר חשק להקשיב?",
           takeaway: "התלהבות היא לא צעקה. היא עוזרת לקהל להרגיש למה הסיפור חשוב לכם."
         },
-        color: "linear-gradient(135deg, #f0992e, #f05c71)",
+        color: "linear-gradient(135deg, #85509d, #bb4f90)",
         do: [
           "להסביר למה הרעיון חשוב לכם.",
           "לספר מה הפתיע או סיקרן אתכם.",
