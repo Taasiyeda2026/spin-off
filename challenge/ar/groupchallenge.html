@@ -1057,7 +1057,7 @@ function downloadTeamsPdf(){
  try{
   const canvas=createPdfCanvas();const bytes=imageToPdfBytes(canvas);
   const blob=new Blob([bytes],{type:'application/pdf'});const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='تقنيات_الفضاء_فرق_المهمة.pdf';
+  const a=document.createElement('a');a.href=url;a.download='חלוקת_צוותים_توزيع_الفرق.pdf';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
  }catch(error){console.error(error);alert('تعذّر إنشاء الملف في هذا المتصفح. حاولوا فتح اللعبة في متصفح Chrome.');}
 }
