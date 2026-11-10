@@ -136,3 +136,26 @@ html[lang="ar"] .navigation-domain .topic-cards .card-description{line-height:1.
  .navigation-domain .topic-cards .card-media{aspect-ratio:auto;height:140px}
  .navigation-domain .topic-cards .card-body{padding:9px 11px}
 }
+
+/* Navigation topic index: breathing room between title, description and cards.
+   Scoped to the index only; no article layouts or content are modified. */
+.navigation-domain .bank-heading h1{
+  margin-block:0 12px;
+  line-height:1.24;
+}
+.navigation-domain .bank-heading .lead{
+  margin:0 0 9px;
+  line-height:1.5;
+}
+.navigation-domain .bank-heading .domain-instruction{
+  margin:0;
+  line-height:1.55;
+}
+.navigation-domain .bank-heading{
+  margin-bottom:24px;
+}
+@media(max-width:760px){
+  .navigation-domain .bank-heading h1{margin-bottom:10px}
+  .navigation-domain .bank-heading .lead{margin-bottom:8px}
+  .navigation-domain .bank-heading{margin-bottom:19px}
+}
