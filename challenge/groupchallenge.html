@@ -738,6 +738,49 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
   #summary .team-detail{max-width:none!important;width:100%;}
 }
 
+
+/* Unified setup fields: compact participant count and action button. */
+#setup .setup-details{gap:12px}
+#setup .setup-number-field{margin-top:14px;align-items:flex-start}
+#setup .setup-number-field label{font-size:14px;font-weight:750}
+#setup .setup-number-field input{
+  width:96px;
+  max-width:100%;
+  height:44px;
+  padding:6px 10px;
+  font-size:21px;
+  font-weight:800;
+  line-height:1.2;
+  text-align:center;
+  border:1px solid #a7d5eb;
+  border-radius:11px;
+  background:#f7fcff;
+  color:#122d4b;
+  box-shadow:inset 0 1px 3px #0e254414;
+  appearance:textfield;
+}
+#setup .setup-number-field input::-webkit-inner-spin-button,
+#setup .setup-number-field input::-webkit-outer-spin-button{appearance:none;margin:0}
+#setup .setup-box button.primary[type="submit"]{
+  display:block;
+  width:min(100%,220px);
+  min-width:0;
+  min-height:44px;
+  height:44px;
+  padding:8px 14px;
+  margin:20px auto 0;
+  border-radius:11px;
+  font-size:16px;
+  line-height:1.25;
+}
+@media(max-height:650px){
+  #setup .setup-number-field{margin-top:9px}
+  #setup .setup-box button.primary[type="submit"]{margin-top:12px}
+}
+@media(max-width:480px){
+  #setup .setup-box button.primary[type="submit"]{width:min(100%,220px)}
+}
+
 </style>
 </head>
 <body>
@@ -764,7 +807,7 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
    <div class="setup-field"><label for="schoolName">שם בית הספר <span class="required-indicator" aria-hidden="true">*</span></label><input id="schoolName" name="schoolName" type="text" maxlength="100" placeholder="הקלידו את שם בית הספר" autocomplete="organization" required aria-describedby="error"></div>
    <div class="setup-field"><label for="classGroup">כיתה / קבוצה <span class="optional-indicator">(לא חובה)</span></label><input id="classGroup" name="classGroup" type="text" maxlength="60" placeholder="לדוגמה: ד׳2 או קבוצה א׳" autocomplete="off"></div>
   </div>
-  <div class="number-row"><label for="count">מספר התלמידים המשתתפים</label><input id="count" type="number" value="24" min="3" max="40" step="1" inputmode="numeric" required aria-describedby="error"></div>
+  <div class="setup-field setup-number-field"><label for="count">מספר התלמידים המשתתפים</label><input id="count" type="number" value="24" min="3" max="40" step="1" inputmode="numeric" required aria-describedby="error"></div>
   <div id="error" role="alert"></div>
   <button class="primary" type="submit">פיזור הקלפים</button>
  </form>
