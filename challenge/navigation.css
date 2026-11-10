@@ -116,3 +116,23 @@ html[lang="ar"] .navigation-domain .topic-cards .card-description{line-height:1.
   .navigation-domain .page-footer{margin-top:7px;min-height:30px}
   html[lang="ar"] .navigation-domain .topic-cards .card-description{line-height:1.6}
 }
+
+/* Third compact pass: make all three navigation choices visible on a laptop screen. */
+@media (min-width:761px){
+ .navigation-domain .bank-wrap{width:min(1000px,calc(100% - 32px))}
+ .navigation-domain .topbar{min-height:47px;margin-bottom:5px}
+ .navigation-domain .bank-heading{margin-bottom:9px}
+ .navigation-domain .bank-heading h1{font-size:29px}
+ .navigation-domain .topic-cards{gap:12px}
+ .navigation-domain .topic-cards .card-media{aspect-ratio:auto;height:135px}
+ .navigation-domain .topic-cards .card-media img{height:100%;width:100%;object-fit:cover}
+ .navigation-domain .topic-cards .card-body{padding:7px 11px 9px}
+ .navigation-domain .topic-cards .card-body h2{font-size:17px;margin-bottom:2px}
+ .navigation-domain .topic-cards .card-subtitle{font-size:13px;margin-bottom:3px}
+ .navigation-domain .topic-cards .card-description{font-size:13.5px;line-height:1.4;margin-bottom:7px}
+ .navigation-domain .topic-cards .read-more{min-height:30px;padding:3px 8px}
+}
+@media (max-width:760px) and (min-width:601px){
+ .navigation-domain .topic-cards .card-media{aspect-ratio:auto;height:140px}
+ .navigation-domain .topic-cards .card-body{padding:9px 11px}
+}
