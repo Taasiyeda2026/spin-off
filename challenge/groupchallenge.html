@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0d2340">
+<script src="challenges-lang.js"></script>
 <title>צוותי המשימה | טכנולוגיות החלל</title>
 <style>
 :root{--night:#0b1c33;--night2:#132e4d;--ink:#17304c;--muted:#688099;--sky:#8fd5ea;--line:#c8ddeb;--paper:#f8fbff;--accent:#59b8d3}
@@ -683,6 +684,15 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
 @media(max-height:650px){#setup{padding:4px 8px 12px}#setup .setup-emblem{width:51px;height:51px;margin-bottom:10px}#setup .setup-emblem svg{width:34px;height:34px}#setup h1{font-size:clamp(27px,3vw,34px);margin-bottom:5px}#setup .intro p{font-size:15px}#setup .setup-box{margin-top:12px;padding:12px 19px}#setup .setup-details{gap:7px}#setup .setup-field input{height:37px}#setup .number-row{margin-top:8px}#setup .setup-box .primary{margin-top:8px}}
 @media(max-width:480px){#setup .setup-box{padding:17px 16px}#setup .number-row{gap:8px}#summary .summary-school{font-size:14px}}
 @media print{#summary .summary-school{color:#244868!important;text-shadow:none!important}}
+
+/* Shared bilingual game navigation */
+.game-language{display:inline-flex;align-items:center;gap:2px;direction:rtl;padding:3px;border:1px solid #5baccb88;border-radius:10px;background:#092650cc;flex:none}
+.game-language a{color:#deefff;text-decoration:none;border-radius:7px;padding:5px 9px;font-size:13px;font-weight:750;white-space:nowrap}
+.game-language a[aria-current="page"]{background:#90eafd;color:#08314a}
+.game-language a:focus-visible{outline:2px solid #ffe8a6}
+@media(max-width:650px){.game-language{order:3}.game-language a{font-size:12px;padding:4px 7px}header .toolbar{gap:5px}}
+@media(max-width:410px){header{gap:5px;padding-inline:7px}.brand strong{font-size:13px}.toolbar button{padding:6px 7px}}
+@media print{.game-language{display:none!important}}
 </style>
 </head>
 <body>
@@ -697,7 +707,7 @@ html.group-auth-locked body > :not(#group-auth-gate){visibility:hidden!important
     <div class="brand-badge"><img src="../images/logo-1.png?v=20261110" alt="לוגו תעשיידע" width="56" height="58"></div>
     <div class="brand-text"><small>טכנולוגיות החלל</small><strong>צוותי המשימה</strong></div>
   </div>
-  <nav class="toolbar" aria-label="כלי המדריך"><button type="button" class="secondary" id="fullscreen">מסך מלא</button><button type="button" class="secondary" id="restart">חלוקה חדשה</button></nav>
+  <nav class="toolbar" aria-label="כלי המדריך"><span class="game-language" role="group" aria-label="שפת המשחק"><a lang="he" aria-current="page" href="groupchallenge.html?lang=he">עברית</a><a lang="ar" href="ar/groupchallenge.html?lang=ar">العربية</a></span><button type="button" class="secondary" id="fullscreen">מסך מלא</button><button type="button" class="secondary" id="restart">חלוקה חדשה</button></nav>
 </header>
 <main>
 <section id="setup">
