@@ -90,3 +90,29 @@ html[lang="ar"] .navigation-domain .topic-cards .card-description{line-height:1.
   .navigation-article .research-questions p,.navigation-article .research-questions li{font-size:15.5px}
 }
 @media(prefers-reduced-motion:reduce){.navigation-domain .topbar,.navigation-article .topbar{backdrop-filter:none}}
+
+
+/* 2026-11-10: second compact pass for navigation domain landing page only.
+   Maintain readable controls and 3 equal cards; no changes to story layouts. */
+@media (min-width:761px) {
+  .navigation-domain .bank-wrap{width:min(920px,calc(100% - 32px));padding-bottom:14px}
+  .navigation-domain .topbar{min-height:50px;padding:3px 2px;margin-bottom:7px}
+  .navigation-domain .brand,.navigation-domain .brand .site-logo{min-height:0}
+  .navigation-domain .brand .site-logo{width:37px;height:41px}
+  .navigation-domain .nav-icon{width:34px;height:34px;border-radius:9px}
+  .navigation-domain .nav-icon svg{width:18px;height:18px}
+  .navigation-domain .bank-heading{max-width:840px;margin:0 auto 11px}
+  .navigation-domain .bank-heading h1{font-size:clamp(27px,2.6vw,31px);line-height:1.15;margin:0 0 3px}
+  .navigation-domain .bank-heading .lead{font-size:16px;line-height:1.35;margin:0 0 4px}
+  .navigation-domain .domain-instruction{font-size:14px;line-height:1.4;margin:0}
+  .navigation-domain .topic-cards{gap:12px}
+  .navigation-domain .topic-cards .challenge-card{border-radius:13px}
+  .navigation-domain .topic-cards .card-media{aspect-ratio:16/8.15}
+  .navigation-domain .topic-cards .card-body{padding:8px 11px 10px}
+  .navigation-domain .topic-cards .card-body h2{font-size:17px;line-height:1.3;margin:0 0 3px}
+  .navigation-domain .topic-cards .card-subtitle{font-size:13.5px;line-height:1.4;margin:0 0 5px}
+  .navigation-domain .topic-cards .card-description{font-size:13.5px;line-height:1.45;margin:0 0 9px}
+  .navigation-domain .topic-cards .read-more{min-height:32px;font-size:13px;padding:4px 8px;border-radius:9px}
+  .navigation-domain .page-footer{margin-top:7px;min-height:30px}
+  html[lang="ar"] .navigation-domain .topic-cards .card-description{line-height:1.6}
+}
