@@ -272,3 +272,196 @@ html[lang="ar"] .navigation-article .space-hint .hint-content p{
   .navigation-article .article-section p{font-size:17px}
   html[lang="ar"] .navigation-article .article-section p{font-size:17px}
 }
+
+/* Navigation reading separator and space-hint visual refinement | 2026-11-10.
+   Styling only. Article text, hint wording and native details/summary behavior stay intact. */
+
+/* A visible but quiet center line between story columns. The full-width final
+   section paints over the underlying line and has its own interior divider. */
+.navigation-article .story-body{
+  position:relative;
+  column-gap:36px;
+  row-gap:24px;
+}
+.navigation-article .story-body::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:20px;
+  bottom:18px;
+  width:2px;
+  transform:translateX(-50%);
+  pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    transparent 0%,
+    #c5dce9 6%,
+    #c5dce9 94%,
+    transparent 100%
+  );
+}
+.navigation-article .article-section p{
+  line-height:1.78;
+  text-wrap:pretty;
+}
+.navigation-article .story-body .article-section:last-child{
+  position:relative;
+  column-gap:36px;
+  background:#f5fafd;
+}
+.navigation-article .story-body .article-section:last-child::before{
+  content:"";
+  position:absolute;
+  top:62px;
+  bottom:16px;
+  left:50%;
+  width:1px;
+  transform:translateX(-50%);
+  background:#c5dce9;
+  pointer-events:none;
+}
+.navigation-article .story-body .article-section:last-child p{
+  text-wrap:pretty;
+}
+
+/* The hint is a purposeful two-part learning card rather than a long
+   full-width text slab. Nothing is added to or removed from the text. */
+.navigation-article .space-hint{
+  margin:10px 26px 18px;
+  background:#f4fbfe;
+  border:1px solid #a7d3e3;
+  border-radius:16px;
+  box-shadow:0 8px 22px rgba(18,75,113,.08);
+}
+.navigation-article .space-hint summary{
+  justify-content:flex-start;
+  padding:13px 18px;
+  font-size:19px;
+  line-height:1.45;
+  font-weight:800;
+  color:#075b77;
+  background:linear-gradient(115deg,#d4edf6,#e5f7fb 80%);
+}
+.navigation-article .space-hint summary::before{
+  content:"✦";
+  display:grid;
+  place-items:center;
+  flex:0 0 32px;
+  width:32px;
+  height:32px;
+  margin-inline-end:12px;
+  border:1px solid #a8d4e2;
+  border-radius:10px;
+  background:#fff;
+  color:#168ca7;
+  font:700 18px Arial,sans-serif;
+}
+.navigation-article .space-hint summary::after{
+  margin-inline-start:auto;
+  flex:0 0 28px;
+  width:28px;
+  height:28px;
+  border-color:#9dcbd8;
+  background:#fff;
+  color:#087c92;
+}
+.navigation-article .space-hint summary:hover,
+.navigation-article .space-hint summary:focus-visible{
+  background:linear-gradient(115deg,#caeaf4,#dcf4fa 80%);
+}
+.navigation-article .space-hint .hint-content{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+  padding:17px 18px 15px;
+  background:linear-gradient(180deg,#f6fcfe 0%,#eef8fb 100%);
+}
+.navigation-article .space-hint .hint-content p{
+  min-width:0;
+  margin:0;
+  padding:15px 17px;
+  border:1px solid #d7e9ef;
+  border-inline-start:3px solid #46b5ca;
+  border-radius:12px;
+  background:#fff;
+  color:#2c465a;
+  font-size:17px;
+  line-height:1.78;
+  text-align:start;
+  text-wrap:pretty;
+  overflow-wrap:break-word;
+}
+.navigation-article .space-hint .hint-content p:last-child{
+  margin-bottom:0;
+}
+.navigation-article .hint-sources{
+  grid-column:1 / -1;
+  margin:0;
+  padding:11px 15px;
+  border:1px solid #d0e5ee;
+  border-radius:10px;
+  background:#e7f4f9;
+  color:#3a6076;
+  font-size:14px;
+  line-height:1.6;
+}
+.navigation-article .hint-sources span{
+  display:block;
+  margin-bottom:4px;
+  font-weight:700;
+}
+.navigation-article .hint-sources ul{
+  margin:0;
+}
+.navigation-article .hint-sources a{
+  color:#085f8c;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  overflow-wrap:anywhere;
+}
+html[lang="ar"] .navigation-article .article-section p{
+  line-height:1.9;
+}
+html[lang="ar"] .navigation-article .space-hint .hint-content p{
+  font-size:17px;
+  line-height:1.92;
+}
+@media(max-width:760px){
+  .navigation-article .story-body::before,
+  .navigation-article .story-body .article-section:last-child::before{
+    display:none;
+  }
+  .navigation-article .space-hint{
+    margin:7px 13px 16px;
+    border-radius:14px;
+  }
+  .navigation-article .space-hint summary{
+    padding:12px 14px;
+    font-size:17px;
+  }
+  .navigation-article .space-hint summary::before{
+    width:29px;
+    height:29px;
+    flex-basis:29px;
+    margin-inline-end:10px;
+  }
+  .navigation-article .space-hint .hint-content{
+    grid-template-columns:1fr;
+    gap:11px;
+    padding:12px;
+  }
+  .navigation-article .space-hint .hint-content p{
+    font-size:16.5px;
+    line-height:1.8;
+    padding:12px 13px;
+  }
+  .navigation-article .hint-sources{
+    grid-column:1;
+    padding:10px 12px;
+    font-size:13px;
+  }
+  html[lang="ar"] .navigation-article .space-hint .hint-content p{
+    font-size:16.5px;
+    line-height:1.92;
+  }
+}
