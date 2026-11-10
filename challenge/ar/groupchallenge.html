@@ -694,6 +694,16 @@ html[lang="ar"] body{font-family:Tahoma,Arial,"Noto Sans Arabic",sans-serif}
 @media(max-width:650px){.game-language{order:3}.game-language a{font-size:12px;padding:4px 7px}header .toolbar{gap:5px}#summary .summary-title h1{font-size:clamp(24px,5vw,35px)}}
 @media(max-width:410px){header{gap:5px;padding-inline:7px}.brand strong{font-size:13px}.toolbar button{padding:6px 7px}}
 @media print{.game-language{display:none!important}}
+
+/* Language selector visible before the team game starts */
+#setup{position:relative}
+.setup-language-switch{position:absolute;top:11px;inset-inline-start:13px;display:inline-flex;align-items:center;gap:2px;border:1px solid #5baccb88;border-radius:10px;padding:3px;background:#092650cc;direction:rtl}
+.setup-language-switch a{display:inline-flex;justify-content:center;align-items:center;padding:5px 9px;font-size:13px;font-weight:750;line-height:1.3;border-radius:7px;color:#deefff;text-decoration:none;white-space:nowrap}
+.setup-language-switch a[aria-current="page"]{background:#90eafd;color:#08314a}
+.setup-language-switch a:focus-visible{outline:2px solid #ffe8a6}
+@media(max-width:480px){.setup-language-switch{top:7px;inset-inline-start:7px}.setup-language-switch a{font-size:12px;padding:4px 7px}}
+@media print{.setup-language-switch{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -712,6 +722,7 @@ html[lang="ar"] body{font-family:Tahoma,Arial,"Noto Sans Arabic",sans-serif}
 </header>
 <main>
 <section id="setup">
+ <nav class="setup-language-switch" aria-label="اختيار اللغة"><a href="groupchallenge.html?lang=ar" lang="ar" aria-current="page">العربية</a><a href="../groupchallenge.html?lang=he" lang="he">עברית</a></nav>
  <div class="setup-emblem" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="11" stroke="currentColor" stroke-width="2.4"/><ellipse cx="32" cy="32" rx="27" ry="13" transform="rotate(-25 32 32)" stroke="currentColor" stroke-width="2"/><path d="M48 7v8m-4-4h8M12 45v7m-3.5-3.5h7" stroke="currentColor" stroke-linecap="round" stroke-width="2"/></svg></div>
  <div class="intro"><h1>إلى أي فريق ستنضمون؟</h1><p>اختاروا بطاقة واكتشفوا إلى أي فريق ستنضمون</p></div>
  <form class="setup-box" id="setupForm">
