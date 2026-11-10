@@ -79,7 +79,10 @@ function enterGame() {
     document.documentElement.classList.remove('group-auth-locked');
     document.getElementById('group-auth-gate')?.setAttribute('hidden', '');
   } else {
-    location.assign(new URL(arabic ? '../groupchallenge.html' : 'groupchallenge.html', location.href).href);
+    // Keep the challenge-area language after authenticated dashboard access.
+    const destination = new URL('groupchallenge.html', location.href);
+    destination.searchParams.set('lang', arabic ? 'ar' : 'he');
+    location.assign(destination.href);
   }
 }
 
