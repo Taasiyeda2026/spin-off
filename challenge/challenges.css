@@ -174,7 +174,7 @@ body.challenge-bank .card-body h2{
   font-weight:900;line-height:1.22;text-align:center;
 }
 body.challenge-bank .card-description{
-  flex:1;margin:0;color:#e6f3fd;font-size:14px;line-height:1.53;
+  flex:0 0 auto;margin: auto 0 0;color:#e6f3fd;font-size:14px;line-height:1.53;
   text-align:center;min-width:0;overflow-wrap:break-word;
 }
 body.challenge-bank .card-question{
@@ -183,7 +183,7 @@ body.challenge-bank .card-question{
 }
 body.challenge-bank .read-more{
   width:100%;max-width:178px;min-height:36px;align-self:center;
-  margin-top:12px;padding:6px 10px;border:1px solid #7ee9ff;border-radius:999px;
+  margin-top:8px;padding:6px 10px;border:1px solid #7ee9ff;border-radius:999px;
   background:linear-gradient(180deg,#e6faff,#b4e4f6);color:#053658;
   box-shadow:0 3px 10px #00122580,0 0 9px #35c9ff26;
   font-size:13.5px;font-weight:900;line-height:1.35;text-align:center;
