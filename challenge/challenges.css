@@ -154,22 +154,20 @@ body.challenge-bank .card-media img{
   margin:auto;object-fit:contain;object-position:center;mix-blend-mode:screen;
   /* Feather the supplied illustration's dark rounded perimeter without
      modifying, cropping or stretching the original artwork. */
-  mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),
-    linear-gradient(180deg,transparent,#000 8%,#000 88%,transparent);
-  mask-composite:intersect;
+  mask-image:radial-gradient(ellipse 69% 75% at 50% 52%,#000 35%,#000b 60%,transparent 77%);
 }
 body.challenge-bank .challenge-card:hover .card-media img{transform:none}
 body.challenge-bank .card-body{
   display:grid;grid-template-rows:58px minmax(0,1fr) 42px;
   gap:10px;height:310px;padding:16px 18px 20px;
   position:relative;isolation:isolate;overflow:hidden;
-  background:linear-gradient(180deg,#062a55 0%,#05234b 65%,#04172f 100%);
-  border-radius:24px 24px 0 0;
+  background:linear-gradient(180deg,#06214300,#062a55 24%,#05234b 65%,#04172f);
+  border-radius:0;
 }
 body.challenge-bank .card-body::before{
   content:"";position:absolute;inset:auto 0 0;height:90px;z-index:-1;
   /* Reuse only the lower Earth horizon from the site's existing space art. */
-  background:url('../images/home-bg.png') left bottom / 205% auto no-repeat;
+  background:url('../images/home-bg.png') left bottom / 240% auto no-repeat;
   mask-image:linear-gradient(transparent,#000 65%);opacity:.62;pointer-events:none;
 }
 body.challenge-bank .card-body h2{
