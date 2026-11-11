@@ -12,7 +12,7 @@
   font-family:'Rubik',Arial,sans-serif;
 }
 html[lang="ar"] .navigation-article,html[lang="ar"] .topic-article{font-family:'Cairo','Tajawal',Arial,sans-serif}
-.navigation-article .article-wrap,.topic-article .article-wrap{width:min(1060px,calc(100% - 32px));padding-bottom:30px}
+.navigation-article .article-wrap,.topic-article .article-wrap{width:min(900px,calc(100% - 32px));padding-bottom:30px}
 .navigation-article .topbar,.topic-article .topbar{margin-bottom:10px}
 .navigation-article .reading,.topic-article .reading{
   background:var(--paper-white);color:var(--ink);
@@ -145,7 +145,6 @@ html[lang="ar"] .navigation-article .article-section p,html[lang="ar"] .topic-ar
 html[lang="ar"] .navigation-article .space-hint .hint-content p,html[lang="ar"] .topic-article .space-hint .hint-content p{line-height:1.85}
 html[lang="ar"] .navigation-article .research-questions li,html[lang="ar"] .topic-article .research-questions li{line-height:1.7}
 @media(max-width:760px){
-.navigation-article .article-wrap,.topic-article .article-wrap{width:calc(100% - 24px)}
 .navigation-article .reading,.topic-article .reading{border-radius:15px}
 .navigation-article .story-hero,.topic-article .story-hero{grid-template-columns:1fr;gap:14px;padding:19px 19px 17px}
 .navigation-article .article-title,.topic-article .article-title{font-size:clamp(29px,6.3vw,35px);margin:10px 0 6px}
@@ -171,10 +170,9 @@ html[lang="ar"] .navigation-article .research-questions li,html[lang="ar"] .topi
 
 /* 2026-11-10: Reading-focused visual refinement for the three navigation stories.
    CSS only: all Hebrew/Arabic wording, links, images and behavior are unchanged. */
-.navigation-article .article-wrap,.topic-article .article-wrap{width:min(990px,calc(100% - 32px))}
 .navigation-article .topbar,.topic-article .topbar{margin-bottom:8px}
 .navigation-article .story-hero,.topic-article .story-hero{
-  grid-template-columns:minmax(0,1fr) minmax(0,.83fr);
+  grid-template-columns:minmax(0,1fr) minmax(0,.9fr);
   gap:20px;padding:19px 24px;
 }
 .navigation-article .story-hero .article-figure,.topic-article .story-hero .article-figure{
