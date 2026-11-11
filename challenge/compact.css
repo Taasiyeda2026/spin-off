@@ -70,7 +70,7 @@ body:is(.domain-hub,.navigation-domain) .bank-heading{margin:0 auto 16px;max-wid
 body:is(.domain-hub,.navigation-domain) .bank-heading h1{font-size:25px;line-height:1.25;margin-bottom:8px}
 body:is(.domain-hub,.navigation-domain) .bank-heading .lead{font-size:14px;line-height:1.45;margin-bottom:6px}
 body:is(.domain-hub,.navigation-domain) .domain-instruction{font-size:13px;line-height:1.45}
-body:is(.domain-hub,.navigation-domain) .topic-cards{gap:10px}
+body:is(.domain-hub,.navigation-domain) .topic-cards{gap:10px;grid-auto-rows:1fr;align-items:stretch}
 body:is(.domain-hub,.navigation-domain) .topic-cards .challenge-card{border-radius:11px}
 body:is(.domain-hub,.navigation-domain) .topic-cards .card-media{height:105px;aspect-ratio:auto}
 body:is(.domain-hub,.navigation-domain) .topic-cards .card-body{padding:7px 9px 9px}
