@@ -2,7 +2,7 @@
    Navigation: .navigation-domain / .navigation-article.
    Other domains: .domain-hub / .topic-article. */
 .navigation-domain .bank-wrap,.domain-hub .bank-wrap{width:min(1120px,calc(100% - 32px));padding-bottom:24px}
-.navigation-article .article-wrap,.topic-article .article-wrap{width:min(890px,calc(100% - 32px));padding-bottom:24px}
+.navigation-article .article-wrap,.topic-article .article-wrap{padding-bottom:24px}
 .navigation-domain .topbar,.domain-hub .topbar,.navigation-article .topbar,.topic-article .topbar{
   position:sticky;top:0;z-index:40;min-height:62px;align-items:center;
   padding:7px 2px;margin-bottom:12px;flex-wrap:nowrap;
@@ -66,7 +66,7 @@ html[lang="ar"] .navigation-domain .topic-cards .card-description,html[lang="ar"
 .navigation-article .story-hero,.topic-article .story-hero{grid-template-columns:minmax(0,1fr) 215px;gap:14px}
 }
 @media(max-width:600px){
-.navigation-domain .bank-wrap,.domain-hub .bank-wrap,.navigation-article .article-wrap,.topic-article .article-wrap{width:calc(100% - 24px)}
+.navigation-domain .bank-wrap,.domain-hub .bank-wrap{width:calc(100% - 24px)}
 .navigation-domain .topbar,.domain-hub .topbar,.navigation-article .topbar,.topic-article .topbar{min-height:55px;gap:6px;padding:4px 0;margin-bottom:10px}
 .navigation-domain .header-tools,.domain-hub .header-tools,.navigation-article .header-tools,.topic-article .header-tools{gap:5px}
 .navigation-domain .brand .site-logo,.domain-hub .brand .site-logo,.navigation-article .brand .site-logo,.topic-article .brand .site-logo{width:36px;height:42px}
