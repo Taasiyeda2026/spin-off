@@ -465,3 +465,61 @@ html[lang="ar"] .navigation-article .space-hint .hint-content p,html[lang="ar"] 
     line-height:1.92;
   }
 }
+
+/* Reading flow | 2026-11-11. Shared by all 24 stories in both languages.
+   The hero and challenge-bank cards retain their existing layout. */
+.navigation-article,.topic-article{
+  --reading-width:760px;
+  --reading-gutter:clamp(14px,2.6vw,26px);
+}
+.navigation-article .story-body,.topic-article .story-body{
+  display:block;
+  width:min(var(--reading-width),calc(100% - 2 * var(--reading-gutter)));
+  margin-inline:auto;
+  padding:24px 0 18px;
+  column-count:auto;
+  column-rule:0;
+}
+.navigation-article .story-body::before,.topic-article .story-body::before,
+.navigation-article .story-body .article-section:last-child::before,
+.topic-article .story-body .article-section:last-child::before{content:none}
+.navigation-article .story-body .article-section,.topic-article .story-body .article-section{
+  display:block;
+  margin:0 0 26px;
+}
+.navigation-article .story-body .article-section:last-child,
+.topic-article .story-body .article-section:last-child{
+  display:block;
+  margin:0;
+  padding:17px 19px;
+}
+.navigation-article .story-body .article-section p + p,
+.topic-article .story-body .article-section p + p{margin-top:11px}
+.navigation-article .story-body .article-section p:last-child,
+.topic-article .story-body .article-section p:last-child{margin-bottom:0}
+.navigation-article .space-hint,.topic-article .space-hint,
+.navigation-article .research-questions,.topic-article .research-questions{
+  width:min(var(--reading-width),calc(100% - 2 * var(--reading-gutter)));
+  margin-inline:auto;
+}
+.navigation-article .space-hint .hint-content,.topic-article .space-hint .hint-content{
+  grid-template-columns:minmax(0,1fr);
+}
+.navigation-article .hint-explanation,.topic-article .hint-explanation{min-width:0}
+.navigation-article .hint-explanation p + p,.topic-article .hint-explanation p + p{margin-top:11px}
+/* Optional future real photograph with caption and image credit. No empty
+   media slot is rendered today; explanation and verified sources stay in flow. */
+.navigation-article .hint-content figure,.topic-article .hint-content figure{min-width:0;margin:0}
+.navigation-article .hint-content figure img,.topic-article .hint-content figure img{
+  display:block;max-width:100%;height:auto;border-radius:10px;
+}
+.navigation-article .hint-content figcaption,.topic-article .hint-content figcaption,
+.navigation-article .hint-credit,.topic-article .hint-credit{
+  margin-block-start:8px;color:#416276;font-size:14px;line-height:1.7;overflow-wrap:anywhere;
+}
+@media(max-width:760px){
+  .navigation-article .story-body,.topic-article .story-body{padding-block:18px 12px}
+  .navigation-article .story-body .article-section,.topic-article .story-body .article-section{margin-bottom:22px}
+  .navigation-article .story-body .article-section:last-child,
+  .topic-article .story-body .article-section:last-child{margin-bottom:0;padding:15px 16px}
+}
