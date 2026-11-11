@@ -491,9 +491,15 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
     line-height: 1.4;
   }
   .practice-quote {
-    max-width: 760px;
-    margin: 9px auto 7px;
-    padding: 11px 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    min-height: 64px;
+    margin: 9px 0 7px;
+    padding: 11px 56px;
     border: 1px solid rgba(131,230,255,.59);
     border-radius: 15px;
     background: linear-gradient(145deg,rgba(5,21,50,.97),rgba(5,30,66,.93));
@@ -508,19 +514,67 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
     letter-spacing: -.012em;
   }
   .another-sentence-button {
-    padding: 5px 13px;
-    border: 1px solid rgba(111,228,255,.42);
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid rgba(112,236,255,.65);
     border-radius: 10px;
-    background: rgba(8,48,88,.78);
-    color: #b0f4ff;
-    font-size: .84rem;
-    font-weight: 600;
-    line-height: 1.25;
+    background: rgba(7,49,93,.90);
+    color: #aaf4ff;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(48,202,253,.18), inset 0 1px 0 rgba(220,251,255,.1);
   }
-  .another-sentence-button:hover { background: rgba(15,73,110,.91); }
+  .sentence-retry-icon {
+    display: block;
+    font-size: 1.62rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: transform .17s ease;
+  }
+  .another-sentence-button:hover,
+  .another-sentence-button:focus-visible {
+    color: #ecfeff;
+    border-color: #aff9ff;
+    background: rgba(10,73,122,.96);
+    box-shadow: 0 0 16px rgba(68,218,255,.33), inset 0 1px 0 rgba(220,251,255,.14);
+  }
+  .another-sentence-button:hover .sentence-retry-icon { transform: rotate(35deg); }
+  .sentence-retry-tooltip {
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 0;
+    z-index: 10;
+    display: block;
+    width: max-content;
+    padding: 5px 9px;
+    border: 1px solid rgba(126,230,255,.58);
+    border-radius: 8px;
+    background: rgba(5,31,67,.98);
+    box-shadow: 0 0 11px rgba(51,186,249,.2);
+    color: #e7faff;
+    font-size: .76rem;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .16s ease, visibility .16s ease;
+  }
+  .another-sentence-button:hover .sentence-retry-tooltip,
+  .another-sentence-button:focus-visible .sentence-retry-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
   .practice-comparison {
     display: grid;
+    width: 100%;
     grid-template-columns: repeat(2,minmax(0,1fr));
     gap: 10px;
     margin-top: 10px;
@@ -579,7 +633,7 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
   .practice-way p { margin: 0; font-size: 1.01rem; font-weight: 400; color: #e6f3ff; line-height: 1.46; }
 
   /* Reveal is not a full-width pill: the answer is its own meaningful moment. */
-  .practice-discovery { width: min(100%,760px); margin: 10px auto 0; }
+  .practice-discovery { width: 100%; margin: 10px 0 0; }
   .practice-discovery summary {
     display: flex;
     flex-direction: column;
@@ -608,10 +662,11 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
   .practice-discovery summary:hover { border-color: #b5fcff; box-shadow: 0 0 17px rgba(52,215,255,.29); }
   .discovery-hint { color: #bdd8e9; font-size: .67rem; font-weight: 400; line-height: 1.25; }
   .practice-discovery[open] .discovery-hint { display: none; }
-  .practice-discovery[open] summary { background: rgba(11,80,120,.98); }
+  .practice-discovery[open] > summary { display: none; }
   .practice-discovery-answer {
     position: relative;
-    margin-top: 9px;
+    width: 100%;
+    margin-top: 0;
     padding: 13px 17px;
     border: 1px solid rgba(113,231,255,.52);
     border-radius: 14px;
@@ -794,7 +849,8 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
   .deep-box { padding: 11px; }
   .main-list li, .avoid-list li { font-size: .96rem; line-height: 1.4; }
   .practice-panel { margin: 7px 8px 6px; padding: 11px 10px; }
-  .practice-quote { padding: 10px; }
+  .practice-quote { min-height: 61px; padding: 10px 50px; }
+  .another-sentence-button { width: 32px; height: 32px; left: 8px; }
   .practice-sentence { font-size: 1.38rem; }
   .practice-comparison { grid-template-columns: 1fr; gap: 7px; }
   .practice-way { padding: 10px; }
@@ -951,10 +1007,13 @@ body { margin: 0; font-family: Arial, "Heebo", sans-serif; }
           <h3 id="practiceHeading">עכשיו תורכם!</h3>
           <p>אותו משפט, שתי הצגות שונות לגמרי. בואו נראה מה עובד טוב יותר!</p>
         </div>
-        <div class="practice-quote" aria-live="polite" aria-atomic="true">
-          <p class="practice-sentence" id="practiceSentence"></p>
+        <div class="practice-quote">
+          <p class="practice-sentence" id="practiceSentence" aria-live="polite" aria-atomic="true"></p>
+          <button type="button" class="another-sentence-button" id="anotherSentenceButton" aria-label="משפט אחר">
+            <span class="sentence-retry-icon" aria-hidden="true">↻</span>
+            <span class="sentence-retry-tooltip" aria-hidden="true">משפט אחר</span>
+          </button>
         </div>
-        <button type="button" class="another-sentence-button" id="anotherSentenceButton" aria-label="הצגת משפט אחר">↻ משפט אחר</button>
         <div class="practice-comparison" aria-label="שני סיבובי התרגול">
           <div class="practice-way practice-way-poor">
             <h4><span class="practice-number">1</span> סיבוב ראשון – פחות טוב</h4>
