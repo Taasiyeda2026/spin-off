@@ -87,16 +87,16 @@ body.challenge-bank .bank-heading{margin-bottom:11px}
 body.challenge-bank .bank-heading h1{font-size:30px;line-height:1.2;margin:2px 0 6px}
 body.challenge-bank .notice{font-size:11px;padding:4px 10px}
 body.challenge-bank .cards{gap:12px}
-body.challenge-bank .challenge-card{min-height:354px;border-radius:18px}
-body.challenge-bank .card-media{flex-basis:115px;height:115px;padding:4px 11px 0}
-body.challenge-bank .card-media img{max-width:175px;max-height:111px}
+body.challenge-bank .challenge-card{min-height:288px;border-radius:18px}
+body.challenge-bank .card-media{flex-basis:100px;height:100px;padding:4px 11px 0}
+body.challenge-bank .card-media img{max-width:170px;max-height:96px}
 body.challenge-bank .card-media::after{height:22px;bottom:-8px}
-body.challenge-bank .card-body{padding:8px 11px 11px}
+body.challenge-bank .card-body{padding:7px 11px 9px}
 body.challenge-bank .card-body::before{height:58px}
-body.challenge-bank .card-body h2{font-size:17px;min-height:36px;line-height:1.25;margin-bottom:5px}
+body.challenge-bank .card-body h2{font-size:17px;min-height:30px;line-height:1.25;margin-bottom:4px}
 body.challenge-bank .card-description{font-size:14px;line-height:1.5}
-body.challenge-bank .card-question{margin-top:5px;line-height:1.45}
-body.challenge-bank .read-more{font-size:12.5px;max-width:152px;min-height:32px;padding:5px 8px;margin-top:9px}
+body.challenge-bank .card-question{margin-top:4px;line-height:1.45}
+body.challenge-bank .read-more{font-size:12.5px;max-width:152px;min-height:32px;padding:5px 8px;margin-top:7px}
 html[lang="ar"] body.challenge-bank .card-body h2{font-size:16px;line-height:1.4}
 html[lang="ar"] body.challenge-bank .card-description{font-size:14px;line-height:1.65}
 html[lang="ar"] body.challenge-bank .read-more{font-size:12.5px}
@@ -132,9 +132,9 @@ html[lang="ar"] body.challenge-bank .read-more{font-size:12.5px}
   body:is(.domain-hub,.navigation-domain) .topic-cards .read-more{font-size:14px;min-height:40px}
   body.challenge-bank .bank-wrap{width:min(370px,calc(100% - 28px))}
   body.challenge-bank .cards{grid-template-columns:1fr;gap:14px}
-  body.challenge-bank .challenge-card{min-height:350px}
-  body.challenge-bank .card-media{flex-basis:125px;height:125px}
-  body.challenge-bank .card-media img{max-height:121px;max-width:190px}
+  body.challenge-bank .challenge-card{min-height:300px}
+  body.challenge-bank .card-media{flex-basis:112px;height:112px}
+  body.challenge-bank .card-media img{max-height:108px;max-width:180px}
   body.challenge-bank .card-description{font-size:15px;line-height:1.6}
   html[lang="ar"] body.challenge-bank .card-description{font-size:15px;line-height:1.75}
   body.challenge-bank .read-more{font-size:14px;min-height:40px}
