@@ -1,0 +1,141 @@
+/* Shared challenge UI density. Loaded after component styles on the 66 bank,
+   domain and story pages only. Physical layout sizes: no zoom or page scaling. */
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article){
+  --compact-gutter:20px;
+}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .topbar{
+  min-height:48px;padding:5px 0;margin-bottom:8px;gap:8px;
+}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .header-tools{gap:8px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .quick-links{gap:5px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .nav-icon{
+  width:34px;height:34px;border-radius:9px;
+}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .nav-icon svg{width:18px;height:18px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .brand{min-height:38px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .site-logo{width:34px;height:38px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .lang-switch{padding:3px;gap:2px;border-radius:9px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .lang-switch a{
+  min-height:30px;font-size:12px;padding:3px 6px;border-radius:6px;
+}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .page-footer{min-height:32px;margin-top:12px;gap:6px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .footer-logo{width:28px;height:32px}
+
+/* Reading pages: approximately four-fifths of the previous desktop geometry,
+   with a 16px text floor for comfortable reading rather than literal 75% type. */
+body:is(.topic-article,.navigation-article){--reading-width:600px;--reading-gutter:20px}
+body:is(.topic-article,.navigation-article) .article-wrap{width:min(680px,calc(100% - 32px));padding-bottom:20px}
+body:is(.topic-article,.navigation-article) .reading{border-radius:14px}
+body:is(.topic-article,.navigation-article) .story-hero{
+  grid-template-columns:minmax(0,1fr) 245px;gap:16px;padding:15px 20px;
+}
+body:is(.topic-article,.navigation-article) .story-hero .article-figure{max-height:none;border-radius:10px;aspect-ratio:16/9}
+body:is(.topic-article,.navigation-article) .eyebrow{font-size:11px;padding:4px 9px}
+body:is(.topic-article,.navigation-article) .article-title{font-size:30px;line-height:1.24;margin:6px 0 5px}
+body:is(.topic-article,.navigation-article) .article-subtitle{font-size:16px;line-height:1.45}
+body:is(.topic-article,.navigation-article) .story-body{padding-block:18px 12px}
+body:is(.topic-article,.navigation-article) .story-body .article-section{margin-bottom:18px}
+body:is(.topic-article,.navigation-article) .story-body .article-section:last-child{margin:0;padding:13px 15px;border-radius:10px}
+body:is(.topic-article,.navigation-article) .article-section h2{
+  font-size:18px;line-height:1.4;margin-bottom:6px;padding-inline-start:8px;border-right-width:3px;
+}
+body:is(.topic-article,.navigation-article) .article-section p{font-size:16px;line-height:1.65;margin-bottom:8px}
+body:is(.topic-article,.navigation-article) .story-body .article-section p + p{margin-top:8px}
+body:is(.topic-article,.navigation-article) .story-body .article-section p:last-child{margin-bottom:0}
+body:is(.topic-article,.navigation-article) .space-hint{margin-block:8px 13px;border-radius:12px}
+body:is(.topic-article,.navigation-article) .space-hint summary{font-size:16px;padding:10px 13px;line-height:1.4}
+body:is(.topic-article,.navigation-article) .space-hint summary::before{
+  width:26px;height:26px;flex-basis:26px;font-size:15px;margin-inline-end:8px;border-radius:8px;
+}
+body:is(.topic-article,.navigation-article) .space-hint summary::after{width:25px;height:25px;flex-basis:25px;font-size:17px}
+body:is(.topic-article,.navigation-article) .space-hint .hint-content{padding:12px;gap:10px}
+body:is(.topic-article,.navigation-article) .space-hint .hint-content p{font-size:15px;line-height:1.65;padding:11px 12px}
+body:is(.topic-article,.navigation-article) .hint-explanation p + p{margin-top:8px}
+body:is(.topic-article,.navigation-article) .hint-sources{font-size:12px;padding:8px 11px}
+body:is(.topic-article,.navigation-article) .research-questions{margin-block:0 17px;padding:12px 14px;border-radius:10px}
+body:is(.topic-article,.navigation-article) .research-questions h2{font-size:18px;line-height:1.4;margin-bottom:4px}
+body:is(.topic-article,.navigation-article) .research-questions p{font-size:14px;line-height:1.5;margin-bottom:8px}
+body:is(.topic-article,.navigation-article) .research-questions ol{gap:7px}
+body:is(.topic-article,.navigation-article) .research-questions li{font-size:14px;line-height:1.45;padding:8px 9px;gap:8px;border-radius:8px}
+body:is(.topic-article,.navigation-article) .research-questions li::before{width:22px;height:22px;flex-basis:22px;border-radius:6px;font-size:12px}
+html[lang="ar"] body:is(.topic-article,.navigation-article) .article-title{font-size:30px;line-height:1.35}
+html[lang="ar"] body:is(.topic-article,.navigation-article) .article-section h2{font-size:18px;line-height:1.5}
+html[lang="ar"] body:is(.topic-article,.navigation-article) .article-section p{font-size:16px;line-height:1.8}
+html[lang="ar"] body:is(.topic-article,.navigation-article) .space-hint .hint-content p{font-size:15px;line-height:1.8}
+html[lang="ar"] body:is(.topic-article,.navigation-article) .research-questions li{line-height:1.6}
+
+/* Domain choices: retain all three cards, with smaller artwork and spacing. */
+body:is(.domain-hub,.navigation-domain) .bank-wrap{width:min(800px,calc(100% - 32px));padding-bottom:16px}
+body:is(.domain-hub,.navigation-domain) .bank-heading{margin:0 auto 16px;max-width:720px}
+body:is(.domain-hub,.navigation-domain) .bank-heading h1{font-size:25px;line-height:1.25;margin-bottom:8px}
+body:is(.domain-hub,.navigation-domain) .bank-heading .lead{font-size:14px;line-height:1.45;margin-bottom:6px}
+body:is(.domain-hub,.navigation-domain) .domain-instruction{font-size:13px;line-height:1.45}
+body:is(.domain-hub,.navigation-domain) .topic-cards{gap:10px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .challenge-card{border-radius:11px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .card-media{height:105px;aspect-ratio:auto}
+body:is(.domain-hub,.navigation-domain) .topic-cards .card-body{padding:7px 9px 9px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .card-body h2{font-size:16px;line-height:1.3;margin-bottom:3px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .card-subtitle{font-size:13px;line-height:1.4;margin-bottom:4px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .card-description{font-size:13px;line-height:1.5;margin-bottom:7px}
+body:is(.domain-hub,.navigation-domain) .topic-cards .read-more{font-size:12.5px;min-height:30px;padding:4px 7px;border-radius:8px}
+html[lang="ar"] body:is(.domain-hub,.navigation-domain) .topic-cards .card-description{line-height:1.65}
+
+/* Bank cards keep the same artwork, blend, question emphasis and equal tracks.
+   Copy already uses 14px, so compact the geometry without shrinking it further. */
+body.challenge-bank .bank-wrap{width:min(1000px,calc(100% - 36px));padding-bottom:28px}
+body.challenge-bank .bank-heading{margin-bottom:11px}
+body.challenge-bank .bank-heading h1{font-size:30px;line-height:1.2;margin:2px 0 6px}
+body.challenge-bank .notice{font-size:11px;padding:4px 10px}
+body.challenge-bank .cards{gap:12px}
+body.challenge-bank .challenge-card{min-height:354px;border-radius:18px}
+body.challenge-bank .card-media{flex-basis:115px;height:115px;padding:4px 11px 0}
+body.challenge-bank .card-media img{max-width:175px;max-height:111px}
+body.challenge-bank .card-media::after{height:22px;bottom:-8px}
+body.challenge-bank .card-body{padding:8px 11px 11px}
+body.challenge-bank .card-body::before{height:58px}
+body.challenge-bank .card-body h2{font-size:17px;min-height:36px;line-height:1.25;margin-bottom:5px}
+body.challenge-bank .card-description{font-size:14px;line-height:1.5}
+body.challenge-bank .card-question{margin-top:5px;line-height:1.45}
+body.challenge-bank .read-more{font-size:12.5px;max-width:152px;min-height:32px;padding:5px 8px;margin-top:9px}
+html[lang="ar"] body.challenge-bank .card-body h2{font-size:16px;line-height:1.4}
+html[lang="ar"] body.challenge-bank .card-description{font-size:14px;line-height:1.65}
+html[lang="ar"] body.challenge-bank .read-more{font-size:12.5px}
+@media(min-width:981px){body.challenge-bank .cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:980px) and (min-width:601px){
+  body.challenge-bank .bank-wrap{width:min(660px,calc(100% - 32px))}
+  body.challenge-bank .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  body:is(.topic-article,.navigation-article) .story-hero{grid-template-columns:minmax(0,1fr) 220px;gap:12px}
+}
+@media(max-width:600px){
+  body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .topbar{min-height:52px;gap:5px;flex-wrap:wrap;row-gap:5px}
+  body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .header-tools{gap:5px}
+  body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .nav-icon{width:40px;height:40px}
+  body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .lang-switch a{min-height:36px;font-size:12px;padding:4px 5px}
+  body:is(.topic-article,.navigation-article){--reading-gutter:14px}
+  body:is(.topic-article,.navigation-article) .article-wrap{width:calc(100% - 24px)}
+  body:is(.topic-article,.navigation-article) .story-hero{grid-template-columns:1fr;padding:13px 14px;gap:10px}
+  body:is(.topic-article,.navigation-article) .story-hero .article-figure{max-width:280px;justify-self:center}
+  body:is(.topic-article,.navigation-article) .article-title{font-size:27px}
+  html[lang="ar"] body:is(.topic-article,.navigation-article) .article-title{font-size:27px}
+  body:is(.topic-article,.navigation-article) .story-body{padding-block:15px 10px}
+  body:is(.topic-article,.navigation-article) .research-questions ol{grid-template-columns:1fr}
+  body:is(.topic-article,.navigation-article) .research-questions li{font-size:15px;line-height:1.5}
+  body:is(.domain-hub,.navigation-domain) .bank-wrap{width:min(400px,calc(100% - 24px))}
+  body:is(.domain-hub,.navigation-domain) .bank-heading h1{font-size:26px}
+  body:is(.domain-hub,.navigation-domain) .bank-heading .lead{font-size:15px}
+  body:is(.domain-hub,.navigation-domain) .topic-cards .card-media{height:135px}
+  body:is(.domain-hub,.navigation-domain) .topic-cards .card-body h2{font-size:18px}
+  body:is(.domain-hub,.navigation-domain) .topic-cards .card-description{font-size:15px;line-height:1.6}
+  body:is(.domain-hub,.navigation-domain) .topic-cards .card-subtitle{font-size:14px}
+  body:is(.domain-hub,.navigation-domain) .topic-cards .read-more{font-size:14px;min-height:40px}
+  body.challenge-bank .bank-wrap{width:min(370px,calc(100% - 28px))}
+  body.challenge-bank .cards{grid-template-columns:1fr;gap:14px}
+  body.challenge-bank .challenge-card{min-height:350px}
+  body.challenge-bank .card-media{flex-basis:125px;height:125px}
+  body.challenge-bank .card-media img{max-height:121px;max-width:190px}
+  body.challenge-bank .card-description{font-size:15px;line-height:1.6}
+  html[lang="ar"] body.challenge-bank .card-description{font-size:15px;line-height:1.75}
+  body.challenge-bank .read-more{font-size:14px;min-height:40px}
+}
