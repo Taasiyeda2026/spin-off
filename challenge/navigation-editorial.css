@@ -12,7 +12,7 @@
   font-family:'Rubik',Arial,sans-serif;
 }
 html[lang="ar"] .navigation-article,html[lang="ar"] .topic-article{font-family:'Cairo','Tajawal',Arial,sans-serif}
-.navigation-article .article-wrap,.topic-article .article-wrap{width:min(900px,calc(100% - 32px));padding-bottom:30px}
+.navigation-article .article-wrap,.topic-article .article-wrap{width:min(860px,calc(100% - 32px));padding-bottom:30px}
 .navigation-article .topbar,.topic-article .topbar{margin-bottom:10px}
 .navigation-article .reading,.topic-article .reading{
   background:var(--paper-white);color:var(--ink);
@@ -467,7 +467,7 @@ html[lang="ar"] .navigation-article .space-hint .hint-content p,html[lang="ar"] 
 /* Reading flow | 2026-11-11. Shared by all 24 stories in both languages.
    The hero and challenge-bank cards retain their existing layout. */
 .navigation-article,.topic-article{
-  --reading-width:760px;
+  --reading-width:740px;
   --reading-gutter:clamp(14px,2.6vw,26px);
 }
 .navigation-article .story-body,.topic-article .story-body{
