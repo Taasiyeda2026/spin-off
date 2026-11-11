@@ -13,13 +13,13 @@ body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigatio
 }
 body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .nav-icon svg{width:18px;height:18px}
 body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .brand{min-height:38px}
-body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .site-logo{width:34px;height:38px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .brand .site-logo{width:34px;height:38px}
 body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .lang-switch{padding:3px;gap:2px;border-radius:9px}
 body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .lang-switch a{
   min-height:30px;font-size:12px;padding:3px 6px;border-radius:6px;
 }
 body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .page-footer{min-height:32px;margin-top:12px;gap:6px}
-body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .footer-logo{width:28px;height:32px}
+body:is(.challenge-bank,.domain-hub,.navigation-domain,.topic-article,.navigation-article) .page-footer .footer-logo{width:28px;height:32px}
 
 /* Reading pages: approximately four-fifths of the previous desktop geometry,
    with a 16px text floor for comfortable reading rather than literal 75% type. */
