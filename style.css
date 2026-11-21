@@ -82,8 +82,9 @@ a {
 
 .nav-card {
   justify-self: stretch;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   aspect-ratio: 1 / 1;
   padding: 7px;
@@ -107,6 +108,17 @@ a {
   text-shadow: 0 0 7px rgba(62, 244, 255, 0.55);
   transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* מרכז את הכיתוב בעברית במדויק בתוך כל כפתור, ללא שינוי בגודל התיבות. */
+.nav-card > span {
+  display: block;
+  flex: 0 1 auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  line-height: 1.15;
 }
 
 .nav-card:hover,
