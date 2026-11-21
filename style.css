@@ -81,13 +81,14 @@ a {
 }
 
 .nav-card {
+  position: relative;
   justify-self: stretch;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   aspect-ratio: 1 / 1;
-  padding: 7px;
+  padding: 0;
   border: 1.5px solid var(--neon-cyan);
   border-radius: 14%;
   background: linear-gradient(180deg, rgba(0, 144, 243, 0.96), rgba(0, 72, 201, 0.98));
@@ -110,14 +111,18 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* מרכז את הכיתוב בעברית במדויק בתוך כל כפתור, ללא שינוי בגודל התיבות. */
+/* הכיתוב ממורכז על פני כל שטח הכפתור, גם עבור מילים ארוכות בעברית. */
 .nav-card > span {
-  display: block;
-  flex: 0 1 auto;
-  width: 100%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  padding: 0;
+  padding: 0 2px;
+  direction: rtl;
   text-align: center;
+  white-space: nowrap;
   line-height: 1.15;
 }
 
