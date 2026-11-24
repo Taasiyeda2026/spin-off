@@ -103,17 +103,26 @@ state.outputs=[{title:T('סט התמונות של הפתרון שלנו','مجم
 $('panel').addEventListener('input',e=>{if(e.target.dataset.text){state.values[e.target.dataset.text]=e.target.value;state.outputs=[];save()}});
 $('panel').addEventListener('change',e=>{const el=e.target;if(el.dataset.kind){if(state.kind!==el.dataset.kind){state.kind=el.dataset.kind;for(const k of ['shape','size','material','components','digital','appearance','operation','action']){delete state.values[k];delete state.values[k+'Other']}}}else if(el.dataset.group){const k=el.dataset.group;state.values[k]=[...document.querySelectorAll('input[data-group="'+k+'"]:checked')].map(x=>Number(x.value)).filter(x=>x>=0)}state.outputs=[];save()});
 const providers={chatgpt:'https://chatgpt.com/',gemini:'https://gemini.google.com/app',copilot:'https://copilot.microsoft.com/'};
+function copyImmediately(value){
+const temp=document.createElement('textarea');temp.value=value;temp.setAttribute('readonly','');temp.style.cssText='position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none';document.body.appendChild(temp);const active=document.activeElement;
+try{temp.focus({preventScroll:true});temp.select();temp.setSelectionRange(0,value.length);return document.execCommand('copy')===true}catch(e){return false}finally{temp.remove();if(active?.focus)active.focus({preventScroll:true})}
+}
 async function copyPrompt(value){
-try{if(!navigator.clipboard?.writeText)throw Error('clipboard unavailable');await navigator.clipboard.writeText(value);return true}catch(err){const temp=document.createElement('textarea');temp.value=value;temp.setAttribute('readonly','');temp.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';document.body.appendChild(temp);temp.select();try{return document.execCommand('copy')}catch(e){return false}finally{temp.remove()}}
+if(copyImmediately(value))return true;
+try{if(!navigator.clipboard?.writeText)return false;await navigator.clipboard.writeText(value);return true}catch(e){return false}
 }
 $('panel').addEventListener('click',async e=>{
-const b=e.target.closest('[data-copy],[data-provider]');if(!b)return;const value=state.outputs[0]?.body;if(!value)return;
-const provider=b.dataset.provider;const feedback=$('launchFeedback');
-let tab=null;if(provider){tab=window.open('about:blank','_blank');if(tab)tab.opener=null}
+const b=e.target.closest('[data-copy],[data-provider]');if(!b||b.disabled)return;const value=state.outputs[0]?.body;if(!value)return;
+const provider=b.dataset.provider;const feedback=$('launchFeedback');feedback.textContent='';b.disabled=true;
+try{
 const ok=await copyPrompt(value);
-if(!ok){if(tab)tab.close();feedback.textContent=T('לא הצלחנו להעתיק. נסו שוב או פנו למדריך.','تعذر النسخ. حاولوا مجدداً أو اطلبوا مساعدة المرشد.');return}
-if(provider){if(tab){const encoded=encodeURIComponent(value);const prefill=provider==='chatgpt'&&encoded.length<14000;tab.location.href=prefill?providers[provider]+'?q='+encoded:providers[provider];feedback.textContent=prefill?T('הפרומפט הועתק. אם לא מופיע בשיחה, הדביקו אותו (Ctrl+V).','تم النسخ. إذا لم تظهر التعليمات، الصقوها (Ctrl+V).'):T('הועתק! הדביקו בחלון שנפתח (Ctrl+V).','تم النسخ! الصقوا في النافذة الجديدة (Ctrl+V).')}else{feedback.textContent=T('הועתק! פתיחת החלון נחסמה. אפשרו חלונות קופצים ונסו שוב.','تم النسخ! مُنع فتح النافذة. اسمحوا بالنوافذ المنبثقة وحاولوا مجدداً.')}}
-else{b.textContent=T('הועתק ✓','تم النسخ ✓');feedback.textContent=T('הפרומפט הועתק.','تم نسخ التعليمات.')}
+if(!ok){feedback.textContent=T('לא הצלחנו להעתיק. נסו שוב באמצעות כפתור ההעתקה.','تعذر النسخ. حاولوا مجدداً باستخدام زر النسخ.');return}
+if(!provider){b.textContent=T('הועתק ✓','تم النسخ ✓');feedback.textContent=T('הפרומפט הועתק.','تم نسخ التعليمات.');return}
+const encoded=encodeURIComponent(value);const prefill=provider==='chatgpt'&&encoded.length<14000;const url=prefill?providers[provider]+'?q='+encoded:providers[provider];
+feedback.textContent=prefill?T('הפרומפט הועתק. אם לא מופיע בשיחה, הדביקו אותו (Ctrl+V).','تم النسخ. إذا لم تظهر التعليمات، الصقوها (Ctrl+V).'):T('הפרומפט הועתק. בחלון המחולל לחצו בשדה ההודעה והדביקו (Ctrl+V).','تم النسخ. اضغطوا على حقل الرسالة في الأداة والصقوا (Ctrl+V).');
+const tab=window.open('about:blank','_blank');
+if(tab){tab.opener=null;tab.location.href=url}else{const link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=T('פתיחת המחולל','فتح الأداة');link.style.cssText='display:block;margin:8px auto;color:#155b83;text-decoration:underline';feedback.appendChild(link)}
+}finally{b.disabled=false}
 });
 $('next').onclick=()=>{if(state.step===0){if(!state.kind||!String(v('name')).trim()||!String(v('purpose')).trim()){$('error').textContent=T('בחרו סוג פתרון וכתבו שם ומשפט קצר על הרעיון.','اختاروا نوع الحل واكتبوا اسماً وجملة قصيرة عن الفكرة.');return}state.step=1}else if(state.step===1){if(!String(v('appearance')).trim()){$('error').textContent=T('הוסיפו משפט קצר על המראה ומיקום הפרטים החשובים כדי שהתמונה תתאים לרעיון שלכם.','أضيفوا جملة قصيرة عن الشكل ومواقع التفاصيل المهمة لتناسب الصورة فكرتكم.');$('appearance').focus();return}generate();state.step=2}render();window.scrollTo(0,0)};
 $('back').onclick=()=>{state.step=Math.max(0,state.step-1);render();window.scrollTo(0,0)};
