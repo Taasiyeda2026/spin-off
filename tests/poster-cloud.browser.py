@@ -127,6 +127,14 @@ with sync_playwright() as playwright:
     expect(student.locator("#poster-school")).to_have_value("Fixture School")
     expect(student.locator("#poster-school")).to_have_js_property("readOnly", True)
 
+    assert student.locator("#bg-up").count() == 0
+    student.locator('[data-background-id="bg3"]').click()
+    expect(student.locator('[data-background-id="bg3"]')).to_have_attribute("aria-pressed", "true")
+    expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
+    assert poster["state"]["design"]["bgId"] == "bg3"
+    assert "background" not in poster["state"]["media"]
+    assert "bgImage" not in poster["state"]["design"]
+
     fail_save = True
     student.locator("#poster-project").fill("Fixture Project")
     expect(student.get_by_role("button", name="ניסיון שמירה מחדש")).to_be_visible()
@@ -151,6 +159,8 @@ with sync_playwright() as playwright:
     click(second, "המשך")
     expect(second.locator("#poster-project")).to_have_value("Fixture Project")
     expect(second.locator("#img-main")).to_be_visible()
+    expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
+    assert second.evaluate("async () => await backgroundReady")
 
     conflict = True
     second.locator("#poster-project").fill("Local update")
@@ -171,6 +181,10 @@ with sync_playwright() as playwright:
     click(staff, "כניסה")
     expect(staff.get_by_role("heading", name="ניהול הפוסטרים שלי")).to_be_visible()
     staff.get_by_role("searchbox").fill("Remote update")
+    staff.context.grant_permissions(["clipboard-read", "clipboard-write"], origin=origin)
+    click(staff, "העתקת מזהה פעילות")
+    assert staff.evaluate("navigator.clipboard.readText()") == activity["id"]
+    expect(staff.locator(".poster-activity-id button")).to_have_text("הועתק")
     click(staff, "צפייה")
     expect(staff.locator("#poster-project")).to_have_value("Remote update")
     expect(staff.locator("#poster")).to_have_js_property("inert", True)
