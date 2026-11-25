@@ -1,9 +1,9 @@
-import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-language-stay';
+import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-research-title';
 import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js?v=20261125-backgrounds';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
-const homeTitle = 'SpaceTech | פוסטר משימת פיתוח';
+const homeTitle = 'SpaceTech | פוסטר חקר';
 const title = document.getElementById('poster-access-title');
 const editor = window.posterEditor;
 const drafts = window.posterDrafts;
