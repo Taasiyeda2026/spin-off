@@ -315,7 +315,7 @@ body:has(.poster-access.is-home:not([hidden])) {
 #sp #fill-list .edit-card > textarea{overflow-y:hidden;resize:none}
 
 #short-desc-box{flex-direction:column;align-items:stretch}
-#solution-description-heading{display:flex;align-items:center;justify-content:center;gap:5px;max-width:100%;height:14px;flex:0 0 14px;font-size:12px;line-height:14px;color:#d7ebff;padding:0 65px;white-space:nowrap}
+#solution-description-heading{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:5px;max-width:100%;height:14px;flex:0 0 14px;font-size:12px;line-height:14px;color:#d7ebff;padding:0 65px;white-space:nowrap}
 #solution-description-heading strong{font-weight:800}#poster-solution-type:empty{display:none}
 #short-desc{flex:1;min-height:0;height:auto;font-size:12px;line-height:1.15;padding-top:0;padding-bottom:0}
 #sp #fill-list .edit-card > select{width:100%;min-width:0;padding:8px 9px;border:1px solid #b4c4d9;border-radius:7px;background:white;color:#142641;font:400 13px/1.5 Heebo,Arial,sans-serif;text-align:right;direction:rtl}

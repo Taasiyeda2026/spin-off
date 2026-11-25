@@ -183,7 +183,7 @@ try{
   if(brief&&Date.now()-brief.createdAt>=0&&Date.now()-brief.createdAt<300000){
    localStorage.setItem(KEY+':before-poster-import',JSON.stringify(state));
    const text=key=>typeof brief[key]==='string'?brief[key]:'';
-   state={lang:brief.lang==='ar'?'ar':'he',step:0,kind:types.some(t=>t[0]===brief.solutionType)?brief.solutionType:'',outputs:[],values:{name:text('name'),purpose:text('description'),audOther:text('target'),spaceOther:text('inspiration'),componentsOther:text('components'),operation:text('operation')}};
+   state={lang:brief.lang==='ar'?'ar':'he',step:0,kind:types.some(t=>t[0]===brief.solutionType)?brief.solutionType:'',outputs:[],values:{name:text('name'),purpose:text('description'),audOther:text('target'),spaceOther:text('inspiration'),componentsOther:text('components'),digitalOther:text('components'),operation:text('operation')}};
   }
  }
 }catch{}
