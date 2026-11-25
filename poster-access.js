@@ -23,6 +23,32 @@ const messages = {
 };
 
 let staff = null;
+let waitForPosterSave = () => Promise.resolve();
+const editorHome = document.getElementById('poster-editor-home');
+const homeLabel = arabic ? 'العودة إلى الصفحة الرئيسية' : 'חזרה לדף הבית';
+for (const link of [document.getElementById('poster-access-home'), editorHome]) {
+  link.title = homeLabel;
+  link.setAttribute('aria-label', homeLabel);
+}
+let leavingForHome = false;
+editorHome.addEventListener('click', async (event) => {
+  event.preventDefault();
+  if (leavingForHome) return;
+  leavingForHome = true;
+  editorHome.setAttribute('aria-busy', 'true');
+  try {
+    await editor.save();
+    await waitForPosterSave();
+    if (editor.hasUnsavedChanges() &&
+        !confirm(t('יש שינויים שטרם נשמרו בענן. לחזור בכל זאת?'))) return;
+    window.location.assign(editorHome.href);
+  } catch (error) {
+    alert(t(messages[error.message] ?? messages.network));
+  } finally {
+    leavingForHome = false;
+    editorHome.removeAttribute('aria-busy');
+  }
+});
 
 const language = document.createElement('a');
 language.textContent = arabic ? 'עברית' : 'العربية';
@@ -297,6 +323,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
   }
 
   let saveQueue = Promise.resolve();
+  waitForPosterSave = () => saveQueue;
   let localQueue = Promise.resolve();
   let latest = 0;
   function writeLocal(record) {
