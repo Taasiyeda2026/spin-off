@@ -1,0 +1,68 @@
+name: Optimize poster backgrounds
+on:
+  push:
+    branches: [feature/poster-background-gallery, main]
+    paths:
+      - 'poster-backgrounds/*.png'
+      - 'poster-backgrounds/*.jpg'
+      - 'poster-backgrounds/*.jpeg'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: poster-backgrounds-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==11.3.0
+      - name: Generate print and thumbnail WebP files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps
+          import json, re
+          root = Path('poster-backgrounds')
+          (root / 'webp').mkdir(exist_ok=True)
+          (root / 'thumbs').mkdir(exist_ok=True)
+          entries = []
+          for src in sorted(root.iterdir()):
+              if not src.is_file() or src.suffix.lower() not in {'.png','.jpg','.jpeg'}:
+                  continue
+              key = src.stem
+              if not re.fullmatch(r'[A-Za-z0-9_-]+', key):
+                  raise ValueError(f'Use a simple unique filename: {src}')
+              if any(e['id'] == key for e in entries):
+                  raise ValueError(f'Duplicate background ID: {key}')
+              with Image.open(src) as original:
+                  image = ImageOps.exif_transpose(original).convert('RGB')
+              image.thumbnail((2480,3508), Image.Resampling.LANCZOS)
+              full = root / 'webp' / (key + '.webp')
+              image.save(full, 'WEBP', quality=88, method=6)
+              thumb = image.copy()
+              thumb.thumbnail((240,340), Image.Resampling.LANCZOS)
+              preview = root / 'thumbs' / (key + '.webp')
+              thumb.save(preview, 'WEBP', quality=76, method=6)
+              for path in (full, preview):
+                  with Image.open(path) as output:
+                      assert output.format == 'WEBP'
+                      output.verify()
+              entries.append({'id': key, 'image': str(full), 'thumb': str(preview)})
+              print(f'{src.name}: {src.stat().st_size} bytes -> {full.stat().st_size} bytes, preview {preview.stat().st_size} bytes; {image.size}')
+          if not entries:
+              raise ValueError('No background images found')
+          (root/'catalog.js').write_text('window.posterBackgroundCatalog = '+json.dumps(entries,ensure_ascii=False)+';\n',encoding='utf-8')
+          PY
+      - name: Commit generated assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add poster-backgrounds/webp poster-backgrounds/thumbs poster-backgrounds/catalog.js
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Generate optimized poster background assets"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

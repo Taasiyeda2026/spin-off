@@ -1,5 +1,5 @@
-import { arabic, translate as t } from './poster-language.js';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js';
+import { arabic, translate as t } from './poster-language.js?v=20261125-backgrounds';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js?v=20261125-backgrounds';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -203,7 +203,7 @@ function copyCode(code) {
 async function openFromManagement(id, mode) {
   const poster = await posterRequest('load', { id }, staff);
   await openPoster(poster, staff, manage, mode !== 'edit');
-  if (mode === 'pdf') window.producePdf();
+  if (mode === 'pdf') await window.producePdf();
 }
 
 async function manage() {
@@ -226,7 +226,22 @@ async function manage() {
       const row = element('details', '', results);
       row.open = Boolean(query);
       element('summary', [activityLabel(activity), t('טכנולוגיות החלל'), activity.posters.length + ' ' + t('פוסטרים')].join(' · '), row);
-      element('p', t('מזהה פעילות') + ': ' + activity.id, row);
+      const idLine = element('div', '', row);
+      idLine.className = 'poster-activity-id';
+      element('span', t('מזהה פעילות') + ':', idLine);
+      const identifier = element('bdi', activity.id, idLine);
+      identifier.dir = 'ltr';
+      const copy = button('העתק', async () => {
+        try {
+          await navigator.clipboard.writeText(activity.id);
+          copy.textContent = t('הועתק');
+          clearTimeout(copy.resetTimer);
+          copy.resetTimer = setTimeout(() => { copy.textContent = t('העתק'); }, 1500);
+        } catch (error) {
+          showError(error);
+        }
+      }, idLine);
+      copy.setAttribute('aria-label', t('העתקת מזהה פעילות'));
       for (const poster of matching) {
         const card = element('article', '', row);
         element('h2', poster.title || t('פוסטר ללא שם'), card);

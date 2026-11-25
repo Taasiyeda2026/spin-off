@@ -1,0 +1,54 @@
+name: Poster gallery checks
+on:
+  pull_request:
+    paths:
+      - 'poster*.html'
+      - 'poster*.js'
+      - 'poster*.css'
+      - 'poster-backgrounds/**'
+      - 'tests/poster-*.py'
+      - '.github/workflows/poster-gallery-checks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: |
+          python -m pip install playwright==1.56.0 Pillow==11.3.0
+          python -m playwright install --with-deps chromium
+          sudo apt-get install -y poppler-utils
+      - name: Check generated assets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          root = Path('poster-backgrounds')
+          catalog = (root/'catalog.js').read_text()
+          entries = json.loads(catalog.removeprefix('window.posterBackgroundCatalog = ').strip().removesuffix(';'))
+          sources = [p for p in root.iterdir() if p.is_file() and p.suffix.lower() in ('.png','.jpg','.jpeg')]
+          assert {e['id'] for e in entries} == {p.stem for p in sources}
+          for e in entries:
+              for field in ('image','thumb'):
+                  with Image.open(e[field]) as image:
+                      assert image.format == 'WEBP'
+                      if field == 'thumb': assert image.width <= 240 and image.height <= 340
+                      image.verify()
+          print(f'Validated {len(entries)} full backgrounds and previews.')
+          PY
+      - name: Browser acceptance
+        run: |
+          export CHROMIUM_PATH="$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
+          python -m http.server 8000 --bind 127.0.0.1 > /tmp/poster-gallery-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do if curl -fsS http://127.0.0.1:8000/poster.html >/dev/null; then break; fi; sleep 1; done
+          python tests/poster-drafts.browser.py
+          python tests/poster-cloud.browser.py
