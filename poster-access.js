@@ -176,17 +176,14 @@ function createDetails(ticket, activities) {
   activity.required = true;
   if (activities.length > 1) element('option', t('בחרו פעילות'), activity).value = '';
   for (const item of activities) element('option', activityLabel(item), activity).value = item.id;
-  const names = field(form, 'שמות חברי הקבוצה, מופרדים בפסיקים', { required: true, maxLength: 650 });
   const access = { session: newToken() };
   const requestId = crypto.randomUUID();
   let created;
   submit(form, 'יצירת פוסטר', async () => {
-    const participants = names.value.split(/[,،]/).map((name) => name.trim()).filter(Boolean);
-    if (!participants.length || participants.length > 8 || participants.some((name) => name.length > 80)) {
-      throw new Error('invalid');
-    }
-    created ??= await posterRequest('create', { requestId, ticket, activityId: activity.value, participants }, access);
+    created ??= await posterRequest('create', { requestId, ticket, activityId: activity.value, participants: [] }, access);
     await openPoster(created, access, home);
+    document.querySelector('[data-tab="students"]').click();
+    document.querySelector('#pcf input')?.focus();
   });
 }
 

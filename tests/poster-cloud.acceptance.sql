@@ -22,11 +22,12 @@ select repeat('a',64) as ticket, repeat('b',64) as session, repeat('c',64) as ot
 select public.spacetech_poster('activities', jsonb_build_object('code', :'original'::jsonb->>'code', 'ticket', :'ticket')) as offered \gset
 select public.poster_assert(jsonb_array_length(:'offered'::jsonb->'activities') = 1, 'only assigned activity offered');
 select jsonb_build_object('ticket', :'ticket', 'session', :'session',
-  'activityId', 'space', 'requestId', gen_random_uuid(), 'participants', jsonb_build_array('Student A','Student B')) as creation \gset
+  'activityId', 'space', 'requestId', gen_random_uuid(), 'participants', '[]'::jsonb) as creation \gset
 select public.poster_assert(public.spacetech_poster('create', :'creation'::jsonb || '{"activityId":"different"}') ->> 'error' = 'denied',
   'creation cannot bypass assignment');
 select public.spacetech_poster('create', :'creation') as created \gset
 select public.poster_assert(:'created'::jsonb->>'code' ~ '^[1-9][0-9]{5}$', 'six digit group code');
+select public.poster_assert(:'created'::jsonb#>>'{state,values,poster-students}' = '' and :'created'::jsonb#>'{state,participants}' = '[]'::jsonb, 'create without participant names');
 select public.poster_assert(public.spacetech_poster('create', :'creation')->>'id' = :'created'::jsonb->>'id', 'idempotent create');
 select public.poster_assert(public.spacetech_poster('create', :'creation'::jsonb || jsonb_build_object('requestId',gen_random_uuid()))->>'error' = 'denied', 'one poster per ticket');
 select jsonb_build_object('id', :'created'::jsonb->>'id', 'session', :'session') as access \gset

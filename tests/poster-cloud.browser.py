@@ -14,8 +14,8 @@ poster = {
     "id": poster_id, "activityId": activity["id"], "code": "222222",
     "updatedAt": "2026-11-25T00:00:00Z", "revision": 0,
     "state": {"values": {"poster-school": "Fixture School", "poster-class": "4A",
-                        "poster-students": "Student A, Student B"},
-              "participants": ["Student A", "Student B"]},
+                        "poster-students": ""},
+              "participants": []},
 }
 png = base64.b64decode(
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFtUAAAAASUVORK5CYII="
@@ -59,7 +59,7 @@ def handle(route):
             result = {"activities": [activity]}
         elif action == "create":
             assert params["activityId"] == activity["id"] and len(params["session"]) == 64
-            assert params["participants"] == ["Student A", "Student B"]
+            assert params["participants"] == []
             result = poster
         elif action in ("resume", "load"):
             if action == "resume":
@@ -121,11 +121,20 @@ with sync_playwright() as playwright:
     student.get_by_label("קוד מדריך").fill("1234")
     click(student, "המשך")
     expect(student.get_by_label("בית הספר והכיתה")).to_have_value(activity["id"])
-    student.get_by_label("שמות חברי הקבוצה, מופרדים בפסיקים").fill("Student A, Student B")
+    expect(student.get_by_label("שמות חברי הקבוצה, מופרדים בפסיקים")).to_have_count(0)
     click(student, "יצירת פוסטר")
     expect(student.get_by_text("קוד הפוסטר: 222222")).to_be_visible()
     expect(student.locator("#poster-school")).to_have_value("Fixture School")
     expect(student.locator("#poster-school")).to_have_js_property("readOnly", True)
+    expect(student.locator("#tab-students")).to_be_visible()
+    expect(student.locator("#poster-students")).to_have_value("")
+    student.locator("#pc-cnt").select_option("2")
+    student.locator("#pcf input").nth(0).fill("Student A")
+    student.locator("#pcf input").nth(1).fill("Student B")
+    expect(student.locator("#poster-students")).to_have_value("Student A, Student B")
+    expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
+    assert poster["state"]["participants"] == ["Student A", "Student B"]
+    student.locator('[data-tab="design"]').click()
 
     assert student.locator("#bg-up").count() == 0
     student.locator('[data-background-id="bg3"]').click()
@@ -158,6 +167,7 @@ with sync_playwright() as playwright:
     second.get_by_label("קוד הפוסטר").fill("222222")
     click(second, "המשך")
     expect(second.locator("#poster-project")).to_have_value("Fixture Project")
+    expect(second.locator("#poster-students")).to_have_value("Student A, Student B")
     expect(second.locator("#img-main")).to_be_visible()
     expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
     assert second.evaluate("async () => await backgroundReady")
