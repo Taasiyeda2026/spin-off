@@ -37,6 +37,8 @@ def handle(route):
         assert username in ("fixture-instructor", "fixture-manager")
         role = "activities_manager" if username == "fixture-manager" else "instructor"
         route.fulfill(json=[{"auth_email": username + "@example.invalid", "auth_user_id": "fixture", "role": role}])
+    elif path == "/rest/v1/rpc/spacetech_school_logo":
+        route.fulfill(json={"schools": []})
     elif path == "/auth/v1/token":
         if request.post_data_json["password"] == "wrong-password":
             route.fulfill(status=400, json={"error_code": "invalid_credentials"})
@@ -138,7 +140,7 @@ with sync_playwright() as playwright:
     student.locator('[data-tab="content"]').click()
     student.locator("#panel-poster-project").fill("Language switch fixture")
     student.evaluate("window.__editorLanguageMarker = true")
-    student.locator("#poster-panel-language").click()
+    student.locator("#poster-editor-language").click()
     expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. اسم حلّنا؟")
     expect(student.locator("#panel-poster-project")).to_have_value("Language switch fixture")
     expect(student.locator("#poster-project")).to_have_value("Language switch fixture")
@@ -146,7 +148,7 @@ with sync_playwright() as playwright:
     assert student.evaluate("window.__editorLanguageMarker === true")
     assert student.locator("#fill-list .edit-card > input, #fill-list .edit-card > textarea").evaluate_all(
         "(fields) => Math.max(...fields.map(f=>f.offsetWidth))-Math.min(...fields.map(f=>f.offsetWidth)) <= 1 && fields.every(f=>getComputedStyle(f).textAlign==='right')")
-    student.locator("#poster-panel-language").click()
+    student.locator("#poster-editor-language").click()
     expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. שם הפתרון שלנו?")
     student.locator("#panel-poster-project").fill("")
     expect(student.get_by_text("נשמר", exact=True)).to_be_visible()

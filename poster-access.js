@@ -1,5 +1,5 @@
-import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-research-title';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js?v=20261125-backgrounds';
+import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-school-logos';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-school-logos';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -9,7 +9,7 @@ const editor = window.posterEditor;
 const drafts = window.posterDrafts;
 const toolbar = document.createElement('div');
 toolbar.className = 'poster-cloud-toolbar';
-document.getElementById('toolbar').append(toolbar);
+document.querySelector('#toolbar .poster-nav').append(toolbar);
 
 const messages = {
   code: 'הקוד לא נמצא או שאינו זמין. בדקו אותו ונסו שוב.',
@@ -59,7 +59,7 @@ function syncLanguageControls() {
   language.textContent = arabic ? 'עברית' : 'العربية';
   language.lang = arabic ? 'he' : 'ar';
   language.href = languageDestination().href;
-  for(const toggle of document.querySelectorAll('#poster-editor-language,#poster-panel-language')){
+  for(const toggle of document.querySelectorAll('#poster-editor-language')){
     toggle.textContent=language.textContent;toggle.lang=language.lang;
     toggle.setAttribute('aria-label',arabic?'מעבר לעברית':'التبديل إلى العربية');
   }
@@ -81,7 +81,7 @@ function switchEditorLanguage() {
   for(const control of toolbar.querySelectorAll('[data-status-key]'))control.textContent=t(control.dataset.statusKey);
   window.dispatchEvent(new Event('poster:language-changed'));
 }
-for(const toggle of document.querySelectorAll('#poster-editor-language,#poster-panel-language'))toggle.addEventListener('click',switchEditorLanguage);
+for(const toggle of document.querySelectorAll('#poster-editor-language'))toggle.addEventListener('click',switchEditorLanguage);
 language.addEventListener('click', (event) => {
   if (!staff || !managementLanguageRefresh || accessRoot.hidden) return;
   // Keep the authenticated bearer exclusively in memory. Do not reload or persist credentials.
@@ -241,12 +241,14 @@ async function openFromManagement(id, mode) {
 
 async function manage() {
   const data = await posterRequest('manage', {}, staff);
+  try {data.logoSchools=(await schoolLogoRequest('list',{},staff)).schools;} catch(error) {if(error.message!=='denied')throw error;data.logoSchools=[];}
   renderManagement(data);
 }
 
 function renderManagement(data, previous = null) {
   screen('ניהול הפוסטרים שלי', home);
   element('p', data.name);
+  if(data.logoSchools?.length) renderSchoolLogos(data.logoSchools);
   if (data.code) {
     element('p', t('קוד מדריך') + ': ' + data.code);
     button('העתקת קוד מדריך', () => copyCode(data.code));
@@ -285,6 +287,7 @@ function renderManagement(data, previous = null) {
         const card = element('article', '', row);
         element('h2', poster.title || t('פוסטר ללא שם'), card);
         element('p', [poster.participants, poster.code, new Date(poster.updatedAt).toLocaleString(arabic ? 'ar' : 'he-IL'),
+          poster.submittedAt ? t('הוגש') : t('טיוטה'),
           poster.deleted ? t('נמחק') : poster.archived ? t('בארכיון') : ''].filter(Boolean).join(' · '), card);
         if (!poster.deleted) {
           button('צפייה', () => openFromManagement(poster.id, 'view').catch(showError), card);
@@ -323,6 +326,15 @@ function renderManagement(data, previous = null) {
 }
 
 async function openPoster(poster, access, back, readOnly = false, useCloud = false) {
+  window.posterSubmit=null;
+  let logoGeneration=0;
+  async function updateSchoolLogo(current=poster) {
+    const generation=++logoGeneration;
+    const source=current.schoolLogo && current.schoolId
+      ? await schoolLogoMedia(current.schoolId,access,poster.id).download(current.schoolLogo) : null;
+    if(generation===logoGeneration) await editor.schoolLogo(source);
+  }
+  window.refreshSchoolLogo=async()=>updateSchoolLogo(await posterRequest('load',{id:poster.id},access));
   const media = createPosterMedia(poster.id, access);
   const cloudDraft = await decodePosterState(poster.state, media);
   const backup = readOnly ? null : await drafts.read(poster.id).catch(() => null);
@@ -437,6 +449,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       await saveQueue;
       if (editor.hasUnsavedChanges() &&
           !confirm(t('יש שינויים שטרם נשמרו בענן. לחזור בכל זאת?'))) return;
+      window.posterSubmit=null;window.refreshSchoolLogo=null;
       await editor.close({ flush: false });
       await back();
     } catch (error) {
@@ -445,10 +458,80 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       control.disabled = false;
     }
   }, toolbar);
+  let submitting=false;
+  window.posterSubmit=readOnly||poster.archived?null:async()=>{
+    if(submitting)return;
+    submitting=true;
+    const panel=document.getElementById('sp'),art=document.getElementById('poster');
+    const languageControl=document.getElementById('poster-editor-language');
+    const submit=document.getElementById('poster-submit'),message=document.getElementById('poster-submit-status');
+    panel.inert=art.inert=true;languageControl.disabled=true;submit.disabled=true;
+    message.textContent=t('שומר ושולח...');
+    try {
+      await editor.flush();await saveQueue;
+      if(editor.hasUnsavedChanges()||conflicted)throw new Error('unsaved');
+      const receipt=await posterRequest('submit',{id:poster.id,revision},access);
+      if(!receipt.submittedAt)throw new Error('network');
+      message.textContent=t('הפוסטר נשמר ונשלח בהצלחה למערכת הניהול.');
+      setIndicator('נשמר ונשלח');
+    } catch(error) {
+      message.textContent=t(error.message==='unsaved'?'לא ניתן לשלוח לפני השלמת השמירה. הנתונים נשמרו בטיוטה.':(messages[error.message]??'השליחה נכשלה. הנתונים נשמרו, נסו שוב.'));
+    } finally {submitting=false;panel.inert=art.inert=false;languageControl.disabled=false;submit.disabled=false;}
+  };
   await editor.open({ id: poster.id, draft, save, readOnly: readOnly || poster.archived });
+  await updateSchoolLogo();
   if (pendingBackup) editor.markChanged();
 }
 
 window.addEventListener('online', () => editor.save());
 if (new URLSearchParams(location.search).get('view') === 'management') instructorEntry();
 else home();
+
+window.addEventListener('focus',()=>window.refreshSchoolLogo?.().catch(()=>{}));
+
+function renderSchoolLogos(schools) {
+  const section=element('section','');section.className='poster-school-logos';
+  element('h2',t('לוגו בית הספר'),section);
+  const label=element('label',t('בחירת בית הספר'),section);
+  const select=element('select','',label);
+  for(const school of schools)element('option',school.name,select).value=school.id;
+  const preview=element('img','',section);preview.alt=t('תצוגה מקדימה של הלוגו');preview.hidden=true;
+  const fileLabel=element('label',t('העלאת לוגו'),section);
+  const input=element('input','',fileLabel);input.type='file';input.accept='image/png,image/jpeg,image/webp,image/gif,image/avif';
+  const info=element('p','',section);info.setAttribute('role','status');
+  let pending=null,generation=0;
+  const media=new Map();
+  const schoolMedia=id=>{if(!media.has(id))media.set(id,schoolLogoMedia(id,staff));return media.get(id)};
+  async function show(){
+    const token=++generation;pending=null;input.value='';preview.hidden=true;preview.removeAttribute('src');info.textContent='';
+    const school=schools.find(s=>s.id===select.value);saveButton.disabled=true;
+    removeButton.disabled=!school?.logo;
+    try {if(school?.logo){const source=await schoolMedia(school.id).download(school.logo);if(token===generation){preview.src=source;preview.hidden=false;}}}
+    catch(error){if(token===generation)info.textContent=t(messages[error.message]??messages.network);}
+  }
+  input.addEventListener('change',async()=>{
+    const file=input.files?.[0],token=++generation;
+    if(!file)return;
+    saveButton.disabled=true;
+    if(file.size>8388608||!['image/png','image/jpeg','image/webp','image/gif','image/avif'].includes(file.type)){info.textContent=t(messages.image);return;}
+    try {
+      const source=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});
+      if(token!==generation)return;pending=source;preview.src=source;preview.hidden=false;saveButton.disabled=false;info.textContent=t('הלוגו מוכן לשמירה.');
+    }catch{info.textContent=t(messages.image);}
+  });
+  async function mutate(remove){
+    const school=schools.find(s=>s.id===select.value),source=pending;
+    if(!school||(!remove&&!source))return;
+    select.disabled=input.disabled=saveButton.disabled=removeButton.disabled=true;
+    info.textContent=t('שומר...');
+    try{
+      if(remove){await schoolLogoRequest('remove',{schoolId:school.id},staff);school.logo=null;}
+      else {const hash=await schoolMedia(school.id).upload(source);await schoolLogoRequest('set',{schoolId:school.id,hash},staff);school.logo=hash;}
+      await show();info.textContent=t('הלוגו עודכן בכל הפוסטרים של בית הספר.');
+    }catch(error){info.textContent=t(messages[error.message]??messages.network);saveButton.disabled=!pending;removeButton.disabled=!school.logo;}
+    finally{select.disabled=input.disabled=false;}
+  }
+  const saveButton=button('שמירת לוגו',()=>mutate(false),section,true);
+  const removeButton=button('הסרת לוגו',()=>mutate(true),section);
+  select.addEventListener('change',show);show();
+}
