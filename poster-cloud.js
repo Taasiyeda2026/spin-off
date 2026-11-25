@@ -109,8 +109,8 @@ export function createPosterMedia(id, access) {
 }
 
 export async function encodePosterState(draft, media) {
-  const { images, savedAt, design: { bgImage, ...design }, ...state } = draft;
-  const slots = { ...images, background: bgImage?.match(/^url\(["']?(data:[^"')]+)["']?\)$/)?.[1] };
+  const { images, savedAt, design: { bgImage, bgOpacity, ...design }, ...state } = draft;
+  const slots = { ...images };
   const uploaded = await Promise.all(Object.entries(slots)
     .filter(([, source]) => source?.startsWith('data:image/'))
     .map(async ([slot, source]) => [slot, await media.upload(source)]));
@@ -119,7 +119,9 @@ export async function encodePosterState(draft, media) {
 
 export async function decodePosterState(state, media) {
   const sources = await Promise.all(Object.entries(state.media ?? {})
+    .filter(([slot]) => slot !== 'background')
     .map(async ([slot, hash]) => [slot, await media.download(hash)]));
-  const { background, ...images } = Object.fromEntries(sources);
-  return { ...state, images, design: { ...state.design, bgImage: background ? 'url("' + background + '")' : 'none' } };
+  const images = Object.fromEntries(sources);
+  const { bgImage, bgOpacity, ...design } = state.design ?? {};
+  return { ...state, images, design };
 }
