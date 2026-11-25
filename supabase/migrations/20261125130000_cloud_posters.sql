@@ -85,6 +85,43 @@ returns boolean language sql immutable set search_path = pg_catalog as $$
     (p_activity.emp_id::text = btrim(p_employee) or btrim(p_activity.emp_id_2) = btrim(p_employee)), false)
 $$;
 
+-- Match Dashboard's feedback activity scope and manager workspace team roster.
+create function poster_private.manager_name(p_user public.users) returns text
+language sql stable set search_path = pg_catalog as $$
+  select coalesce(nullif(btrim(p_user.full_name), ''), nullif(btrim(p_user.name), ''),
+    nullif(btrim(p_user.username), ''))
+$$;
+
+create function poster_private.activity_manager_key(p_name text) returns text
+language sql immutable set search_path = pg_catalog as $$
+  select nullif(lower(regexp_replace(btrim(p_name), '[[:space:]]+', ' ', 'g')), '')
+$$;
+
+create function poster_private.can_manage_activity(p_activity public.activities, p_actor public.users)
+returns boolean language sql stable set search_path = pg_catalog as $$
+  select case p_actor.role::text
+    when 'admin' then true
+    when 'instructor' then poster_private.activity_member(p_activity, p_actor.emp_id::text)
+    when 'activities_manager' then coalesce(
+      poster_private.activity_manager_key(p_activity.activity_manager) =
+        poster_private.activity_manager_key(poster_private.manager_name(p_actor))
+      and not exists (
+        select 1 from public.users u
+        where u.is_active is true and u.role::text = 'activities_manager'
+          and u.user_id is distinct from p_actor.user_id
+          and poster_private.activity_manager_key(poster_private.manager_name(u)) =
+            poster_private.activity_manager_key(poster_private.manager_name(p_actor))
+      )
+      and exists (
+        select 1 from public.contacts_instructors ci
+        where poster_private.activity_member(p_activity, ci.emp_id::text)
+          and lower(btrim(ci.direct_manager)) = lower(poster_private.manager_name(p_actor))
+          and lower(btrim(coalesce(ci.active::text, ''))) not in ('no', 'false', '0', 'לא')
+      ), false)
+    else false
+  end
+$$;
+
 create function poster_private.token_hash(p_token text) returns bytea
 language sql immutable set search_path = pg_catalog as $$
   select case when p_token ~ '^[0-9a-f]{64}$' then extensions.digest(p_token, 'sha256') end
@@ -127,7 +164,7 @@ begin
 
   select u.* into actor from public.users u
     where u.auth_user_id = auth.uid() and u.is_active is true
-      and u.role::text in ('instructor', 'admin')
+      and u.role::text in ('instructor', 'activities_manager', 'admin')
       and (select count(*) from public.users linked where linked.auth_user_id = auth.uid()) = 1;
   staff := actor.user_id is not null;
   admin := staff and actor.role::text = 'admin';
@@ -214,7 +251,7 @@ begin
 
   if p_action = 'manage' then
     if not staff then return jsonb_build_object('error', 'denied'); end if;
-    if not admin then
+    if actor.role::text = 'instructor' then
       perform pg_advisory_xact_lock(hashtextextended(actor.user_id::text, 94217));
       select c.code into instructor_code from poster_private.instructor_codes c where c.user_id = actor.user_id::text;
       if not found then
@@ -231,7 +268,7 @@ begin
       select a.row_id as id, poster_private.activity_info(a) as info,
         a.school, a.grade, a.class_group
       from public.activities a where a.gefen_number = '57651'
-        and (admin or poster_private.activity_member(a, actor.emp_id::text))
+        and poster_private.can_manage_activity(a, actor)
       union all
       (select distinct on (x.activity_id) x.activity_id,
         jsonb_build_object('id', x.activity_id, 'school', x.state#>>'{values,poster-school}',
@@ -256,7 +293,7 @@ begin
   select x.* into poster from poster_private.posters x where x.id = (p->>'id')::uuid for update;
   if not found then return jsonb_build_object('error', 'denied'); end if;
   select admin or exists(select 1 from public.activities a where a.row_id = poster.activity_id
-    and a.gefen_number = '57651' and staff and poster_private.activity_member(a, actor.emp_id::text))
+    and a.gefen_number = '57651' and staff and poster_private.can_manage_activity(a, actor))
     into permitted;
 
   if p_action in ('delete', 'restore', 'archive', 'unarchive', 'rotate') then

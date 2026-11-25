@@ -30,7 +30,7 @@ async function jsonRequest(path, body, bearer) {
 
 export async function signIn(username, password) {
   const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: username });
-  if (!identity?.auth_email || !['instructor', 'admin'].includes(identity.role)) throw new Error('login');
+  if (!identity?.auth_email || !['instructor', 'activities_manager', 'admin'].includes(identity.role)) throw new Error('login');
   const session = await jsonRequest('/auth/v1/token?grant_type=password', {
     email: identity.auth_email,
     password,

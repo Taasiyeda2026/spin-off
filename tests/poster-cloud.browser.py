@@ -33,11 +33,14 @@ def handle(route):
     if not request.url.startswith(origin + "/"):
         route.abort()
     elif path.startswith("/rest/v1/rpc/lookup_"):
-        assert request.post_data_json == {"p_username": "fixture-instructor"}
-        route.fulfill(json=[{"auth_email": "fixture@example.invalid", "auth_user_id": "fixture", "role": "instructor"}])
+        username = request.post_data_json["p_username"]
+        assert username in ("fixture-instructor", "fixture-manager")
+        role = "activities_manager" if username == "fixture-manager" else "instructor"
+        route.fulfill(json=[{"auth_email": username + "@example.invalid", "auth_user_id": "fixture", "role": role}])
     elif path == "/auth/v1/token":
         assert request.post_data_json["password"] == "fake-password"
-        route.fulfill(json={"user": {"id": "fixture"}, "access_token": "fixture-token"})
+        token = "manager-token" if request.post_data_json["email"].startswith("fixture-manager") else "fixture-token"
+        route.fulfill(json={"user": {"id": "fixture"}, "access_token": token})
     elif path == "/functions/v1/poster-media":
         image_key = urlsplit(request.url).query
         if request.method == "PUT":
@@ -75,8 +78,11 @@ def handle(route):
             poster["state"] = params["state"]
             result = poster
         elif action == "manage":
-            assert request.headers["authorization"] == "Bearer fixture-token"
-            result = {"name": "Fixture Instructor", "code": "1234", "activities": [
+            bearer = request.headers["authorization"]
+            assert bearer in ("Bearer fixture-token", "Bearer manager-token")
+            manager = bearer == "Bearer manager-token"
+            result = {"name": "Fixture Manager" if manager else "Fixture Instructor",
+                      "code": None if manager else "1234", "activities": [
                 {**activity, "posters": [{**poster, "title": poster["state"]["values"]["poster-project"],
                                         "participants": "Student A, Student B"}]}
             ]}
@@ -172,6 +178,17 @@ with sync_playwright() as playwright:
     third.get_by_label("קוד הפוסטר").fill("222222")
     click(third, "המשך")
     expect(third.locator("#poster-project")).to_have_value("Instructor update")
+    manager = open_page(new_context(browser))
+    click(manager, "כניסת מדריכים")
+    manager.get_by_label("שם משתמש").fill("fixture-manager")
+    manager.get_by_label("סיסמה").fill("fake-password")
+    click(manager, "כניסה")
+    expect(manager.get_by_role("heading", name="ניהול הפוסטרים שלי")).to_be_visible()
+    expect(manager.get_by_text("Fixture Manager", exact=True)).to_be_visible()
+    expect(manager.get_by_role("button", name="העתקת קוד מדריך")).to_have_count(0)
+    manager.get_by_role("searchbox").fill("Instructor update")
+    click(manager, "צפייה")
+    expect(manager.locator("#poster-project")).to_have_value("Instructor update")
     arabic = open_page(new_context(browser))
     arabic.get_by_role("link", name="العربية").click()
     expect(arabic.locator("#poster-access")).to_have_attribute("lang", "ar")
