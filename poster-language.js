@@ -4,7 +4,7 @@ export let arabic = new URLSearchParams(location.search).get('lang') === 'ar';
 export function setArabic(value) { arabic = Boolean(value); }
 
 const translations = {
-  'SpaceTech | פוסטר משימת פיתוח': 'SpaceTech | ملصق مهمة التطوير',
+  'SpaceTech | פוסטר חקר': 'SpaceTech | ملصق بحثي',
   'יצירת פוסטר חדש': 'إنشاء ملصق جديد',
   'המשך עבודה על פוסטר': 'متابعة العمل على ملصق',
   'כניסת מדריכים': 'دخول المرشدين',
