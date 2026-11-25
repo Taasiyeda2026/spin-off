@@ -1,5 +1,5 @@
-import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-school-logos';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-school-logos';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic } from './poster-language.js?v=20261125-editable-school-class';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-editable-school-class';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -181,7 +181,7 @@ function createEntry() {
 }
 
 function activityLabel(activity) {
-  return [activity.school, activity.grade, activity.classGroup].filter(Boolean).join(' · ') || activity.id;
+  return [arabic?schoolNameArabic(activity.schoolId,activity.school):activity.school, arabic?classNameArabic(activity.grade??''):activity.grade, arabic?classNameArabic(activity.classGroup??''):activity.classGroup].filter(Boolean).join(' · ') || activity.id;
 }
 
 function createDetails(ticket, activities) {
@@ -335,6 +335,10 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
     if(generation===logoGeneration) await editor.schoolLogo(source);
   }
   window.refreshSchoolLogo=async()=>updateSchoolLogo(await posterRequest('load',{id:poster.id},access));
+  const defaults=poster.schoolDefault===undefined?null:{
+    'poster-school':{original:poster.schoolDefault,he:poster.schoolDefault,ar:schoolNameArabic(poster.schoolId,poster.schoolDefault)},
+    'poster-class':{original:poster.classDefault,he:poster.classDefault,ar:classNameArabic(poster.classDefault??'')}
+  };
   const media = createPosterMedia(poster.id, access);
   const cloudDraft = await decodePosterState(poster.state, media);
   const backup = readOnly ? null : await drafts.read(poster.id).catch(() => null);
@@ -479,7 +483,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       message.textContent=t(error.message==='unsaved'?'לא ניתן לשלוח לפני השלמת השמירה. הנתונים נשמרו בטיוטה.':(messages[error.message]??'השליחה נכשלה. הנתונים נשמרו, נסו שוב.'));
     } finally {submitting=false;panel.inert=art.inert=false;document.getElementById('toolbar').inert=false;languageControl.disabled=false;submit.disabled=false;}
   };
-  await editor.open({ id: poster.id, draft, save, readOnly: readOnly || poster.archived });
+  await editor.open({ id: poster.id, draft, save, defaults, readOnly: readOnly || poster.archived });
   await updateSchoolLogo();
   if (pendingBackup) editor.markChanged();
 }
@@ -495,7 +499,7 @@ function renderSchoolLogos(schools) {
   element('h2',t('לוגו בית הספר'),section);
   const label=element('label',t('בחירת בית הספר'),section);
   const select=element('select','',label);
-  for(const school of schools)element('option',school.name,select).value=school.id;
+  for(const school of schools)element('option',arabic?schoolNameArabic(school.id,school.name):school.name,select).value=school.id;
   const preview=element('img','',section);preview.alt=t('תצוגה מקדימה של הלוגו');preview.hidden=true;
   const fileLabel=element('label',t('העלאת לוגו'),section);
   const input=element('input','',fileLabel);input.type='file';input.accept='image/png,image/jpeg,image/webp,image/gif,image/avif';

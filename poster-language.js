@@ -86,3 +86,25 @@ const translations = {
 export function translate(text) {
   return arabic && Object.hasOwn(translations, text) ? translations[text] : text;
 }
+
+// Display names keyed by the existing school identity; never changes activity ownership.
+const schoolNamesArabic = {
+  '1236':'داركا رامون على اسم إيلان وآساف رامون', '1848':'درور',
+  '1860':'الزهراء', '1931':'سدوت', '1984':'بيت الحكمة', '2030':'إشراقة',
+  '2067':'هرتسل', '2074':'بئر المشاش', '2215':'الإشراق', '2343':'الخيام',
+  '2557':'نيتساني همداع', '2577':'ألون', '2730':'بيغن الابتكارية',
+  '2854':'الأنوار - مسعدة', '2914':'مي زيادة - حي شيكون العرب',
+  '2991':'مدرسة سميح القاسم', '3064':'المدرسة الابتدائية د «الشرق»',
+  '3068':'الأخوّة سميع على اسم الدكتور سلمان فلاح',
+  '3155':'همجينيم - كريات شمونة', '3171':'نارت',
+  '3535':'إيفن شموئيل الإقليمية', '3566':'أوروت إلياهو',
+  '3900':'رمبام الحكومي الديني - نهاريا'
+};
+export function schoolNameArabic(id,name) { return schoolNamesArabic[String(id)]??name; }
+export function classNameArabic(value='') {
+  const grades={'א':'الأول','ב':'الثاني','ג':'الثالث','ד':'الرابع','ה':'الخامس','ו':'السادس','ז':'السابع','ח':'الثامن','ט':'التاسع','י':'العاشر','יא':'الحادي عشر','יב':'الثاني عشر'};
+  return value.replace(/קבוצה/g,'المجموعة').replace(/כיתה/g,'الصف')
+    .replace(/מצויינות/g,'التميّز').replace(/אמירים/g,'أميريم')
+    .replace(/(יב|יא|[אבגדהוזחטי])(?:[׳'״"])?(?=\s|\d|[-+]|$)/g,(_,grade)=>grades[grade]+' ')
+    .replace(/\s*\+\s*/g,' و').replace(/\s*-\s*/g,'–').replace(/\s+/g,' ').trim();
+}
