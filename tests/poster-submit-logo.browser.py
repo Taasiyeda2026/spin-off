@@ -226,11 +226,11 @@ with sync_playwright() as pw:
     expect(again.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
     expect(again.locator('#c-slogan .bq')).to_be_hidden()
     expect(again.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
-    # The closing answer has its own presentation; the form, frame and 140 limit stay intact.
+    # The closing answer has its own presentation; the form, frame and 90 limit stay intact.
     closing_label=again.locator('label[for=panel-slogan]').text_content()
     frame_before=again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')
     question_style=again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')
-    for sentence in ['פתרון קטן שעושה שינוי גדול', 'حلّ صغير يصنع فرقًا كبيرًا', 'ת'*140, 'م'*140, 'W'*140, ('שורה\n'*28)[:140]]:
+    for sentence in ['פתרון קטן שעושה שינוי גדול', 'حلّ صغير يصنع فرقًا كبيرًا', 'ת'*90, 'م'*90, 'W'*90, ('שורה\n'*18)[:90]]:
         again.locator('#panel-slogan').fill(sentence)
         expect(again.locator('#slogan')).to_have_value(sentence)
         expect(again.locator('#slogan-output')).to_have_text(re.sub(r'\s+', ' ', sentence).strip())
@@ -239,7 +239,7 @@ with sync_playwright() as pw:
         assert metrics['color']=='rgb(255, 255, 255)'
     again.locator('#panel-slogan').fill('פתרון קטן שעושה שינוי גדול')
     assert again.locator('#slogan-output').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')>again.locator('#problem').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')
-    assert again.locator('#panel-slogan').get_attribute('maxlength')=='140'
+    assert again.locator('#panel-slogan').get_attribute('maxlength')=='90'
     assert again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')==frame_before
     assert again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')==question_style
     assert again.locator('label[for=panel-slogan]').text_content()==closing_label
@@ -282,5 +282,30 @@ with sync_playwright() as pw:
     # Import is one-time and the token carries no student answers in the URL.
     assert description not in visual.url
     assert visual.evaluate('localStorage.getItem("spacetech.poster.visualization."+new URLSearchParams(location.search).get("posterBrief"))') is None
+    # Earlier saved answers above the reduced limits survive open/language/unrelated save.
+    legacy_limits={'research1':50,'research2':50,'solution':115,'feedback':110,'improvement':110,'value':110,'slogan':90}
+    legacy_lengths={'research1':70,'research2':90,'solution':140,'feedback':120,'improvement':120,'value':120,'slogan':140}
+    legacy_values={key:'ת'*length for key,length in legacy_lengths.items()}
+    posters[ids[2]]['state']['values'].update(legacy_values)
+    legacy=resume(context(browser),'222224');legacy.locator('[data-tab=content]').click()
+    for key,value in legacy_values.items():
+        expect(legacy.locator('#'+key)).to_have_value(value)
+        expect(legacy.locator('#panel-'+key)).to_have_value(value)
+        assert legacy.locator('#panel-'+key).get_attribute('maxlength')==str(legacy_limits[key])
+        expect(legacy.locator('#panel-counter-'+key)).to_have_text(f'{len(value)}/{legacy_limits[key]}')
+    expect(legacy.locator('.counter[data-for=research]')).to_have_text('160/100')
+    for key in ['requirements1','requirements2','requirements3']:
+        legacy.locator('#panel-'+key).fill('م'*56)
+        expect(legacy.locator('#panel-'+key)).to_have_value('م'*55)
+    expect(legacy.locator('.counter[data-for=requirements]')).to_have_text('165/165')
+    legacy.locator('#poster-editor-language').click()
+    legacy.locator('#panel-problem').fill('An unrelated edit')
+    legacy.locator('#poster-submit').click()
+    expect(legacy.locator('#poster-submit-status')).to_contain_text('بنجاح')
+    for key,value in legacy_values.items():
+        assert posters[ids[2]]['state']['values'][key]==value
+    legacy.locator('#panel-slogan').fill('م'*91)
+    expect(legacy.locator('#panel-slogan')).to_have_value('م'*90)
+    expect(legacy.locator('#panel-counter-slogan')).to_have_text('90/90')
     assert not errors,errors
     print('PASS: responsive header, final actions, language/state, save/submit/retry/idempotency, manager logo, school isolation, existing posters, removal and A4 PDF')
