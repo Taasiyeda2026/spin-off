@@ -225,7 +225,7 @@ function queueLocalWrite(operation) {
   localWrite = pending.catch(() => {});
   return pending;
 }
-const BG_ARABIC = new URLSearchParams(location.search).get('lang') === 'ar';
+const BG_ARABIC = () => new URLSearchParams(location.search).get('lang') === 'ar';
 const approvedBackgrounds = Array.isArray(window.posterBackgroundCatalog) ? window.posterBackgroundCatalog.filter(entry =>
   /^[A-Za-z0-9_-]+$/.test(entry.id) &&
   entry.image === 'poster-backgrounds/webp/' + entry.id + '.webp' &&
@@ -241,7 +241,7 @@ function selectPosterBackground(id, persist = false) {
   G('poster-background-status').textContent = '';
   if (!entry) {
     img.removeAttribute('src');
-    G('poster-background-status').textContent = BG_ARABIC ? 'الخلفيات غير متاحة الآن.' : 'הרקעים אינם זמינים כרגע.';
+    G('poster-background-status').textContent = BG_ARABIC() ? 'الخلفيات غير متاحة الآن.' : 'הרקעים אינם זמינים כרגע.';
     backgroundReady = Promise.resolve(false);
     return backgroundReady;
   }
@@ -249,21 +249,22 @@ function selectPosterBackground(id, persist = false) {
   if (img.getAttribute('src') !== entry.image) img.src = entry.image;
   backgroundReady = img.decode().then(() => true, () => {
     if (selectedBackgroundId === requestedId) G('poster-background-status').textContent =
-      BG_ARABIC ? 'تعذّر تحميل الخلفية. حاولوا مجددًا.' : 'לא ניתן לטעון את הרקע. נסו שוב.';
+      BG_ARABIC() ? 'تعذّر تحميل الخلفية. حاولوا مجددًا.' : 'לא ניתן לטעון את הרקע. נסו שוב.';
     return false;
   });
   if (persist) scheduleAutosave();
   return backgroundReady;
 }
+window.addEventListener('poster:language-changed', () => renderBackgroundGallery());
 function renderBackgroundGallery() {
   const gallery = G('poster-background-gallery');
   gallery.replaceChildren();
-  G('poster-background-label').textContent = BG_ARABIC ? 'اختيار خلفية الملصق' : 'בחירת רקע לפוסטר';
+  G('poster-background-label').textContent = BG_ARABIC() ? 'اختيار خلفية الملصق' : 'בחירת רקע לפוסטר';
   approvedBackgrounds.forEach((entry, i) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.backgroundId = entry.id;
-    const label = (BG_ARABIC ? 'خلفية ' : 'רקע ') + (i + 1);
+    const label = (BG_ARABIC() ? 'خلفية ' : 'רקע ') + (i + 1);
     btn.title = label;
     btn.setAttribute('aria-label', label);
     const thumb = document.createElement('img');
@@ -333,7 +334,7 @@ async function offerRestoreDraft() {
 }
 function wireAutosave(){document.addEventListener('input',e=>{if(e.target?.matches?.('#wrap input,#wrap textarea,#sp input,#sp textarea,#sp select'))scheduleAutosave()},true);document.addEventListener('change',e=>{if(e.target?.matches?.('#wrap input,#wrap textarea,#sp input,#sp textarea,#sp select'))scheduleAutosave()},true);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()})}
 function fitPreview(){if(window.matchMedia?.('print')?.matches)return;const poster=G('poster');if(!poster)return;const narrow=window.innerWidth<=720;const panel=document.body.classList.contains('panel-open')&&!narrow;const reserved=panel?380:40;const available=Math.max(260,window.innerWidth-reserved);const scale=Math.max(.33,Math.min(1,available/824));poster.style.zoom=String(scale)}
-async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}await saveDraft();printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר משימת פיתוח';window.print()}
+async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC()?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}await saveDraft();printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר משימת פיתוח';window.print()}
 const LAYOUT={'c-problem':{left:407,top:277,width:357,height:65},'c-target':{left:407,top:370,width:357,height:65},'c-question':{left:407,top:463,width:357,height:80},'img-pair':{left:407,top:561,width:357,height:170},'c-research':{left:407,top:755,width:357,height:74},'c-findings':{left:407,top:839,width:357,height:92},'c-requirements':{left:407,top:944,width:357,height:92},'c-solution':{left:30,top:277,width:357,height:85},'main-image-box':{left:84,top:384,width:250,height:250},'c-use':{left:30,top:656,width:357,height:95},'c-feedback':{left:30,top:770,width:357,height:70},'c-improvement':{left:30,top:868,width:357,height:70},'c-value':{left:30,top:966,width:357,height:70},'c-slogan':{left:30,top:1054,width:734,height:56}};
 function positionFlowArrows(){[['c-feedback','c-improvement','arrow-feedback-improvement'],['c-improvement','c-value','arrow-improvement-value']].forEach(([fromId,toId,arrowId])=>{const from=G(fromId),to=G(toId),arrow=G(arrowId);if(!from||!to||!arrow)return;const arrowWidth=24,left=from.offsetLeft+(from.offsetWidth/2)-(arrowWidth/2),gap=6,top=from.offsetTop+from.offsetHeight+gap,end=to.offsetTop-gap,height=Math.max(14,end-top);Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'})})}
 function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});positionFlowArrows()}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
@@ -394,7 +395,7 @@ window.posterEditor = {
   hasUnsavedChanges: () => draftDirty,
 };
 </script>
-<script type="module" src="poster-access.js?v=20261125-dashboard-posters"></script>
+<script type="module" src="poster-access.js?v=20261125-language-stay"></script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>

@@ -1,5 +1,7 @@
 // The existing poster artwork and teaching text stay as authored.
-export const arabic = new URLSearchParams(location.search).get('lang') === 'ar';
+export let arabic = new URLSearchParams(location.search).get('lang') === 'ar';
+
+export function setArabic(value) { arabic = Boolean(value); }
 
 const translations = {
   'SpaceTech | פוסטר משימת פיתוח': 'SpaceTech | ملصق مهمة التطوير',

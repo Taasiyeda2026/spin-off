@@ -1,4 +1,4 @@
-import { arabic, translate as t } from './poster-language.js?v=20261125-backgrounds';
+import { arabic, setArabic, translate as t } from './poster-language.js?v=20261125-language-stay';
 import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js?v=20261125-backgrounds';
 
 const root = document.getElementById('poster-access-content');
@@ -25,11 +25,7 @@ const messages = {
 let staff = null;
 let waitForPosterSave = () => Promise.resolve();
 const editorHome = document.getElementById('poster-editor-home');
-const homeLabel = arabic ? 'العودة إلى الصفحة الرئيسية' : 'חזרה לדף הבית';
-for (const link of [document.getElementById('poster-access-home'), editorHome]) {
-  link.title = homeLabel;
-  link.setAttribute('aria-label', homeLabel);
-}
+let managementLanguageRefresh = null;
 let leavingForHome = false;
 editorHome.addEventListener('click', async (event) => {
   event.preventDefault();
@@ -51,14 +47,37 @@ editorHome.addEventListener('click', async (event) => {
 });
 
 const language = document.createElement('a');
-language.textContent = arabic ? 'עברית' : 'العربية';
-language.lang = arabic ? 'he' : 'ar';
-language.href = arabic ? 'poster.html' : 'poster.html?lang=ar';
-document.getElementById('poster-access').prepend(language);
-if (arabic) {
-  document.getElementById('poster-access').lang = 'ar';
-  toolbar.lang = 'ar';
+const accessRoot = document.getElementById('poster-access');
+accessRoot.prepend(language);
+function languageDestination() {
+  const url = new URL(location.href);
+  if (arabic) url.searchParams.delete('lang');
+  else url.searchParams.set('lang', 'ar');
+  return url;
 }
+function syncLanguageControls() {
+  language.textContent = arabic ? 'עברית' : 'العربية';
+  language.lang = arabic ? 'he' : 'ar';
+  language.href = languageDestination().href;
+  accessRoot.lang = toolbar.lang = arabic ? 'ar' : 'he';
+  const homeLabel = arabic ? 'العودة إلى الصفحة الرئيسية' : 'חזרה לדף הבית';
+  for (const link of [document.getElementById('poster-access-home'), editorHome]) {
+    link.title = homeLabel;
+    link.setAttribute('aria-label', homeLabel);
+  }
+}
+syncLanguageControls();
+language.addEventListener('click', (event) => {
+  if (!staff || !managementLanguageRefresh || accessRoot.hidden) return;
+  // Keep the authenticated bearer exclusively in memory. Do not reload or persist credentials.
+  event.preventDefault();
+  const destination = languageDestination();
+  history.replaceState(history.state, '', destination.href);
+  setArabic(!arabic);
+  syncLanguageControls();
+  window.dispatchEvent(new Event('poster:language-changed'));
+  managementLanguageRefresh();
+});
 
 function element(tag, text, parent = root) {
   const node = document.createElement(tag);
@@ -76,6 +95,7 @@ function button(text, action, parent = root, primary = false) {
 }
 
 function screen(heading, back) {
+  managementLanguageRefresh = null;
   document.getElementById('poster-access').classList.remove('is-home');
   root.replaceChildren();
   status.textContent = '';
@@ -208,6 +228,10 @@ async function openFromManagement(id, mode) {
 
 async function manage() {
   const data = await posterRequest('manage', {}, staff);
+  renderManagement(data);
+}
+
+function renderManagement(data, previous = null) {
   screen('ניהול הפוסטרים שלי', home);
   element('p', data.name);
   if (data.code) {
@@ -216,7 +240,8 @@ async function manage() {
   }
   const search = field(root, 'חיפוש לפי שם המוצר, משתתפים או קוד', { type: 'search' });
   const results = element('div');
-  function render() {
+  search.value = previous?.query ?? '';
+  function render(expanded = null) {
     results.replaceChildren();
     const query = search.value.trim().toLocaleLowerCase();
     for (const activity of data.activities) {
@@ -224,7 +249,8 @@ async function manage() {
         [poster.title, poster.participants, poster.code].some((value) => String(value ?? '').toLocaleLowerCase().includes(query)));
       if (query && !matching.length) continue;
       const row = element('details', '', results);
-      row.open = Boolean(query);
+      row.dataset.activityId = activity.id;
+      row.open = expanded ? expanded.has(activity.id) : Boolean(query);
       element('summary', [activityLabel(activity), t('טכנולוגיות החלל'), activity.posters.length + ' ' + t('פוסטרים')].join(' · '), row);
       const idLine = element('div', '', row);
       idLine.className = 'poster-activity-id';
@@ -275,8 +301,12 @@ async function manage() {
     }
     if (!results.childElementCount) element('p', t('לא נמצאו פעילויות או פוסטרים מתאימים.'), results);
   }
-  search.addEventListener('input', render);
-  render();
+  search.addEventListener('input', () => render());
+  render(previous?.expanded);
+  managementLanguageRefresh = () => renderManagement(data, {
+    query: search.value,
+    expanded: new Set(Array.from(results.querySelectorAll('details[open]'), row => row.dataset.activityId))
+  });
 }
 
 async function openPoster(poster, access, back, readOnly = false, useCloud = false) {
