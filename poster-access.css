@@ -130,3 +130,116 @@ body:has(.poster-access.is-home:not([hidden])) {
   html { background: none !important; }
   body::before, body::after { content: none !important; display: none !important; }
 }
+
+/* Compact centered access forms; management and printable poster are unaffected. */
+@media screen {
+  body:has(.poster-access:not([hidden]) #poster-access-content > form) {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+  }
+  .poster-access:has(#poster-access-content > form) {
+    width: min(330px, calc(100% - 28px));
+    max-width: none;
+    margin: 16px auto;
+    padding: 17px 20px 22px;
+    text-align: center;
+  }
+  .poster-access:has(#poster-access-content > form) > a {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 12px;
+    font-size: 12px;
+  }
+  .poster-access:has(#poster-access-content > form) h1 {
+    font-size: 22px;
+    line-height: 1.35;
+    margin: 0 0 16px;
+    text-align: center;
+  }
+  .poster-access:has(#poster-access-content > form) h1:focus { outline: none; }
+  .poster-access #poster-access-content:has(> form) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .poster-access #poster-access-content > form {
+    order: 0;
+    width: min(220px, 100%);
+    max-width: none;
+    margin: 0 auto;
+    gap: 11px;
+  }
+  .poster-access #poster-access-content > form:has(input[inputmode="numeric"]) {
+    width: min(112px, 100%);
+  }
+  .poster-access:has(#poster-access-content > form:has(select)) {
+    width: min(380px, calc(100% - 28px));
+  }
+  .poster-access #poster-access-content > form:has(select) {
+    width: min(300px, 100%);
+  }
+  .poster-access #poster-access-content > form label {
+    min-width: 0;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.4;
+    gap: 5px;
+  }
+  .poster-access #poster-access-content > form :is(input, select) {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    border: 1px solid #36788f;
+    border-radius: 7px;
+    padding: 7px 9px;
+    font-size: 14px;
+    color: #e8faff;
+    background: #0a1c30;
+    text-align: center;
+  }
+  .poster-access #poster-access-content > form input[inputmode="numeric"] {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .poster-access #poster-access-content > form :is(input, select):focus {
+    border-color: #71eaff;
+    outline: 1px solid #71eaff;
+    outline-offset: 1px;
+    box-shadow: 0 0 12px #3edcff33;
+  }
+  .poster-access #poster-access-content > form button[type="submit"] {
+    width: 100%;
+    min-height: 36px;
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+  .poster-access #poster-access-content:has(> form) > button[data-back] {
+    order: 1;
+    margin: 0;
+    min-height: 32px;
+    padding: 4px 14px;
+    font-size: 12px;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: #a3eaff;
+  }
+  .poster-access:has(#poster-access-content > form) [role=status] {
+    font-size: 13px;
+    line-height: 1.45;
+    margin-block-start: 10px;
+    text-align: center;
+  }
+  .poster-access:has(#poster-access-content > form) [role=status]:empty { display: none; }
+}
+@media screen and (max-width:560px) {
+  .poster-access #poster-access-content > form :is(input, select) { font-size: 16px; min-height: 42px; }
+  .poster-access #poster-access-content > form input[inputmode="numeric"] { font-size: 19px; }
+  .poster-access #poster-access-content > form button[type="submit"] { min-height: 42px; }
+  .poster-access #poster-access-content:has(> form) > button[data-back] { min-height: 40px; }
+}
