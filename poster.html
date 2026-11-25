@@ -188,7 +188,7 @@ body.panel-open #wrap{padding-right:344px}
 #poster.approved-background::before,#poster.approved-background::after,#poster.approved-background #space-overlay{display:none}
 @media print{#poster,#approved-bg-image{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style>
-<link rel="stylesheet" href="poster-access.css?v=20261125-editor-rtl-ar">
+<link rel="stylesheet" href="poster-access.css?v=20261125-editor-rtl-ar2">
 </head>
 <body class="panel-open">
 <main id="poster-access" class="poster-access">
@@ -483,6 +483,14 @@ function setParts(n,names=[],skipSync=false){n=clamp(parseInt(n)||1,1,8);G('pc-c
 captureEditorLanguage();setParts(1);bindLimits();wireDesign();applyDesign();applyAllGlow();updateAllCombinedFields();renderFillPanel();wireAutosave();window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1'});window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});applyLayout();autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();
 applyEditorLanguage();
 window.addEventListener('poster:language-changed', applyEditorLanguage);
+// Account for a wrapping toolbar on small laptop screens and after switching languages.
+function updateEditorToolbarHeight(){
+  const height=G('toolbar').offsetHeight;
+  if(height>0)document.documentElement.style.setProperty('--editor-toolbar-height',height+'px');
+}
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(updateEditorToolbarHeight).observe(G('toolbar'));
+window.addEventListener('resize',updateEditorToolbarHeight);
+updateEditorToolbarHeight();
 const blankPoster = collectDraft();
 window.posterEditor = {
   async open({ id = null, draft, save, readOnly = false } = {}) {

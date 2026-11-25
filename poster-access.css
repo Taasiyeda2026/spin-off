@@ -286,3 +286,5 @@ body:has(.poster-access.is-home:not([hidden])) {
   #toolbar .tb-acts { flex-wrap:wrap; min-width:0; }
 }
 @media print { .poster-language-toggle { display:none!important; } }
+
+@media screen { #sp { top:var(--editor-toolbar-height,52px); } #wrap { margin-top:var(--editor-toolbar-height,52px); min-height:calc(100vh - var(--editor-toolbar-height,52px)); } }

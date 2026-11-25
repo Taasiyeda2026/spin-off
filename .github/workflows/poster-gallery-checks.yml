@@ -8,6 +8,15 @@ on:
       - 'poster-backgrounds/**'
       - 'tests/poster-*.py'
       - '.github/workflows/poster-gallery-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'poster*.html'
+      - 'poster*.js'
+      - 'poster*.css'
+      - 'poster-backgrounds/**'
+      - 'tests/poster-*.py'
+      - '.github/workflows/poster-gallery-checks.yml'
   workflow_dispatch:
 permissions:
   contents: read
