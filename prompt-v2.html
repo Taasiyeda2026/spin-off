@@ -132,6 +132,28 @@ header{background:linear-gradient(110deg,rgba(4,10,24,.68),rgba(6,23,43,.64))}
 .panel,.panel:has(.finish){background:rgba(3,10,23,.76)}
 .nav.bottom{background:rgba(2,8,20,.91)}
 @media(max-width:560px){body::before{background-position:center 55%}.panel,.panel:has(.finish){background:rgba(3,10,23,.82)}}
+
+/* Clear question hierarchy and consistent custom cyan form controls. */
+.panel .field h3,.panel .field>label{font-size:17px;font-weight:700;color:#88f2f3;line-height:1.45;margin:0 0 9px;letter-spacing:0;text-shadow:0 0 9px rgba(75,226,236,.13)}
+.panel .domain-start .field h3,.panel h2{font-size:21px;font-weight:750;color:#e1ffff;margin-bottom:12px}
+.field{padding:11px 0 15px}.field+.field{margin-top:4px}
+.options{gap:5px 10px}.chip{font-size:14px;font-weight:400;color:#d4e2ec}
+.chip input[type=checkbox],.chip input[type=radio]{appearance:none;-webkit-appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;display:inline-grid;place-content:center;background:#081626;border:1.5px solid #6191a7;box-shadow:none;cursor:pointer;color:inherit}
+.chip input[type=checkbox]{border-radius:4px}
+.chip input[type=radio]{border-radius:50%}
+.chip input[type=checkbox]::before{content:"";width:8px;height:4px;border-left:2px solid #06242b;border-bottom:2px solid #06242b;transform:rotate(-45deg) scale(0);margin-top:-2px}
+.chip input[type=checkbox]:checked{background:#76f2f2;border-color:#76f2f2;box-shadow:0 0 7px #48e9ed55}
+.chip input[type=checkbox]:checked::before{transform:rotate(-45deg) scale(1)}
+.chip input[type=radio]::before{content:"";width:8px;height:8px;border-radius:50%;background:#76f2f2;transform:scale(0)}
+.chip input[type=radio]:checked{background:#081626;border-color:#76f2f2;box-shadow:0 0 7px #48e9ed55}
+.chip input[type=radio]:checked::before{transform:scale(1)}
+.chip:hover input{border-color:#8ee8ef}.chip:has(input:checked){color:#b9ffff;background:#17465380}
+textarea,input[type=text]{color:#e3edf4;font-size:14px;font-weight:400;line-height:1.5}
+textarea::placeholder,input[type=text]::placeholder{color:#8ea7b9;font-weight:400}
+.other summary{font-size:12px;font-weight:500;color:#8ed7e2;text-shadow:none}
+@media(max-width:560px){.panel .field h3,.panel .field>label{font-size:16px}.panel .domain-start .field h3,.panel h2{font-size:19px}textarea,input[type=text]{font-size:16px}.chip input[type=checkbox],.chip input[type=radio]{width:18px;height:18px;flex-basis:18px}}
+@media(forced-colors:active){.chip input[type=checkbox],.chip input[type=radio]{appearance:auto;-webkit-appearance:auto}.chip input::before{display:none}}
+
 </style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
 <script>
 'use strict';
