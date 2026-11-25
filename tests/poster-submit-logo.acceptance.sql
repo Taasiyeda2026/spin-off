@@ -7,13 +7,19 @@ alter table public.activities add column if not exists school_id bigint referenc
 insert into public.schools values (1,'Fixture A'),(2,'Fixture B');
 update public.activities set school_id=case when row_id in ('space','team-a','outside-team') then 1 else 2 end;
 \ir ../supabase/migrations/20261125165221_spacetech_submission_school_logos.sql
+\ir ../supabase/migrations/20261125172620_restrict_school_logo_rpc_to_staff.sql
 reset role;
 insert into storage.objects(bucket_id,name) values('spacetech-posters','schools/1/'||repeat('a',64)),('spacetech-posters','schools/2/'||repeat('b',64));
 select id::text as poster_a from poster_private.posters where activity_id='team-a' \gset
 set role anon;
 select set_config('request.jwt.claim.sub','',false);
-select public.poster_assert(public.spacetech_school_logo('list')->>'error'='denied','anonymous cannot manage logos');
-select public.poster_assert(public.spacetech_school_logo('set',jsonb_build_object('schoolId','1','hash',repeat('a',64)))->>'error'='denied','anonymous cannot write school logos');
+do $$ begin
+  begin
+    perform public.spacetech_school_logo('list');
+    raise exception 'anonymous logo RPC unexpectedly accessible';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
 set role authenticated;
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000101',false);
 select public.poster_assert(public.spacetech_school_logo('list')->>'error'='denied','instructors cannot manage logos');
