@@ -1,5 +1,5 @@
-import { arabic, translate as t } from './poster-language.js';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js';
+import { arabic, translate as t } from './poster-language.js?v=20261125-backgrounds';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn } from './poster-cloud.js?v=20261125-backgrounds';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -181,7 +181,7 @@ function copyCode(code) {
 async function openFromManagement(id, mode) {
   const poster = await posterRequest('load', { id }, staff);
   await openPoster(poster, staff, manage, mode !== 'edit');
-  if (mode === 'pdf') window.producePdf();
+  if (mode === 'pdf') await window.producePdf();
 }
 
 async function manage() {
