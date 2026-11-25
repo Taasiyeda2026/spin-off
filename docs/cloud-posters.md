@@ -17,13 +17,17 @@ The public entry stays at `/spin-off/poster.html`. The existing content, artwork
 
 ## Read-only facts to verify on the existing project
 
-Run [supabase-production-readonly.sql](supabase-production-readonly.sql) via the authorized production reader and share its single report cell. The queries return schema metadata and aggregate counts. Separately confirm the Auth password/MFA policy and whether Dashboard activity IDs can be reused.
+The authorized production read confirmed the Dashboard identifiers and lookup RPC, manager predicates and Storage permissions in project `szinlhjuwyiyszdpsdop`. The [read-only aggregate report](supabase-production-readonly.sql) also confirmed the full breakdown for the 40 open activities in `school_2027`:
 
-The authorized read confirmed the project `szinlhjuwyiyszdpsdop`, the Dashboard identifiers and lookup RPC, the manager predicates, and the Storage permissions. Out of 47 activities, 40 are open in `school_2027` and seven are closed in a previous period. For תשפ״ז, 33 have a primary instructor and seven do not. One activity has no matched active manager, six lack a matching instructor on the manager's team, and none has an ambiguous manager name. The counts do not establish which activities overlap across categories or whether an activity without a primary instructor has a secondary instructor.
+| Instructor assignment | Manager scope | Count |
+|---|---|---:|
+| Primary assigned | Matched | 33 |
+| No primary or secondary instructor | No matching active manager | 1 |
+| No primary or secondary instructor | No assigned instructor on manager's team | 6 |
 
-For the overlap, use `manager_audit_by_season_status_and_assignment` from the updated read-only report. It separates open, closed and other statuses and distinguishes a primary assignment, secondary-only assignment and no assigned instructor. Unmatched records do not grant manager access. No Dashboard data correction is included. The remaining checks include MFA and hosted Staging acceptance.
+All 33 assigned activities match the approved rule. The seven unassigned activities do not grant access via a manager or instructor assignment. Admins can see them, and student creation requires an instructor assignment. No Dashboard data correction is required for this release. The seven closed activities from earlier periods are outside the application scope.
 
-Before release, confirm the production MFA requirement and verify the remaining hosting checks in Staging. Use only aggregate diagnostics for the manager audit.
+Before release, confirm the production MFA requirement and verify the remaining hosting and device checks in managed Staging. Aggregate assignment verification is complete.
 
 ## Verification
 

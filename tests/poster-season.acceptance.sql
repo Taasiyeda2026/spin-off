@@ -55,3 +55,30 @@ $$;
 reset role;
 select public.poster_assert(exists(select 1 from poster_private.posters where activity_id='season-old'
   and state#>>'{values,poster-project}'='Historical' and deleted_at is null and archived_at is null), 'historical poster data remains intact');
+
+-- Reproduce the production audit shape without copying any production records.
+insert into public.activities(row_id, school, gefen_number, activity_manager)
+values ('unassigned-owner', 'Synthetic unassigned A', '57651','Manager A'),
+       ('unassigned-no-owner', 'Synthetic unassigned B','57651',null);
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000104',false);
+select public.poster_assert((
+  select count(*) from jsonb_array_elements(public.spacetech_poster('manage')->'activities') a
+  where a->>'id' in ('unassigned-owner','unassigned-no-owner')
+) = 2, 'admin lists both types of current-year unassigned activity');
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000201',false);
+select public.poster_assert(not exists(
+  select 1 from jsonb_array_elements(public.spacetech_poster('manage')->'activities') a
+  where a->>'id' in ('unassigned-owner','unassigned-no-owner')
+), 'manager scope does not include unassigned activities');
+set role anon;
+select set_config('request.jwt.claim.sub','',false);
+select public.poster_assert(not exists(
+  select 1 from jsonb_array_elements(public.spacetech_poster('activities',jsonb_build_object(
+    'code',:'instructor_code','ticket',repeat('8',64)))->'activities') a
+  where a->>'id' in ('unassigned-owner','unassigned-no-owner')
+), 'student lookup omits both types of unassigned activity');
+select public.poster_assert(public.spacetech_poster('create',jsonb_build_object(
+  'activityId','unassigned-owner','ticket',repeat('8',64),'session',repeat('2',64),
+  'requestId',gen_random_uuid(),'participants',jsonb_build_array('Fixture')
+))->>'error'='denied','forged direct creation on an unassigned activity is denied');
