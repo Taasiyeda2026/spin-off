@@ -31,3 +31,44 @@
 .poster-read-only button:not([onclick="producePdf()"]) { display: none !important; }
 .poster-access > a { display: inline-block; color: #a6eaff; margin-block-end: .65em; }
 .poster-access :is(#poster-access-content, article) > button { margin: 0 0 .45em .45em; }
+
+/* Main entry navigation only. Keep editor and all form screens unchanged. */
+body:has(.poster-access.is-home:not([hidden])) {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+.poster-access.is-home {
+  width: min(680px, calc(100% - 28px));
+  max-width: none;
+  margin: 24px auto;
+  padding: 20px 22px 26px;
+  text-align: center;
+}
+.poster-access.is-home > a { display: block; width: fit-content; margin-inline-start: auto; margin-block-end: 12px; font-size: 13px; }
+.poster-access.is-home h1 { font-size: clamp(20px, 3.5vw, 28px); line-height: 1.35; margin: 0 0 24px; }
+.poster-access.is-home h1:focus { outline: none; }
+.poster-home-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 560px;
+  margin-inline: auto;
+}
+.poster-access .poster-home-actions > button {
+  width: 100%;
+  min-height: 42px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  padding: 8px 9px;
+  margin: 0;
+}
+.poster-access .poster-home-actions > button:hover { filter: brightness(1.12); }
+.poster-access.is-home [role=status]:empty { display: none; }
+@media(max-width:560px){
+  .poster-access.is-home { padding: 18px 16px 24px; }
+  .poster-home-actions { grid-template-columns: minmax(0, 1fr); max-width: 260px; gap: 9px; }
+  .poster-access .poster-home-actions > button { min-height: 44px; }
+}
