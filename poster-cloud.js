@@ -56,12 +56,12 @@ export function posterRequest(action, params = {}, access = {}) {
   }, access.bearer);
 }
 
-export function createPosterMedia(id, access) {
+export function createPosterMedia(id, access, schoolId = null) {
   const pending = new Map();
   const downloaded = new Map();
   function request(image, body) {
     const url = new URL(project + '/functions/v1/poster-media');
-    url.search = new URLSearchParams({ id, image });
+    url.search = new URLSearchParams({ ...(id ? {id} : {}), image, ...(schoolId ? {schoolId:String(schoolId)} : {}) });
     return fetch(url, {
       method: body ? 'PUT' : 'GET',
       headers: {
@@ -110,7 +110,7 @@ export function createPosterMedia(id, access) {
 
 export async function encodePosterState(draft, media) {
   const { images, savedAt, design: { bgImage, bgOpacity, ...design }, ...state } = draft;
-  const slots = { ...images };
+  const { logo, ...slots } = images ?? {};
   const uploaded = await Promise.all(Object.entries(slots)
     .filter(([, source]) => source?.startsWith('data:image/'))
     .map(async ([slot, source]) => [slot, await media.upload(source)]));
@@ -119,9 +119,16 @@ export async function encodePosterState(draft, media) {
 
 export async function decodePosterState(state, media) {
   const sources = await Promise.all(Object.entries(state.media ?? {})
-    .filter(([slot]) => slot !== 'background')
+    .filter(([slot]) => !['background', 'logo'].includes(slot))
     .map(async ([slot, hash]) => [slot, await media.download(hash)]));
   const images = Object.fromEntries(sources);
   const { bgImage, bgOpacity, ...design } = state.design ?? {};
   return { ...state, images, design };
+}
+
+export async function schoolLogoRequest(action, params, access) {
+  return jsonRequest('/rest/v1/rpc/spacetech_school_logo', {p_action:action,p:params}, access?.bearer);
+}
+export function schoolLogoMedia(schoolId, access, posterId = null) {
+  return createPosterMedia(posterId, access, schoolId);
 }

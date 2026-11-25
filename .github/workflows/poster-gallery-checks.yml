@@ -6,7 +6,8 @@ on:
       - 'poster*.js'
       - 'poster*.css'
       - 'poster-backgrounds/**'
-      - 'tests/poster-*.py'
+      - 'tests/poster-*'
+      - 'supabase/**'
       - '.github/workflows/poster-gallery-checks.yml'
   push:
     branches: [main]
@@ -15,12 +16,26 @@ on:
       - 'poster*.js'
       - 'poster*.css'
       - 'poster-backgrounds/**'
-      - 'tests/poster-*.py'
+      - 'tests/poster-*'
+      - 'supabase/**'
       - '.github/workflows/poster-gallery-checks.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
+  database:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Database authorization and submission acceptance
+        run: |
+          sudo systemctl start postgresql
+          sudo -u postgres createdb poster_test
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -d poster_test -f tests/poster-cloud-fixture.sql -f supabase/migrations/20261125130000_cloud_posters.sql -f supabase/migrations/20261125142634_poster_allow_empty_participants_on_creation.sql -f tests/poster-cloud.acceptance.sql -f tests/poster-manager.acceptance.sql -f tests/poster-submit-logo.acceptance.sql
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --experimental-strip-types --test tests/poster-media.test.mjs
   browser:
     runs-on: ubuntu-24.04
     steps:
@@ -61,3 +76,4 @@ jobs:
           for attempt in $(seq 1 20); do if curl -fsS http://127.0.0.1:8000/poster.html >/dev/null; then break; fi; sleep 1; done
           python tests/poster-drafts.browser.py
           python tests/poster-cloud.browser.py
+          python tests/poster-submit-logo.browser.py

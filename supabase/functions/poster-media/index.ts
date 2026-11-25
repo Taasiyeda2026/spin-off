@@ -62,25 +62,32 @@ Deno.serve(async (request) => {
   const url = new URL(request.url);
   const id = url.searchParams.get('id') ?? '';
   const hash = url.searchParams.get('image') ?? '';
-  if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(id) ||
+  const schoolId=url.searchParams.get('schoolId');
+  const schoolMode=schoolId!==null;
+  if(schoolMode&&!/^[1-9][0-9]{0,18}$/.test(schoolId!))return reply(400);
+  if ((!schoolMode||id)&&!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(id) ||
       !/^[0-9a-f]{64}$/.test(hash)) return reply(400);
 
   const write = request.method === 'PUT';
+  if(schoolMode&&id&&write)return reply(403);
   try {
     const authHeaders = new Headers({ apikey: publicKey, 'content-type': 'application/json' });
     const bearer = request.headers.get('authorization');
     if (bearer) authHeaders.set('authorization', bearer);
-    const check = await fetch(project + '/rest/v1/rpc/spacetech_poster', {
+    const endpoint=schoolMode&&!id?'spacetech_school_logo':'spacetech_poster';
+    const check = await fetch(project + '/rest/v1/rpc/'+endpoint, {
       method: 'POST',
       headers: authHeaders,
       body: JSON.stringify({
-        p_action: 'media',
-        p: { id, hash, mode: write ? 'write' : 'read', session: request.headers.get('x-poster-session') },
+        p_action: schoolMode&&id?'logo_media':'media',
+        p: { id, schoolId, hash, mode: write ? 'write' : 'read', session: request.headers.get('x-poster-session') },
       }),
     });
-    if (!check.ok || (await check.json()).allowed !== true) return reply(403);
+    if(!check.ok)return reply(403);
+    const permission=await check.json();
+    if(permission.allowed!==true||(schoolMode&&id&&permission.schoolId!==schoolId))return reply(403);
 
-    const path = '/' + bucket + '/' + id + '/' + hash;
+    const path = '/' + bucket + '/' + (schoolMode?'schools/'+schoolId:id) + '/' + hash;
     const storageHeaders = new Headers({ apikey: serviceKey, authorization: 'Bearer ' + serviceKey });
     const privateRead = () => fetch(bucketUrl + '/authenticated' + path, { headers: storageHeaders });
 
