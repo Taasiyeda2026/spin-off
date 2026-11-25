@@ -148,11 +148,11 @@ with sync_playwright() as pw:
     # Only submitted answers appear on the poster; editing questions remain in the panel.
     reopened.locator('#panel-short-desc').fill('תיק דיגיטלי לניהול משימות')
     reopened.locator('#panel-solution-type').select_option('app')
-    expect(reopened.locator('#solution-description-heading')).to_have_text('אפליקציה: תיק דיגיטלי לניהול משימות')
+    expect(reopened.locator('#solution-description-heading')).to_have_text('تطبيق: תיק דיגיטלי לניהול משימות')
     reopened.locator('#panel-slogan').fill('המשימות שלנו תמיד איתנו')
     expect(reopened.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
     expect(reopened.locator('#c-slogan .bq')).to_be_hidden()
-    expect(reopened.locator('label[for=panel-slogan]')).to_have_text('23. איך נציג את הפתרון שלנו במשפט אחד?')
+    expect(reopened.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
     # Empty type on older posters shows only their description.
     reopened.locator('#panel-solution-type').select_option('')
     expect(reopened.locator('#solution-description-heading')).to_have_text('תיק דיגיטלי לניהול משימות')
