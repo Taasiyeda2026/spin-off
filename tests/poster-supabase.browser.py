@@ -61,7 +61,7 @@ def seed():
         email = name + "@poster-fixture.example"
         user = request("/auth/v1/admin/users", {"email": email, "password": password, "email_confirm": True},
                        service_key, service_key)
-        users.append(dict(user_id=name, auth_user_id=user["id"], emp_id=emp_id,
+        users.append(dict(user_id=name, auth_user_id=user["id"], emp_id=str(emp_id) if emp_id is not None else None,
                           role=role, username=name, full_name=name, auth_email=email))
     for table, rows in (
         ("users", users),

@@ -6,7 +6,7 @@ insert into public.users(user_id, auth_user_id, role, is_active, full_name, name
   ('manager-b', '00000000-0000-0000-0000-000000000202', 'activities_manager', true, null, 'Manager B');
 insert into public.contacts_instructors values
   (101, 'Manager A', 'no'), (102, ' manager a ', 'true'), (103, 'Manager B', 'כן');
-insert into public.activities values
+insert into public.activities(row_id, emp_id, emp_id_2, school, grade, class_group, gefen_number, activity_manager) values
   ('team-a', 103, '102', 'Fixture A', '4', 'A', '57651', ' MANAGER   A '),
   ('team-b', 103, null, 'Fixture B', '4', 'B', '57651', 'Manager B'),
   ('outside-team', 103, null, 'Fixture C', '4', 'C', '57651', 'Manager A'),

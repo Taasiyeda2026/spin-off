@@ -1,6 +1,6 @@
 # Release verification
 
-The test target was a disposable local stack with GoTrue, PostgREST, Supabase Storage, Supabase Edge Runtime, Kong and PostgreSQL 17. The Dashboard tables and accounts were synthetic. These checks establish application behavior with the actual Supabase services. Production metadata and a hosted staging release check remain required.
+The test target was a disposable local stack with GoTrue, PostgREST, Supabase Storage, Supabase Edge Runtime, Kong and PostgreSQL 17. The Dashboard tables and accounts were synthetic. These checks establish application behavior with the actual Supabase services. The production schema and relevant grants were confirmed by an authorized read. Production MFA and a hosted staging release check remain required.
 
 | # | Approved scenario | Evidence |
 |---|---|---|

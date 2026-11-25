@@ -2,12 +2,12 @@
 -- Auth, Storage, PostgREST and Edge Runtime come from Supabase itself.
 create table public.users (
   user_id text primary key, auth_user_id uuid unique references auth.users(id),
-  emp_id bigint, role text not null, is_active boolean not null default true,
+  emp_id text, role text not null, is_active boolean not null default true,
   full_name text not null, name text, username text not null unique, auth_email text not null
 );
 create table public.activities (
   row_id text primary key, emp_id bigint, emp_id_2 text,
-  school text, grade text, class_group text, gefen_number text, activity_manager text
+  school text, grade text, class_group text, gefen_number text, activity_manager text, activity_season text not null default 'school_2027', status text not null default 'פתוח'
 );
 create table public.contacts_instructors (emp_id bigint, direct_manager text, active text);
 alter table public.users enable row level security;

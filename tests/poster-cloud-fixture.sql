@@ -1,6 +1,7 @@
 -- Run on a fresh, disposable PostgreSQL database only.
 create role anon;
 create role authenticated;
+create role service_role bypassrls;
 create schema extensions;
 create schema auth;
 create function auth.uid() returns uuid language sql stable as $$
@@ -15,9 +16,9 @@ grant usage on schema storage to anon, authenticated;
 grant all on storage.objects to anon, authenticated;
 create policy fixture_broad_storage on storage.objects for all using (true) with check (true);
 
-create table public.users(user_id text primary key, emp_id bigint, auth_user_id uuid, role text, is_active boolean, full_name text, name text, username text);
+create table public.users(user_id text primary key, emp_id text, auth_user_id uuid, role text, is_active boolean, full_name text, name text, username text);
 create table public.activities(row_id text primary key, emp_id bigint, emp_id_2 text,
-  school text, grade text, class_group text, gefen_number text, activity_manager text);
+  school text, grade text, class_group text, gefen_number text, activity_manager text, activity_season text not null default 'school_2027', status text not null default 'פתוח');
 create table public.contacts_instructors(emp_id bigint, direct_manager text, active text);
 alter table public.activities enable row level security;
 grant select on public.activities to anon, authenticated;

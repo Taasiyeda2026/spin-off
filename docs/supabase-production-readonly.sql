@@ -5,7 +5,7 @@ with required_columns as (
   from information_schema.columns
   where table_schema = 'public' and (
     (table_name = 'activities' and column_name in
-      ('row_id','gefen_number','emp_id','emp_id_2','school','grade','class_group','activity_manager'))
+      ('row_id','gefen_number','emp_id','emp_id_2','school','grade','class_group','activity_manager','activity_season','status'))
     or (table_name = 'users' and column_name in
       ('user_id','emp_id','auth_user_id','role','is_active','full_name','name','username'))
     or (table_name = 'contacts_instructors' and column_name in ('emp_id','direct_manager','active'))
@@ -38,6 +38,11 @@ with required_columns as (
   select name, lower(regexp_replace(name, '[[:space:]]+', ' ', 'g')) as key from manager_names
 ), classified as (
   select a.emp_id, nullif(btrim(a.emp_id_2), '') as secondary,
+    coalesce(nullif(btrim(a.activity_season),''),'unspecified') as season,
+    case lower(btrim(coalesce(a.status,'')))
+      when 'פתוח' then 'open' when 'open' then 'open'
+      when 'סגור' then 'closed' when 'closed' then 'closed'
+      else 'other_or_missing' end as lifecycle,
     (select count(*) from manager_keys m
       where m.key = lower(regexp_replace(btrim(a.activity_manager), '[[:space:]]+', ' ', 'g'))) as owner_matches,
     exists(select 1 from manager_keys m join public.contacts_instructors ci
@@ -54,6 +59,18 @@ with required_columns as (
     count(*) filter (where owner_matches > 1) as ambiguous_manager,
     count(*) filter (where owner_matches = 1 and not team_match) as manager_without_assigned_team_instructor
   from classified
+), manager_audit as (
+  select season, lifecycle,
+    case when emp_id is not null then 'primary_assigned'
+      when secondary is not null then 'secondary_only'
+      else 'no_assigned_instructor' end as assignment,
+    case when owner_matches = 0 then 'no_active_manager'
+      when owner_matches > 1 then 'ambiguous_manager'
+      when not team_match then 'no_assigned_team_instructor'
+      else 'matched' end as manager_scope,
+    count(*) as activity_count
+  from classified
+  group by 1,2,3,4
 ), policies as (
   select schemaname, tablename, policyname, roles, cmd, permissive,
     coalesce(qual in ('true', '(true)'), false) as unrestricted_select
@@ -72,6 +89,8 @@ select jsonb_build_object(
   'roster_uses_direct_manager', coalesce(position('ci.direct_manager' in pg_get_functiondef(to_regprocedure(
     'public.get_manager_team_roster(text,text)'))) > 0, false),
   'activity_counts', (select to_jsonb(c) from activity_counts c),
+  'manager_audit_by_season_status_and_assignment',
+    (select jsonb_agg(to_jsonb(m) order by season,lifecycle,assignment,manager_scope) from manager_audit m),
   'pgcrypto_schema', (select extnamespace::regnamespace::text from pg_extension where extname='pgcrypto'),
   'storage_objects_rls', (select relrowsecurity from pg_class where oid=to_regclass('storage.objects')),
   'storage_service_role_can_select_buckets', has_table_privilege('service_role','storage.buckets','SELECT'),

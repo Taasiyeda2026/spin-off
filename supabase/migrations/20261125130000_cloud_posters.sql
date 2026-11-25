@@ -103,6 +103,11 @@ begin
 end
 $$;
 
+create function poster_private.activity_in_scope(a public.activities)
+returns boolean language sql immutable set search_path = pg_catalog as $$
+  select coalesce(a.gefen_number = '57651' and a.activity_season = 'school_2027', false)
+$$;
+
 create function poster_private.activity_member(p_activity public.activities, p_employee text)
 returns boolean language sql immutable set search_path = pg_catalog as $$
   select coalesce(nullif(btrim(p_employee), '') is not null and
@@ -205,7 +210,7 @@ begin
       where c.code = p->>'code' and u.is_active is true and u.role::text = 'instructor';
     select coalesce(jsonb_agg(poster_private.activity_info(a) order by a.school, a.grade, a.class_group, a.row_id), '[]')
       into result from public.activities a
-      where a.gefen_number = '57651' and poster_private.activity_member(a, instructor.emp_id::text);
+      where poster_private.activity_in_scope(a) and poster_private.activity_member(a, instructor.emp_id::text);
     if result = '[]'::jsonb then
       perform poster_private.charge_code_failure(p_action);
       return jsonb_build_object('error', 'code');
@@ -236,7 +241,7 @@ begin
       join public.users u on t.instructor_id = u.user_id::text
       where t.token_hash = ticket and u.is_active is true and u.role::text = 'instructor';
     select a.* into activity from public.activities a
-      where a.row_id = p->>'activityId' and a.gefen_number = '57651'
+      where a.row_id = p->>'activityId' and poster_private.activity_in_scope(a)
         and poster_private.activity_member(a, instructor.emp_id::text);
     if not found then return jsonb_build_object('error', 'denied'); end if;
     select x.* into poster from poster_private.posters x where x.ticket_hash = ticket;
@@ -277,7 +282,7 @@ begin
     end if;
     select x.* into poster from poster_private.posters x
       where x.code = p->>'code' and x.deleted_at is null and x.archived_at is null
-        and exists (select 1 from public.activities a where a.row_id = x.activity_id and a.gefen_number = '57651');
+        and exists (select 1 from public.activities a where a.row_id = x.activity_id and poster_private.activity_in_scope(a));
     if not found then
       perform poster_private.charge_code_failure(p_action);
       return jsonb_build_object('error', 'code');
@@ -309,17 +314,9 @@ begin
     with scoped as (
       select a.row_id as id, poster_private.activity_info(a) as info,
         a.school, a.grade, a.class_group
-      from public.activities a where a.gefen_number = '57651'
+      from public.activities a where poster_private.activity_in_scope(a)
         and poster_private.can_manage_activity(a, actor)
-      union all
-      (select distinct on (x.activity_id) x.activity_id,
-        jsonb_build_object('id', x.activity_id, 'school', x.state#>>'{values,poster-school}',
-          'classGroup', x.state#>>'{values,poster-class}', 'unavailable', true),
-        x.state#>>'{values,poster-school}', null, x.state#>>'{values,poster-class}'
-      from poster_private.posters x
-      where admin and not exists (select 1 from public.activities a
-        where a.row_id = x.activity_id and a.gefen_number = '57651')
-      order by x.activity_id, x.updated_at desc)
+
     )
     select coalesce(jsonb_agg(scoped.info || jsonb_build_object('posters', (
       select coalesce(jsonb_agg(poster_private.poster_info(x) || jsonb_build_object(
@@ -334,9 +331,10 @@ begin
 
   select x.* into poster from poster_private.posters x where x.id = (p->>'id')::uuid for update;
   if not found then return jsonb_build_object('error', 'denied'); end if;
-  select admin or exists(select 1 from public.activities a where a.row_id = poster.activity_id
-    and a.gefen_number = '57651' and staff and poster_private.can_manage_activity(a, actor))
-    into permitted;
+  select a.* into activity from public.activities a
+    where a.row_id = poster.activity_id and poster_private.activity_in_scope(a);
+  if not found then return jsonb_build_object('error', 'denied'); end if;
+  permitted := staff and poster_private.can_manage_activity(activity, actor);
 
   if p_action in ('delete', 'restore', 'archive', 'unarchive', 'rotate') then
     if not permitted or (p_action in ('restore', 'archive', 'unarchive') and not admin) then
@@ -369,7 +367,6 @@ begin
 
   if poster.deleted_at is not null or (poster.archived_at is not null and not permitted)
     or (not permitted and not exists (select 1 from poster_private.sessions s
-      join public.activities a on a.row_id = poster.activity_id and a.gefen_number = '57651'
       where s.token_hash = session_hash and s.poster_id = poster.id and s.expires_at > now())) then
     return jsonb_build_object('error', 'denied');
   end if;

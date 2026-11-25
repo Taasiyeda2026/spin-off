@@ -141,7 +141,10 @@ reset role;
 delete from public.activities where row_id = 'space';
 set role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000104', false);
-select public.poster_assert(exists(select 1 from jsonb_array_elements(public.spacetech_poster('manage')->'activities') a
-  where a->>'id' = 'space' and a->>'unavailable' = 'true'), 'admin can manage after Dashboard activity deletion');
-select public.poster_assert(public.spacetech_poster('load', jsonb_build_object('id', :'created'::jsonb->>'id'))->>'revision' = '1',
-  'deleted activity does not erase poster data');
+select public.poster_assert(not exists(select 1 from jsonb_array_elements(public.spacetech_poster('manage')->'activities') a
+  where a->>'id' = 'space'), 'activity without a verifiable season is hidden even from admin');
+select public.poster_assert(public.spacetech_poster('load', jsonb_build_object('id', :'created'::jsonb->>'id'))->>'error' = 'denied',
+  'admin cannot open a poster without a verifiable activity');
+reset role;
+select public.poster_assert(exists(select 1 from poster_private.posters x where x.id::text = :'created'::jsonb->>'id' and x.revision = 1),
+  'Dashboard activity deletion preserves historical poster data');
