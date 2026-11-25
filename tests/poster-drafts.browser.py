@@ -14,6 +14,7 @@ with sync_playwright() as playwright:
     errors = []
     page.on("pageerror", lambda error: errors.append(str(error)))
     page.goto(url)
+    page.evaluate("window.posterEditor.open()")
     page.wait_for_function("!document.getElementById('wrap').inert")
     page.locator("#poster-project").fill("מערכת ניסיונית")
     page.locator("#problem").fill("תשובה לבדיקה בלבד")
@@ -38,11 +39,13 @@ with sync_playwright() as playwright:
         raise AssertionError("Image and background were not saved")
     page.once("dialog", lambda dialog: dialog.dismiss())
     page.reload()
+    page.get_by_role("button", name="טיוטה שמורה בדפדפן").click()
     page.wait_for_function("!document.getElementById('wrap').inert")
     expect(page.locator("#poster-project")).to_have_value("")
     assert page.evaluate("(async () => (await posterDrafts.read(null)).values['poster-project'])()") == "מערכת ניסיונית"
     page.once("dialog", lambda dialog: dialog.accept())
     page.reload()
+    page.get_by_role("button", name="טיוטה שמורה בדפדפן").click()
     expect(page.locator("#poster-project")).to_have_value("מערכת ניסיונית")
     expect(page.locator("#problem")).to_have_value("תשובה לבדיקה בלבד")
     expect(page.locator("#border-color")).to_have_value("#ff0000")

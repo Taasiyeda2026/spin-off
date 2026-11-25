@@ -1,0 +1,115 @@
+const project = window.posterCloudConfig?.url ?? 'https://szinlhjuwyiyszdpsdop.supabase.co';
+const publicKey = window.posterCloudConfig?.publishableKey ??
+  'sb_publishable_k0IbDJlgPA9KTVuDWrCyFw_Zsa5kZIM';
+
+export function newToken() {
+  return hex(crypto.getRandomValues(new Uint8Array(32)));
+}
+
+function hex(bytes) {
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function jsonRequest(path, body, bearer) {
+  const response = await fetch(project + path, {
+    method: 'POST',
+    headers: {
+      apikey: publicKey,
+      'Content-Type': 'application/json',
+      ...(bearer ? { Authorization: 'Bearer ' + bearer } : {}),
+    },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+    signal: AbortSignal.timeout(20000),
+  });
+  if (!response.ok) throw new Error(response.status === 401 ? 'denied' : 'network');
+  const result = await response.json();
+  if (result?.error) throw new Error(result.error);
+  return result;
+}
+
+export async function signIn(username, password) {
+  const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: username });
+  if (!identity?.auth_email || !['instructor', 'admin'].includes(identity.role)) throw new Error('login');
+  const session = await jsonRequest('/auth/v1/token?grant_type=password', {
+    email: identity.auth_email,
+    password,
+  });
+  if (session.user?.id !== identity.auth_user_id || !session.access_token) throw new Error('login');
+  return session.access_token;
+}
+
+export function posterRequest(action, params = {}, access = {}) {
+  return jsonRequest('/rest/v1/rpc/spacetech_poster', {
+    p_action: action,
+    p: { ...params, ...(access.session ? { session: access.session } : {}) },
+  }, access.bearer);
+}
+
+export function createPosterMedia(id, access) {
+  const pending = new Map();
+  const downloaded = new Map();
+  function request(image, body) {
+    const url = new URL(project + '/functions/v1/poster-media');
+    url.search = new URLSearchParams({ id, image });
+    return fetch(url, {
+      method: body ? 'PUT' : 'GET',
+      headers: {
+        apikey: publicKey,
+        ...(access.bearer ? { Authorization: 'Bearer ' + access.bearer } : {}),
+        ...(access.session ? { 'x-poster-session': access.session } : {}),
+        ...(body ? { 'Content-Type': body.type } : {}),
+      },
+      body,
+      cache: 'no-store',
+      signal: AbortSignal.timeout(30000),
+    });
+  }
+  function upload(dataUrl) {
+    if (!pending.has(dataUrl)) {
+      const operation = (async () => {
+        const blob = await (await fetch(dataUrl)).blob();
+        const hash = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', await blob.arrayBuffer())));
+        const response = await request(hash, blob);
+        if (!response.ok) throw new Error(response.status === 413 || response.status === 415 ? 'image' : 'network');
+        downloaded.set(hash, dataUrl);
+        return hash;
+      })();
+      pending.set(dataUrl, operation);
+      operation.catch(() => pending.delete(dataUrl));
+    }
+    return pending.get(dataUrl);
+  }
+  async function download(hash) {
+    if (downloaded.has(hash)) return downloaded.get(hash);
+    const response = await request(hash);
+    if (!response.ok) throw new Error('network');
+    const blob = await response.blob();
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    downloaded.set(hash, dataUrl);
+    pending.set(dataUrl, Promise.resolve(hash));
+    return dataUrl;
+  }
+  return { upload, download };
+}
+
+export async function encodePosterState(draft, media) {
+  const { images, savedAt, design: { bgImage, ...design }, ...state } = draft;
+  const slots = { ...images, background: bgImage?.match(/^url\(["']?(data:[^"')]+)["']?\)$/)?.[1] };
+  const uploaded = await Promise.all(Object.entries(slots)
+    .filter(([, source]) => source?.startsWith('data:image/'))
+    .map(async ([slot, source]) => [slot, await media.upload(source)]));
+  return { ...state, design, media: Object.fromEntries(uploaded) };
+}
+
+export async function decodePosterState(state, media) {
+  const sources = await Promise.all(Object.entries(state.media ?? {})
+    .map(async ([slot, hash]) => [slot, await media.download(hash)]));
+  const { background, ...images } = Object.fromEntries(sources);
+  return { ...state, images, design: { ...state.design, bgImage: background ? 'url("' + background + '")' : 'none' } };
+}
