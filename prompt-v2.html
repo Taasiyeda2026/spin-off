@@ -84,7 +84,47 @@ header h1{color:#d9ffff;text-shadow:0 0 14px #47dfe34d}
 .finishHero{border-color:#43a2af;box-shadow:0 0 20px #31e3e62b}
 .finish .launchers .provider:hover{border-color:#66f4f0;box-shadow:0 0 18px #39e5ea46}
 .provider-action,.other summary{color:#85e6ed}
-.extra-options{display:grid;gap:7px;margin-top:7px}.extra-options input[type=text]{margin-top:0}</style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
+.extra-options{display:grid;gap:7px;margin-top:7px}.extra-options input[type=text]{margin-top:0}
+/* Open, low-chrome layout: use light and spacing instead of nested frames. */
+header{background:linear-gradient(110deg,rgba(6,17,30,.72),rgba(10,38,49,.6));border:0;border-bottom:1px solid #54dce45c;border-radius:0;box-shadow:none;padding-inline:12px}
+header::after{display:none}
+header .btn,header a{border:0;background:transparent;border-radius:6px;box-shadow:none}
+header .btn:hover,header a:hover{background:#1c56684d;color:#b5ffff}
+.panel,.panel:has(.finish){border:0;border-radius:10px;background:rgba(6,15,26,.79);box-shadow:none;padding:16px 14px}
+.panel::before{display:none}
+.progress{gap:9px;margin:10px 0 14px}
+.progress span{border:0;border-bottom:2px solid #31515d;background:transparent;border-radius:0;box-shadow:none;padding:8px 5px}
+.progress .active{background:transparent;border-color:#79f5fa;color:#caffff;box-shadow:0 5px 10px -6px #45e9ef;text-shadow:0 0 10px #57e8ef59}
+.progress .done{background:transparent;border-color:#288b8e;color:#9ae2d9}
+.field,.domain-start .field{border:0;padding:9px 0 12px}
+.field+.field{margin-top:3px}
+.field h3,.field>label{margin-bottom:6px}
+.options{gap:4px 8px}
+.chip{border:1px solid transparent;border-radius:5px;background:transparent;box-shadow:none;padding:5px 8px;min-height:32px}
+.chip:hover{background:#173b4959;border-color:transparent;box-shadow:none}
+.chip:has(input:checked){border-color:transparent;background:#1b56665e;color:#b5ffff;box-shadow:none}
+.chip:has(input:checked):hover{background:#246d7d70}
+.chip input{accent-color:#67f2f1}
+.domain-start .options{gap:5px}
+.domain-start .chip{min-height:37px}
+.domain-selected{background:transparent;border:0;border-bottom:1px solid #376676;border-radius:0;box-shadow:none;padding:6px 0 10px;margin-bottom:9px}
+.domain-change,.domain-cancel{background:transparent;border:0;color:#85e6ed;box-shadow:none;text-decoration:underline;text-underline-offset:3px}
+.domain-change:hover,.domain-cancel:hover{background:#1c56684d}
+textarea,input[type=text]{background:#102636a6;border:1px solid transparent;border-bottom-color:#41697b;border-radius:6px}
+textarea:focus,input[type=text]:focus{border-color:#57d1d8}
+.other summary{padding:4px 0}
+.tip{border:0;border-inline-start:2px solid #3fbac5;background:#12334062;border-radius:0}
+.nav.bottom{border:0;border-top:1px solid #244956;background:rgba(5,13,22,.93);box-shadow:none}
+.nav #back,.copy-only{background:transparent;border:0;box-shadow:none;color:#9beaf0}
+.nav #back:hover,.copy-only:hover{background:#173846}
+.finishHero{background:transparent;border:0;box-shadow:none}
+.finishHero .mark{background:transparent;border:0;text-shadow:0 0 16px #4beef5}
+.finish .launchers .provider{background:#102b3b6b;border:0;box-shadow:none;border-radius:8px}
+.finish .launchers .provider:hover{background:#173643;box-shadow:0 0 13px #39e5ea2b}
+.copyRow{border:0;padding-top:6px}
+@media(max-width:560px){.panel,.panel:has(.finish){padding:12px 9px}.chip,.domain-start .chip{min-height:40px;padding:6px 7px}.options{gap:3px 5px}}
+
+</style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
 <script>
 'use strict';
 const KEY='spacetech_prompt_life_v2';
