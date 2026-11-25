@@ -43,7 +43,7 @@ reset role;
 select public.poster_assert(not has_table_privilege('authenticated','poster_private.school_logos','UPDATE'),'no direct logo table writes');
 select public.poster_assert(not has_table_privilege('anon','poster_private.submissions','SELECT'),'receipts are private');
 select 'PASS: school scope, roles, inherited logo, removal, submission binding, stale revision and idempotency';
-\ir ../supabase/migrations/20261125173832_editable_poster_school_class.sql
+\ir ../supabase/migrations/20261125174151_editable_poster_school_class.sql
 set role authenticated;
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000201',false);
 select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as before_edit \gset
