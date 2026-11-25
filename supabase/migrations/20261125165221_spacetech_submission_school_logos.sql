@@ -30,7 +30,7 @@ language sql stable set search_path=pg_catalog as $$
 $$;
 create function public.spacetech_school_logo(p_action text,p jsonb default '{}') returns jsonb
 language plpgsql security definer set search_path=pg_catalog as $$
-declare actor public.users; school bigint; image text; result jsonb;
+declare actor public.users; target_school_id bigint; image text; result jsonb;
 begin
  if jsonb_typeof(p) is distinct from 'object' or octet_length(p::text)>2048 then return jsonb_build_object('error','invalid');end if;
  select u.* into actor from public.users u where u.auth_user_id=auth.uid() and u.is_active is true
@@ -43,19 +43,19 @@ begin
  where exists(select 1 from public.activities a where a.school_id=s.id and poster_private.activity_in_scope(a) and poster_private.can_manage_activity(a,actor));
  return jsonb_build_object('schools',result);
  end if;
- school:=(p->>'schoolId')::bigint;image:=p->>'hash';
+ target_school_id:=(p->>'schoolId')::bigint;image:=p->>'hash';
  -- Never authorize by the display name supplied by a client.
- if school is null or not exists(select 1 from public.activities a where a.school_id=school and poster_private.activity_in_scope(a) and poster_private.can_manage_activity(a,actor)) then return jsonb_build_object('error','denied');end if;
- perform pg_advisory_xact_lock(hashtextextended('school-logo:'||school::text,91278));
- if p_action='remove' then delete from poster_private.school_logos where school_id=school;return jsonb_build_object('saved',true);end if;
+ if target_school_id is null or not exists(select 1 from public.activities a where a.school_id=target_school_id and poster_private.activity_in_scope(a) and poster_private.can_manage_activity(a,actor)) then return jsonb_build_object('error','denied');end if;
+ perform pg_advisory_xact_lock(hashtextextended('target_school_id-logo:'||target_school_id::text,91278));
+ if p_action='remove' then delete from poster_private.school_logos where school_id=target_school_id;return jsonb_build_object('saved',true);end if;
  if image is null or image !~ '^[0-9a-f]{64}$' then return jsonb_build_object('error','invalid');end if;
  if p_action='media' then
- if p->>'mode'='read' and exists(select 1 from poster_private.school_logos l where l.school_id=school and l.image_hash=image) then return jsonb_build_object('allowed',true);end if;
- if p->>'mode'='write' and poster_private.admit('school-logo:'||school::text,3600,30)
- and (select count(*) from storage.objects o where o.bucket_id='spacetech-posters' and o.name like 'schools/'||school::text||'/%')<250 then return jsonb_build_object('allowed',true);end if;
+ if p->>'mode'='read' and exists(select 1 from poster_private.school_logos l where l.school_id=target_school_id and l.image_hash=image) then return jsonb_build_object('allowed',true);end if;
+ if p->>'mode'='write' and poster_private.admit('target_school_id-logo:'||target_school_id::text,3600,30)
+ and (select count(*) from storage.objects o where o.bucket_id='spacetech-posters' and o.name like 'schools/'||target_school_id::text||'/%')<250 then return jsonb_build_object('allowed',true);end if;
  elsif p_action='set' then
- if not exists(select 1 from storage.objects o where o.bucket_id='spacetech-posters' and o.name='schools/'||school::text||'/'||image) then return jsonb_build_object('error','invalid');end if;
- insert into poster_private.school_logos(school_id,image_hash,updated_by) values(school,image,actor.user_id::text)
+ if not exists(select 1 from storage.objects o where o.bucket_id='spacetech-posters' and o.name='schools/'||target_school_id::text||'/'||image) then return jsonb_build_object('error','invalid');end if;
+ insert into poster_private.school_logos(school_id,image_hash,updated_by) values(target_school_id,image,actor.user_id::text)
  on conflict(school_id) do update set image_hash=excluded.image_hash,updated_at=now(),updated_by=excluded.updated_by;
  return jsonb_build_object('saved',true);
  end if;

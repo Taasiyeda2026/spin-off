@@ -115,7 +115,9 @@ with sync_playwright() as pw:
         pdf=Path(directory)/'poster.pdf';first.pdf(path=pdf,prefer_css_page_size=True,print_background=True)
         assert re.search(r'^Pages:\s+1$',subprocess.check_output(['pdfinfo',str(pdf)],text=True),re.M)
         assert len(re.findall(r'^\s*1\s+\d+\s+image',subprocess.check_output(['pdfimages','-list',str(pdf)],text=True),re.M))>=3
-    manager.get_by_role('button',name='הסרת לוגו',exact=True).click();expect(manager.get_by_text('הלוגו עודכן בכל הפוסטרים של בית הספר.',exact=True)).to_be_visible()
+    with manager.expect_response(lambda response:urlsplit(response.url).path=='/rest/v1/rpc/spacetech_school_logo' and response.request.post_data_json['p_action']=='remove'):
+        manager.get_by_role('button',name='הסרת לוגו',exact=True).click()
+    expect(manager.get_by_text('הלוגו עודכן בכל הפוסטרים של בית הספר.',exact=True)).to_be_visible()
     no_logo=resume(context(browser),'222223');expect(no_logo.locator('#school-logo-box')).to_be_hidden()
     assert not errors,errors
     print('PASS: responsive header, final actions, language/state, save/submit/retry/idempotency, manager logo, school isolation, existing posters, removal and A4 PDF')

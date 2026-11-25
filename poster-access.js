@@ -451,6 +451,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
           !confirm(t('יש שינויים שטרם נשמרו בענן. לחזור בכל זאת?'))) return;
       window.posterSubmit=null;window.refreshSchoolLogo=null;
       await editor.close({ flush: false });
+      root.replaceChildren();
       await back();
     } catch (error) {
       showError(error);

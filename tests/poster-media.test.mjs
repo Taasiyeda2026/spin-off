@@ -70,3 +70,28 @@ test('Edge media authorization, immutable upload, and private download', async (
     globalThis.fetch = realFetch;
   }
 });
+
+test('School logo media checks manager scope and binds student reads to poster school', async () => {
+  const realFetch=globalThis.fetch;
+  const calls=[];
+  globalThis.fetch=async(target,init)=>{
+    calls.push({target,init});
+    if(target.includes('/rest/v1/rpc/')){
+      const body=JSON.parse(init.body);
+      if(target.endsWith('spacetech_school_logo'))return Response.json({allowed:init.headers.get('authorization')==='Bearer fixture-manager'});
+      assert.equal(body.p_action,'logo_media');
+      return Response.json({allowed:body.p.session==='fixture-session',schoolId:'1'});
+    }
+    return new Response(png,{headers:{'content-type':'image/png'}});
+  };
+  try{
+    const endpoint=project+'/functions/v1/poster-media?schoolId=1&image='+digest;
+    const request=(url,extra={})=>new Request(url,{headers:{origin:site,'x-poster-session':'fixture-session',...extra}});
+    assert.equal((await handler(request(endpoint+'&id='+posterId))).status,200);
+    assert.ok(calls.at(-1).target.endsWith('/spacetech-posters/schools/1/'+digest));
+    assert.equal((await handler(request(endpoint.replace('schoolId=1','schoolId=2')+'&id='+posterId))).status,403);
+    assert.equal((await handler(new Request(endpoint+'&id='+posterId,{method:'PUT',headers:{origin:site,'content-type':'image/png'},body:png}))).status,403);
+    assert.equal((await handler(new Request(endpoint,{method:'PUT',headers:{origin:site,'content-type':'image/png'},body:png}))).status,403);
+    assert.equal((await handler(new Request(endpoint,{method:'PUT',headers:{origin:site,'content-type':'image/png',authorization:'Bearer fixture-manager'},body:png}))).status,204);
+  }finally{globalThis.fetch=realFetch;}
+});
