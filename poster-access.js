@@ -50,6 +50,7 @@ function button(text, action, parent = root, primary = false) {
 }
 
 function screen(heading, back) {
+  document.getElementById('poster-access').classList.remove('is-home');
   root.replaceChildren();
   status.textContent = '';
   title.textContent = t(heading);
@@ -92,18 +93,13 @@ function submit(form, label, action) {
 function home() {
   staff = null;
   screen(homeTitle);
-  button('יצירת פוסטר חדש', createEntry, root, true);
-  button('המשך עבודה על פוסטר', resumeEntry, root, true);
-  button('כניסת מדריכים', instructorEntry);
-  drafts.read(null).then((draft) => {
-    if (draft && title.textContent === t(homeTitle)) {
-      button('טיוטה שמורה בדפדפן', () => {
-        toolbar.replaceChildren();
-        button('חזרה', async () => { await editor.close(); home(); }, toolbar);
-        editor.open().catch(showError);
-      });
-    }
-  }).catch(() => {});
+  document.getElementById('poster-access').classList.add('is-home');
+  const actions = element('nav', '', root);
+  actions.className = 'poster-home-actions';
+  actions.setAttribute('aria-label', t(homeTitle));
+  button('יצירת פוסטר חדש', createEntry, actions, true);
+  button('המשך עבודה על פוסטר', resumeEntry, actions, true);
+  button('כניסת מדריכים', instructorEntry, actions);
 }
 
 function codeForm(heading, caption, pattern, length, action) {
