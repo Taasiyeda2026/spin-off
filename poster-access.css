@@ -243,3 +243,15 @@ body:has(.poster-access.is-home:not([hidden])) {
   .poster-access #poster-access-content > form button[type="submit"] { min-height: 42px; }
   .poster-access #poster-access-content:has(> form) > button[data-back] { min-height: 40px; }
 }
+
+/* Home navigation and official research-question display. */
+.poster-access { position: relative; }
+.poster-access > a#poster-access-home { position:absolute; inset-block-start:12px; inset-inline-end:12px; margin:0; }
+.poster-home-icon, #toolbar .poster-home-icon { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; min-width:34px; padding:0; background:transparent; border:0; color:#8cf5ff; text-decoration:none; }
+.poster-home-icon:hover { color:#e0ffff; filter:drop-shadow(0 0 6px #43e8ff); }
+.poster-home-icon[aria-busy="true"] { opacity:.5; cursor:wait; }
+#poster .bq span:first-child { min-width:0; white-space:normal; overflow:visible; text-overflow:clip; overflow-wrap:break-word; }
+#poster .bq { align-items:flex-start; }
+#c-research .bq { font-size:11px; }
+.poster-image-question { display:grid; gap:5px; }
+.poster-image-question .pb { width:100%; }
