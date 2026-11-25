@@ -406,4 +406,5 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
 }
 
 window.addEventListener('online', () => editor.save());
-home();
+if (new URLSearchParams(location.search).get('view') === 'management') instructorEntry();
+else home();
