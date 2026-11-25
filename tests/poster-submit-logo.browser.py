@@ -145,6 +145,17 @@ with sync_playwright() as pw:
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
     # Solution type is independent from the 135-character description and survives language/save/reopen.
     expect(reopened.locator('#panel-solution-type')).to_have_value('')
+    # Only submitted answers appear on the poster; editing questions remain in the panel.
+    reopened.locator('#panel-short-desc').fill('תיק דיגיטלי לניהול משימות')
+    reopened.locator('#panel-solution-type').select_option('app')
+    expect(reopened.locator('#solution-description-heading')).to_have_text('אפליקציה: תיק דיגיטלי לניהול משימות')
+    reopened.locator('#panel-slogan').fill('המשימות שלנו תמיד איתנו')
+    expect(reopened.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
+    expect(reopened.locator('#c-slogan .bq')).to_be_hidden()
+    expect(reopened.locator('label[for=panel-slogan]')).to_have_text('23. איך נציג את הפתרון שלנו במשפט אחד?')
+    # Empty type on older posters shows only their description.
+    reopened.locator('#panel-solution-type').select_option('')
+    expect(reopened.locator('#solution-description-heading')).to_have_text('תיק דיגיטלי לניהול משימות')
     description='ת' * 135
     reopened.locator('#panel-short-desc').fill(description)
     for kind in ['physical','smart','app','web','digital']:
@@ -158,7 +169,7 @@ with sync_playwright() as pw:
     assert reopened.locator('#panel-solution-type option[value=other]').count()==0
     reopened.locator('#poster-editor-language').click()
     reopened.locator('#panel-solution-type').select_option('digital')
-    expect(reopened.locator('#poster-solution-type')).to_have_text('(מערכת דיגיטלית)')
+    expect(reopened.locator('#poster-solution-type')).to_have_text('מערכת דיגיטלית: ')
     reopened.locator('#poster-submit').click();expect(reopened.locator('#poster-submit-status')).to_contain_text('בהצלחה')
     assert posters[ids[2]]['state']['values']['solution-type']=='digital'
     assert posters[ids[2]]['state']['values']['short-desc']==description
@@ -166,11 +177,20 @@ with sync_playwright() as pw:
     expect(again.locator('#panel-solution-type')).to_have_value('digital')
     expect(again.locator('#short-desc')).to_have_value(description)
     again.locator('#poster-editor-language').click()
-    expect(again.locator('#poster-solution-type')).to_have_text('(نظام رقمي)')
+    expect(again.locator('#poster-solution-type')).to_have_text('نظام رقمي: ')
+    expect(again.locator('#poster-solution-description')).to_have_text(description)
+    expect(again.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
+    expect(again.locator('#c-slogan .bq')).to_be_hidden()
+    expect(again.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
     before=again.locator('#solution-description-heading').text_content()
     again.emulate_media(media='print')
     expect(again.locator('#solution-description-heading')).to_have_text(before)
     expect(again.locator('#solution-description-heading')).to_be_visible()
+    expect(again.locator('#c-slogan .bq')).to_be_hidden()
+    assert again.locator('#solution-description-heading').evaluate('(el)=>el.scrollHeight<=el.clientHeight')
+    pdf=fitz.open(stream=again.pdf(prefer_css_page_size=True),filetype='pdf')
+    assert len(pdf)==1
+    assert 'كيف نعرض' not in pdf[0].get_text()
     again.emulate_media(media='null')
     with again.expect_popup() as popup:
         again.locator('#poster-visualization').click()
