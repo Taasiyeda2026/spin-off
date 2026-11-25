@@ -11,7 +11,54 @@ main{padding-bottom:32px}.nav.bottom{display:grid;grid-template-columns:1fr minm
 /* Compact layout, with readable touch targets and the domain selector first. */
 body{font-size:14px;line-height:1.42}main{max-width:900px;padding:12px 16px 22px}header{padding:12px 18px 15px;border-radius:13px}header .top{margin-bottom:7px;gap:7px}header h1{font-size:clamp(23px,2.8vw,28px)}header p{font-size:13px;margin-top:3px}header .btn,header a{padding:5px 10px;min-height:34px;font-size:13px}.progress{margin:12px 0;gap:6px}.progress span{padding:8px 6px;font-size:13px}.panel{padding:18px 20px;margin-bottom:8px;border-radius:13px}.panel h2{font-size:21px;margin:0 0 12px}.field{padding:10px 0}.field h3,.field>label{font-size:15px;margin-bottom:7px}.options{gap:5px}.chip{padding:6px 9px;min-height:36px;gap:6px;font-size:14px;border-radius:7px}.chip input{width:16px;height:16px;flex:none}textarea,input[type=text]{padding:7px 10px;font-size:14px}textarea{min-height:57px}.other{margin-top:5px}.other summary{font-size:12px}.other input{margin-top:5px}.tip{padding:8px 10px;font-size:13px;margin:7px 0}.nav.bottom{padding:8px 0;gap:8px}.btn{min-height:38px;padding:7px 13px}.domain-start .field{padding-top:0;padding-bottom:12px;border-bottom:1px solid #e2ebf1}.domain-start .field h3{font-size:18px;margin-bottom:9px}.domain-start .options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.domain-start .chip{min-height:40px;white-space:normal}.finishHero{padding:18px 12px}.finishHero h2{font-size:25px}.finishHero .mark{width:42px;height:42px;margin-bottom:7px}.finish .launchers{margin:12px 0 10px;gap:9px}.finish .launchers .provider{min-height:112px;padding:10px 6px;gap:5px}.provider-icon{width:56px;height:56px}.provider-icon img{width:44px;height:44px}.provider strong{font-size:16px}.copyRow{padding-top:10px;margin-bottom:6px}
 @media(max-width:560px){main{padding:8px 10px 18px}header{padding:12px}.panel{padding:13px}.domain-start .options{grid-template-columns:repeat(2,minmax(0,1fr))}.chip{min-height:40px;font-size:14px}.btn{min-height:42px}textarea,input[type=text]{font-size:16px}.progress span{font-size:12px}.finishHero h2{font-size:21px}.finish .launchers .provider{min-height:98px}.provider-icon{width:40px;height:40px}.provider-icon img{width:30px;height:30px}.provider strong{font-size:14px}}
-.domain-selected{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#edf6fa;border:1px solid #d1e6f1;border-radius:9px;padding:8px 12px;margin-bottom:8px}.domain-selected>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.domain-label{color:#52677a;font-size:12px}.domain-selected strong{color:#155b83;font-size:15px}.domain-change,.domain-cancel{font-size:12px;min-height:32px;padding:5px 10px}.domain-cancel{margin-top:9px}.domain-start .field{border-bottom:0}.nav.bottom:has(#back[hidden]):has(#next[hidden]):has(#status:empty){display:none}@media(max-width:560px){.domain-selected{padding:7px 9px}.domain-change,.domain-cancel{min-height:40px}}</style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
+.domain-selected{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#edf6fa;border:1px solid #d1e6f1;border-radius:9px;padding:8px 12px;margin-bottom:8px}.domain-selected>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.domain-label{color:#52677a;font-size:12px}.domain-selected strong{color:#155b83;font-size:15px}.domain-change,.domain-cancel{font-size:12px;min-height:32px;padding:5px 10px}.domain-cancel{margin-top:9px}.domain-start .field{border-bottom:0}.nav.bottom:has(#back[hidden]):has(#next[hidden]):has(#status:empty){display:none}@media(max-width:560px){.domain-selected{padding:7px 9px}.domain-change,.domain-cancel{min-height:40px}}
+/* Deep-space theme — subtle cyan / turquoise accents */
+:root{color-scheme:dark;--ink:#eaf5fb;--accent:#56d8df;--line:#234353;--space:#03080f;--soft:#a8c0cf;--glow:rgba(55,211,221,.10)}
+html{min-height:100%;background:#03080f}
+body{min-height:100vh;isolation:isolate;color:var(--ink);background:#03080f}
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 8% 22%,rgba(11,99,117,.16),transparent 36%),radial-gradient(ellipse at 94% 78%,rgba(19,102,127,.12),transparent 32%),radial-gradient(ellipse at 75% -15%,rgba(24,55,100,.18),transparent 55%),linear-gradient(160deg,#040911,#050e18 50%,#02060c)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.52;background-image:radial-gradient(circle at 17px 29px,#a2d6e7 0 .65px,transparent 1.25px),radial-gradient(circle at 79px 57px,#688dba 0 .65px,transparent 1.35px),radial-gradient(circle at 105px 163px,#7ee7e6 0 .8px,transparent 1.6px);background-size:173px 193px,241px 263px,359px 311px}
+main{position:relative}
+header{background:linear-gradient(125deg,#0a1726,#0b2634 65%,#0b1d2b);border:1px solid #285365;box-shadow:0 10px 32px #0005,0 0 24px var(--glow)}
+header h1{color:#f2fcff}header p{color:#b6d5e1}
+header .btn,header a{background:#122e3c;border-color:#315467;color:#e4f6fa}
+header .btn:hover,header a:hover{background:#173e4c;border-color:#53c5d0}
+.panel{background:linear-gradient(160deg,#0d1928,#0a1420);border:1px solid #233d4e;box-shadow:0 10px 30px #0005}
+.panel h2,.field h3,.field>label{color:#edf9ff}
+.progress span{background:#0a1724;border-color:#243c4f;color:#a8bfce}
+.progress .active{background:#103442;border-color:#4bc6d0;color:#d7fcff;box-shadow:0 0 12px #42d3de16}
+.progress .done{background:#102b30;border-color:#27545a;color:#9ae2d9}
+.field,.domain-start .field{border-color:#213645}
+.domain-start .field{border-bottom:0}
+.chip{background:#0e2030;border-color:#2b475b;color:#e1eff6;box-shadow:none;transition:background .15s,border-color .15s}
+.chip:hover{background:#132e3e;border-color:#448c9d}
+.chip:has(input:checked){background:#123b48;border-color:#59d2d8;color:#e4ffff;box-shadow:inset 0 0 0 1px #59d2d83b,0 0 10px #4acbd515}
+.chip input{accent-color:#55d5dc;color-scheme:dark}
+textarea,input[type=text]{background:#081522;color:#ecf9ff;border-color:#304d60}
+textarea::placeholder,input[type=text]::placeholder{color:#91adbf;opacity:1}
+textarea:focus,input[type=text]:focus{border-color:#57d1d8}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #68e4ea;outline-offset:3px}
+.other summary{color:#9ecedb}.other summary:hover{color:#b4fbfc}
+.tip,.domain-selected{background:#102b3a;border-color:#2c5263;color:#d2eaf3}
+.domain-label{color:#a6c3d1}.domain-selected strong{color:#94e8e8}
+.btn{background:#122536;color:#e5f4fa;border-color:#345366}
+.btn:hover{background:#173849;border-color:#53bfc9}
+.btn.primary{background:linear-gradient(115deg,#55d8df,#36b6c7);color:#03151e;border-color:#68e1e4;box-shadow:0 0 16px #40cad123}
+.btn.primary:hover{background:#82e9e9;color:#03151e}
+.nav.bottom{background:rgba(5,13,22,.96);border-color:#28414f;box-shadow:0 -5px 18px #0002}
+.muted,#status{color:#aac3d2}.error{color:#ffaba7}
+.finishHero{background:linear-gradient(125deg,#0a1a2d,#103947);border:1px solid #305d6a;box-shadow:0 0 16px #45c9d210}
+.finishHero .mark{background:#174650;color:#a4f7f3;border-color:#4a8d95}
+.finishHero h2{color:#efffff}.finishHero p{color:#b8d9e4}
+.finish .launchers .provider{background:#102131;border-color:#2c465a;color:#edf8ff;box-shadow:0 4px 12px #0003}
+.finish .launchers .provider:hover{background:#173643;border-color:#5bd2da;box-shadow:0 0 15px #4bd3d81b}
+.provider-icon{background:#e9f4f7;color:#174b5d;box-shadow:0 0 12px #53ccd319}
+.provider-action{color:#95dce4}
+.copyRow{border-color:#263e4d}.copy-only{background:#102433;color:#a0ebee;border-color:#345a69}.copy-only:hover{background:#173846}
+.finish .finishHint{color:#aac3d2}.launch-feedback{color:#9be7dc!important}.launch-feedback a{color:#9be7dc!important}
+@media(prefers-reduced-motion:reduce){.chip,.finish .launchers .provider{transition:none}.finish .launchers .provider:hover{transform:none}}
+
+</style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
 <script>
 'use strict';
 const KEY='spacetech_prompt_life_v2';
