@@ -139,7 +139,7 @@ with sync_playwright() as playwright:
     student.locator("#panel-poster-project").fill("Language switch fixture")
     student.evaluate("window.__editorLanguageMarker = true")
     student.locator("#poster-panel-language").click()
-    expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. ما اسم حلّنا؟")
+    expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. اسم حلّنا؟")
     expect(student.locator("#panel-poster-project")).to_have_value("Language switch fixture")
     expect(student.locator("#poster-project")).to_have_value("Language switch fixture")
     expect(student.locator("#poster-students")).to_have_value("Student A, Student B")
@@ -147,7 +147,7 @@ with sync_playwright() as playwright:
     assert student.locator("#fill-list .edit-card > input, #fill-list .edit-card > textarea").evaluate_all(
         "(fields) => Math.max(...fields.map(f=>f.offsetWidth))-Math.min(...fields.map(f=>f.offsetWidth)) <= 1 && fields.every(f=>getComputedStyle(f).textAlign==='right')")
     student.locator("#poster-panel-language").click()
-    expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. מה שם הפתרון שלנו?")
+    expect(student.locator("#tab-content .edit-card").first.locator("label")).to_have_text("1. שם הפתרון שלנו?")
     student.locator("#panel-poster-project").fill("")
     expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
     student.locator('[data-tab="design"]').click()
