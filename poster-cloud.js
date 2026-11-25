@@ -22,18 +22,28 @@ async function jsonRequest(path, body, bearer) {
     cache: 'no-store',
     signal: AbortSignal.timeout(20000),
   });
-  if (!response.ok) throw new Error(response.status === 401 ? 'denied' : 'network');
+  if (!response.ok) {
+    if (path === '/auth/v1/token?grant_type=password' && [400, 401, 422].includes(response.status)) {
+      throw new Error('login');
+    }
+    throw new Error(response.status === 401 ? 'denied' : 'network');
+  }
   const result = await response.json();
   if (result?.error) throw new Error(result.error);
   return result;
 }
 
 export async function signIn(username, password) {
-  const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: username });
-  if (!identity?.auth_email || !['instructor', 'activities_manager', 'admin'].includes(identity.role)) throw new Error('login');
+  // Use the same credential normalization as loginWithSupabaseAuth in Dashboard.
+  const login = username.trim().toLowerCase();
+  const submittedPassword = password.trim();
+  if (!login || !submittedPassword) throw new Error('login');
+  const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: login });
+  const email = identity?.auth_email?.trim().toLowerCase();
+  if (!email || !['instructor', 'activities_manager', 'admin'].includes(identity.role)) throw new Error('login');
   const session = await jsonRequest('/auth/v1/token?grant_type=password', {
-    email: identity.auth_email,
-    password,
+    email,
+    password: submittedPassword,
   });
   if (session.user?.id !== identity.auth_user_id || !session.access_token) throw new Error('login');
   return session.access_token;

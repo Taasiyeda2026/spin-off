@@ -27,7 +27,7 @@ The authorized production read confirmed the Dashboard identifiers and lookup RP
 
 All 33 assigned activities match the approved rule. The seven unassigned activities do not grant access via a manager or instructor assignment. Admins can see them, and student creation requires an instructor assignment. No Dashboard data correction is required for this release. The seven closed activities from earlier periods are outside the application scope.
 
-Before release, confirm the production MFA requirement and verify the remaining hosting and device checks in managed Staging. Aggregate assignment verification is complete.
+Aggregate assignment verification is complete. Before approving a release, confirm the Dashboard MFA requirement and review the remaining hosted-only risks documented below.
 
 ## Verification
 
@@ -63,19 +63,12 @@ POSTER_SUPABASE_PUBLIC_KEY=... POSTER_SUPABASE_SERVICE_KEY=... python3 tests/pos
 
 Use only the throwaway keys from the local CLI stack. The script creates synthetic users with the real Auth admin API. It requires an empty fixture and refuses non-loopback hosts. The service key stays entirely in the Python fixture process.
 
-### Hosted Supabase Staging
+### Release on the existing infrastructure
 
-Use the actual Supabase gateway, Auth, PostgREST, Storage and Edge runtime in staging, with synthetic primary, secondary, unassigned, disabled and admin users and synthetic activities. Include two activity managers with disjoint teams and activities, plus one activity that matches only the owner and one that matches only the roster. Seed the existing username lookup contract and activity assignments. Run the 25 approved acceptance scenarios across two fresh browser profiles. In particular:
+Do not create a separate managed Supabase project. Review the [acceptance record](cloud-posters-acceptance.md) before explicitly approving production changes.
 
-- Real username/password sign-in, Auth UUID verification, expiration and role revocation.
-- RPC anonymous access with the project publishable key, PostgreSQL grants/RLS, PostgREST error behavior, and isolation even with the existing wide activities policy.
-- The complete creation and resume flow, assignment changes, instructor editing from another browser, soft delete, restore, archive, code rotation, session expiry, parallel creation and save conflicts.
-- Real Edge CORS and JWT behavior, direct bucket denial, cross-poster media denial, full image upload/download, size/type enforcement, and storage usage during retry.
-- Offline edits, reopening from another device, the actual fallback and retry UX, PDF on mobile/desktop, and Dashboard regression for the existing login and activity editing/deletion. Browser tests with mocked network and the PostgreSQL fixture are partial evidence for these scenarios.
-
-### Staging setup and rollback
-
-1. Supply a separate project ref and authorized staging database credentials through the environment's secure configuration. Verify the project ref and database host explicitly before executing any SQL. Apply only the feature migration to the staging database with SQL editor or `psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261125130000_cloud_posters.sql`.
-2. Deploy the Edge Function from this repository with `supabase functions deploy poster-media --project-ref <staging-ref> --no-verify-jwt`. It performs authorization via the RPC for both staff and student requests. Configure `POSTER_ALLOWED_ORIGINS` on the function with the exact staging browser origin. Supply `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` from the staging Edge runtime's built-in secrets. Keep the service key in the runtime only.
-3. Serve the branch from the staging host. In the staging copy of the site, define `window.posterCloudConfig = { url: '<staging project URL>', publishableKey: '<staging publishable key>' }` before loading `poster-access.js`. Check that all requests target staging before running the browser acceptance.
-4. Keep the draft PR open until the staged tests have passed and release is explicitly approved. If an approved deployment later needs rollback, revert the static site to the previous revision, disable the feature RPC for anon/authenticated and disable the Edge endpoint. Preserve the private schema, Storage, and IndexedDB for recovery. Do not execute a destructive down migration.
+1. Confirm whether Dashboard staff must complete MFA. The password login reuses the Dashboard RPC and verifies the returned Auth identity. Public GoTrue health and settings confirm reachability and the email provider. They do not confirm a mandatory MFA policy. If staff require MFA, verify that flow before authorizing release.
+2. After approval, verify that the SQL destination is the existing Supabase project `szinlhjuwyiyszdpsdop`. Apply only `20261125130000_cloud_posters.sql`. Existing Dashboard grants and activity records are untouched by the migration. Verify that the newly created bucket is private and its browser policy is restrictive.
+3. Deploy the `poster-media` Edge Function to the same project with gateway JWT verification disabled as required for anonymous student sessions. Its database RPC enforces access before each Storage request. Set `POSTER_ALLOWED_ORIGINS=https://taasiyeda2026.github.io`. Keep the built-in service role key on the Edge runtime.
+4. Check the deployed Edge CORS preflight from the planned GitHub Pages origin and verify the Dashboard still loads. Full hosted acceptance requires write operations such as creating a poster and uploading and retrieving its image. Perform those checks only after approval of production validation and an approved synthetic group. The local results do not establish behavior under the hosted gateway or on physical devices.
+5. Once the backend checks pass and the release is authorized, merge the reviewed website change. If rollout needs reversal, restore the previous static site, revoke `spacetech_poster` execution from the browser roles and disable the poster Edge endpoint. Preserve the poster tables, bucket, and browser drafts.

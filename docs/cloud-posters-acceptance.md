@@ -1,10 +1,10 @@
 # Release verification
 
-The test target was a disposable local stack with GoTrue, PostgREST, Supabase Storage, Supabase Edge Runtime, Kong and PostgreSQL 17. The Dashboard tables and accounts were synthetic. These checks establish application behavior with the actual Supabase services. The production schema and relevant grants were confirmed by an authorized read. The read-only manager audit confirmed all 33 assigned current-year activities match the approved rule and the seven others have no primary or secondary instructor. Production MFA and a hosted staging release check remain required.
+The test target was a disposable local stack with GoTrue, PostgREST, Supabase Storage, Supabase Edge Runtime, Kong and PostgreSQL 17. The Dashboard tables and accounts were synthetic. These checks establish application behavior with the actual Supabase services. The production schema and relevant grants were confirmed by an authorized read. The read-only manager audit confirmed all 33 assigned current-year activities match the approved rule and the seven others have no primary or secondary instructor. Mandatory production MFA is still unconfirmed. No separate staging project is planned. Hosted-only checks that require writing data or deploying feature components must wait for explicit production approval.
 
 | # | Approved scenario | Evidence |
 |---|---|---|
-| 1 | Dashboard instructor sign-in | Real GoTrue password session and the Dashboard lookup contract on synthetic accounts. Production lookup and MFA settings pending. |
+| 1 | Dashboard instructor sign-in | Real local GoTrue verified normalized credentials for instructors, activity managers and admins, and rejected an incorrect password. Dashboard login regression and production anonymous lookup with empty input passed. Production health and public settings returned HTTP 200 and the email provider is enabled. Mandatory MFA and authenticated production login remain unverified. |
 | 2 | Instructor sees assigned activities | Local integration and SQL role tests, including primary and secondary assignments. |
 | 3 | Unique four-digit instructor code | Local integration compared two instructors. SQL verifies format and stability. |
 | 4 | Create a group poster | Local browser integration. |
@@ -12,22 +12,22 @@ The test target was a disposable local stack with GoTrue, PostgREST, Supabase St
 | 6 | Correct activity association | Local browser selects the sole activity. SQL rejects forged activity IDs, including current-year activities without an assigned instructor. |
 | 7 | Save answers | Local browser saves an answer after reconnect and restores it in a fresh profile. |
 | 8 | Save and restore images | Local integration uploads through the real Edge and Storage services and restores the image in a fresh browser profile. |
-| 9 | Restore design settings | A live local instructor save restores color, size and glow in the student browser. Background restore also passes the legacy browser test. Repeat with the full design matrix in hosted staging. |
+| 9 | Restore design settings | A live local instructor save restores color, size and glow in the student browser. Background restore also passes the legacy browser test. Repeat with the full design matrix after release approval on the existing hosted infrastructure. |
 | 10 | Close and reopen | Local integration resumes a saved poster in a clean browser context. Local browser test covers reload and restoration of an existing IndexedDB draft. |
-| 11 | Resume from another computer | Local integration uses a separate browser profile with no shared storage. Repeat from a separate device against hosted staging. |
+| 11 | Resume from another computer | Local integration uses a separate browser profile with no shared storage. Repeat from a separate device against the existing host after release approval. |
 | 12 | Poster appears under its activity | Local integration uses two activities and checks staff visibility. |
 | 13 | Instructor edits remotely | Separate instructor and manager edits passed against local Supabase. |
 | 14 | Student sees staff edits | Real local integration resumes and sees the manager's saved edit from another profile. |
 | 15 | Staff retrieves group code | SQL checks the scoped management result, and the local Chrome demo copies the exact group code. Repeat on target devices. |
 | 16 | Student group isolation | Live PostgREST request used one group's session to request another poster and was denied. |
 | 17 | Instructor isolation | Local browser and SQL tests. The same checks cover manager isolation; admin sees both teams. |
-| 18 | Instructor reassignment | SQL updates live fixture assignments and checks that the previous instructor loses access. Live cascading in the Dashboard workflow remains for hosted staging. |
+| 18 | Instructor reassignment | SQL updates live fixture assignments and checks that the previous instructor loses access. Live cascading in the Dashboard workflow remains for an approved hosted check. |
 | 19 | Offline backup and retry | Real local browser goes offline, observes the failure, reconnects and verifies the answer in a fresh profile. |
 | 20 | No silent concurrent overwrite | Real browser integration edits in two profiles and verifies the stale write is rejected. Mocked browser flow also verifies recovery of the preserved local copy. |
-| 21 | PDF | Local browser tests produce a single A4 page, including an Arabic RTL session at the emulated Pixel 7 viewport. Physical-device print verification remains for hosted staging. |
+| 21 | PDF | Local browser tests produce a single A4 page, including an Arabic RTL session at the emulated Pixel 7 viewport. Physical-device print verification remains for an approved hosted check. |
 | 22 | Guess limits | Local SQL verifies lockdown before code lookup after the shared failure budget is exhausted, and 90 valid lookups on one instructor code. Real PostgREST integration passes 90 concurrent valid requests spread over two instructor codes. |
-| 23 | Existing editing tools | Local compatibility tests cover answers, participant slots, images, background and design. Visual acceptance of the full editor on target devices remains for hosted staging. |
-| 24 | Dashboard regressions | 15 Dashboard login regression assertions passed. Dashboard end-to-end login and activity maintenance remain for hosted staging. |
+| 23 | Existing editing tools | Local compatibility tests cover answers, participant slots, images, background and design. Visual acceptance of the full editor on target devices remains for an approved hosted check. |
+| 24 | Dashboard regressions | 15 Dashboard login regression assertions passed. Dashboard end-to-end login and activity maintenance remain for an approved hosted check. |
 | 25 | Duplicate creates | Two concurrent requests over PostgREST with the same creation parameters return the same poster ID. |
 
-The aggregate production report is in [supabase-production-readonly.sql](supabase-production-readonly.sql). [Setup, hosted staging and rollback](cloud-posters.md) describe the remaining release steps.
+The aggregate production report is in [supabase-production-readonly.sql](supabase-production-readonly.sql). [Release setup and rollback](cloud-posters.md) describe the remaining release steps.

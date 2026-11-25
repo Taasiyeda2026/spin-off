@@ -38,6 +38,9 @@ def handle(route):
         role = "activities_manager" if username == "fixture-manager" else "instructor"
         route.fulfill(json=[{"auth_email": username + "@example.invalid", "auth_user_id": "fixture", "role": role}])
     elif path == "/auth/v1/token":
+        if request.post_data_json["password"] == "wrong-password":
+            route.fulfill(status=400, json={"error_code": "invalid_credentials"})
+            return
         assert request.post_data_json["password"] == "fake-password"
         token = "manager-token" if request.post_data_json["email"].startswith("fixture-manager") else "fixture-token"
         route.fulfill(json={"user": {"id": "fixture"}, "access_token": token})
@@ -160,8 +163,11 @@ with sync_playwright() as playwright:
 
     staff = open_page(new_context(browser))
     click(staff, "כניסת מדריכים")
-    staff.get_by_label("שם משתמש").fill("fixture-instructor")
-    staff.get_by_label("סיסמה").fill("fake-password")
+    staff.get_by_label("שם משתמש").fill("  FIXTURE-INSTRUCTOR  ")
+    staff.get_by_label("סיסמה").fill("wrong-password")
+    click(staff, "כניסה")
+    expect(staff.get_by_role("status")).to_contain_text("הכניסה לא הצליחה")
+    staff.get_by_label("סיסמה").fill("  fake-password  ")
     click(staff, "כניסה")
     expect(staff.get_by_role("heading", name="ניהול הפוסטרים שלי")).to_be_visible()
     staff.get_by_role("searchbox").fill("Remote update")
