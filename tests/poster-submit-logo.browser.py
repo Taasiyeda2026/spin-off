@@ -219,9 +219,12 @@ with sync_playwright() as pw:
     assert again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')==frame_before
     assert again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')==question_style
     assert again.locator('label[for=panel-slogan]').text_content()==closing_label
+    again.locator('[data-tab=design]').click()
     for bg in ['bg1','bg2','bg3','bg4']:
         again.locator('[data-background-id="'+bg+'"]').click()
         assert again.locator('#slogan-output > span').evaluate('(el)=>getComputedStyle(el).backgroundColor')=='rgba(4, 12, 28, 0.9)'
+    assert again.evaluate('async()=>await backgroundReady')
+    again.locator('[data-tab=content]').click()
     again.locator('#poster-editor-language').click()
     expect(again.locator('#slogan-output')).to_have_text('פתרון קטן שעושה שינוי גדול')
     again.locator('#poster-editor-language').click()
