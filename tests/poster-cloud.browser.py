@@ -153,7 +153,13 @@ with sync_playwright() as playwright:
     student.locator('[data-tab="design"]').click()
 
     assert student.locator("#bg-up").count() == 0
-    student.locator('[data-background-id="bg3"]').click()
+    # A previous saved status may remain visible during the debounce interval.
+    # Wait for the response for this background before inspecting saved state.
+    with student.expect_response(lambda response:
+            urlsplit(response.url).path == "/rest/v1/rpc/spacetech_poster"
+            and response.request.post_data_json.get("p_action") == "save"
+            and response.request.post_data_json["p"]["state"].get("design", {}).get("bgId") == "bg3"):
+        student.locator('[data-background-id="bg3"]').click()
     expect(student.locator('[data-background-id="bg3"]')).to_have_attribute("aria-pressed", "true")
     expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
     assert poster["state"]["design"]["bgId"] == "bg3"
