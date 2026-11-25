@@ -1,5 +1,6 @@
 """Acceptance with isolated network fixtures; never changes live posters or schools."""
-import base64, copy, hashlib, json, os, re, subprocess
+import base64, copy, hashlib, json, os, re
+import fitz
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit, parse_qs
@@ -113,8 +114,9 @@ with sync_playwright() as pw:
     first.locator('#poster-pdf').click();first.wait_for_function('window.__printed')
     with TemporaryDirectory() as directory:
         pdf=Path(directory)/'poster.pdf';first.pdf(path=pdf,prefer_css_page_size=True,print_background=True)
-        assert re.search(r'^Pages:\s+1$',subprocess.check_output(['pdfinfo',str(pdf)],text=True),re.M)
-        assert len(re.findall(r'^\s*1\s+\d+\s+image',subprocess.check_output(['pdfimages','-list',str(pdf)],text=True),re.M))>=3
+        with fitz.open(pdf) as document:
+            assert document.page_count==1
+            assert len(document[0].get_images())>=3
     with manager.expect_response(lambda response:urlsplit(response.url).path=='/rest/v1/rpc/spacetech_school_logo' and response.request.post_data_json['p_action']=='remove'):
         manager.get_by_role('button',name='הסרת לוגו',exact=True).click()
     expect(manager.get_by_text('הלוגו עודכן בכל הפוסטרים של בית הספר.',exact=True)).to_be_visible()

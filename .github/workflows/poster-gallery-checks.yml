@@ -47,9 +47,8 @@ jobs:
           python-version: '3.12'
       - name: Install test dependencies
         run: |
-          python -m pip install playwright==1.56.0 Pillow==11.3.0
-          python -m playwright install --with-deps chromium
-          sudo apt-get install -y poppler-utils
+          python -m pip install playwright==1.56.0 Pillow==11.3.0 PyMuPDF==1.26.6
+          google-chrome --version
       - name: Check generated assets
         run: |
           python - <<'PY'
@@ -71,7 +70,7 @@ jobs:
           PY
       - name: Browser acceptance
         run: |
-          export CHROMIUM_PATH="$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
+          export CHROMIUM_PATH="$(command -v google-chrome)"
           python -m http.server 8000 --bind 127.0.0.1 > /tmp/poster-gallery-http.log 2>&1 &
           server=$!
           trap 'kill "$server" 2>/dev/null || true' EXIT

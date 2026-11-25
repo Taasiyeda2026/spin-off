@@ -2,7 +2,7 @@ import base64
 import json
 import os
 import re
-import subprocess
+import fitz
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from playwright.sync_api import expect, sync_playwright
@@ -120,10 +120,10 @@ with sync_playwright() as playwright:
     with TemporaryDirectory() as directory:
         pdf = Path(directory) / "poster.pdf"
         page.pdf(path=pdf, prefer_css_page_size=True, print_background=False)
-        image_info = subprocess.check_output(["pdfimages", "-list", str(pdf)], text=True)
-        assert any(int(match.group(1)) >= 500 for match in re.finditer(r"^\s*1\s+\d+\s+image\s+(\d+)\s+\d+", image_info, re.MULTILINE)), image_info
-        metadata = subprocess.check_output(["pdfinfo", str(pdf)], text=True)
-        assert re.search(r"^Pages:\s+1$", metadata, re.MULTILINE), metadata
-        assert re.search(r"^Page size:.*\(A4\)$", metadata, re.MULTILINE), metadata
+        with fitz.open(pdf) as document:
+            assert document.page_count == 1
+            assert any(image[2] >= 500 for image in document[0].get_images())
+            assert abs(document[0].rect.width - 595.28) < 1
+            assert abs(document[0].rect.height - 841.89) < 1
     assert not errors, errors
     print("Restore, dismiss without deleting, participant slots, images, background, design, draft isolation and PDF passed.")
