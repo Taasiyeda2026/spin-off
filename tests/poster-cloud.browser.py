@@ -237,6 +237,8 @@ with sync_playwright() as playwright:
     click(staff, "חזרה")
     staff.get_by_role("searchbox").fill("Remote update")
     click(staff, "עריכה")
+    # Editing opens asynchronously after the prior read-only view; wait until it is interactive.
+    expect(staff.locator("#poster")).to_have_js_property("inert", False)
     staff.locator("#poster-project").fill("Instructor update")
     expect(staff.get_by_text("נשמר", exact=True)).to_be_visible()
     third = open_page(new_context(browser))
