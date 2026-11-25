@@ -16,7 +16,7 @@ with sync_playwright() as playwright:
     page.on("pageerror", lambda error: errors.append(str(error)))
     page.goto(url)
     expect(page.locator(".poster-home-actions > button")).to_have_count(3)
-    expect(page.locator("#poster-access-home")).to_be_visible()
+    expect(page.locator("#poster-editor-home")).to_be_visible()
     assert page.get_by_role("button", name="טיוטה שמורה בדפדפן").count() == 0
     assert page.locator(".poster-home-actions > button").evaluate_all(
         "(buttons) => Math.max(...buttons.map(b=>b.offsetWidth))-Math.min(...buttons.map(b=>b.offsetWidth)) <= 1")

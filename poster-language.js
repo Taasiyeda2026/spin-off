@@ -108,3 +108,9 @@ export function classNameArabic(value='') {
     .replace(/(יב|יא|[אבגדהוזחטי])(?:[׳'״"])?(?=\s|\d|[-+]|$)/g,(_,grade)=>grades[grade]+' ')
     .replace(/\s*\+\s*/g,' و').replace(/\s*-\s*/g,'–').replace(/\s+/g,' ').trim();
 }
+
+// Translate interface text in place without recreating forms or dropping pending files.
+export function translateInterfaceText(text) {
+ const key=Object.keys(translations).find(key=>text===key||text===translations[key]);
+ return key?translate(key):text;
+}

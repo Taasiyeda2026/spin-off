@@ -28,7 +28,7 @@
 .poster-access [role=status] { margin-block-start: 12px; }
 .poster-cloud-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 @media print { .poster-access, .poster-cloud-toolbar { display: none !important; } }
-.poster-read-only button:not([onclick="producePdf()"]) { display: none !important; }
+.poster-read-only button:not(#poster-editor-language) { display: none !important; }
 .poster-access > a { display: inline-block; color: #a6eaff; margin-block-end: .65em; }
 .poster-access :is(#poster-access-content, article) > button { margin: 0 0 .45em .45em; }
 
@@ -325,3 +325,10 @@ body:has(.poster-access.is-home:not([hidden])) {
 #poster-visualization{text-decoration:none;margin-top:6px}
 
 .iw img{object-fit:contain}
+
+/* One shared header; editing actions only when a poster is open. */
+@media screen{
+ body.poster-access-mode #toolbar .tb-acts > button:not(#poster-editor-language){display:none!important}
+ body.poster-access-mode #toolbar .poster-cloud-toolbar{display:none!important}
+ body.poster-access-mode .poster-access{margin-top:calc(var(--editor-toolbar-height,72px) + 18px)}
+}
