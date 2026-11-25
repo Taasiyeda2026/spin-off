@@ -49,7 +49,7 @@ with sync_playwright() as playwright:
     page.emulate_media(media="print")
     assert page.evaluate("getComputedStyle(document.body,'::before').display") == "none"
     expect(page.locator("#approved-bg-image")).to_be_visible()
-    page.emulate_media(media=None)
+    page.emulate_media(media="null")  # restore native media selection for page.pdf()
     for attempt in range(20):
         if page.evaluate("""async () => {
           const draft = await posterDrafts.read(null);
