@@ -29,15 +29,20 @@ with sync_playwright() as playwright:
     expect(page.locator("#poster-editor-home")).to_be_visible()
     expected_labels = ['שם הפתרון שלנו?', 'תיאור הפתרון שלנו?', 'כיתה', 'שם בית הספר', 'איזו בעיה בחרנו לפתור?', 'מי נתקל בבעיה ומה הוא צריך?', 'מה הפתרון חייב לעשות? – דרישה ראשונה', 'מה הפתרון חייב לעשות? – דרישה שנייה', 'מה הפתרון חייב לעשות? – דרישה שלישית', 'מה למדנו מטכנולוגיות החלל?', 'איך טכנולוגיות החלל תרמו לפתרון?', 'איזה רעיון לפתרון הצענו? – רעיון ראשון', 'איזה רעיון לפתרון הצענו? – רעיון שני', 'איזה רעיון לפתרון הצענו? – רעיון שלישי', 'איזה רעיון בחרנו ולמה?', 'מה כולל הפתרון שלנו?', 'איך הפתרון אמור לעבוד? – שלב ראשון', 'איך הפתרון אמור לעבוד? – שלב שני', 'איך הפתרון אמור לעבוד? – שלב שלישי', 'מה בדקנו בתכנון הפתרון שלנו?', 'איזה משוב קיבלנו על הפתרון?', 'מה שיפרנו בעקבות המשוב?', 'איך נציג את הפתרון שלנו במשפט אחד?']
     expected_arabic = ['اسم حلّنا؟', 'وصف حلّنا؟', 'الصف', 'اسم المدرسة', 'أي مشكلة اخترنا حلّها؟', 'من يواجه المشكلة وماذا يحتاج؟', 'ماذا يجب أن يفعل الحل؟ – المتطلب الأول', 'ماذا يجب أن يفعل الحل؟ – المتطلب الثاني', 'ماذا يجب أن يفعل الحل؟ – المتطلب الثالث', 'ماذا تعلمنا من تكنولوجيا الفضاء؟', 'كيف ساهمت تكنولوجيا الفضاء في الحل؟', 'أي فكرة للحل اقترحنا؟ – الفكرة الأولى', 'أي فكرة للحل اقترحنا؟ – الفكرة الثانية', 'أي فكرة للحل اقترحنا؟ – الفكرة الثالثة', 'أي فكرة اخترنا ولماذا؟', 'ماذا يتضمّن حلّنا؟', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الأولى', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الثانية', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الثالثة', 'ماذا فحصنا في تصميم حلّنا؟', 'ما الملاحظات التي تلقّيناها حول الحل؟', 'ماذا حسّنّا بناءً على الملاحظات؟', 'كيف نعرض حلّنا في جملة واحدة؟']
-    expected_limits = [40,135,None,None,120,110,40,40,40,70,90,50,50,50,125,140,55,55,55,120,120,120,140]
+    expected_labels.insert(1, 'סוג הפתרון שלנו')
+    expected_arabic.insert(1, 'نوع حلّنا')
+    expected_limits = [40,None,135,None,None,120,110,40,40,40,70,90,50,50,50,125,140,55,55,55,120,120,120,140]
     page.locator('[data-tab="content"]').click()
     for language, labels in [('he', expected_labels), ('ar', expected_arabic)]:
         if language == 'ar':
             page.locator('#poster-editor-language').click()
         expect(page.locator('#fill-list .edit-card > label').first).to_have_text('1. ' + labels[0])
-        assert page.locator('#fill-list .edit-card > label').all_text_contents()[:23] == [f'{i}. {text}' for i, text in enumerate(labels, 1)]
+        prefixes = ['1. ', '2א. ' if language=='he' else '2أ. ', '2ב. ' if language=='he' else '2ب. '] + [f'{i}. ' for i in range(3,24)]
+        assert page.locator('#fill-list .edit-card > label').all_text_contents()[:24] == [prefix+text for prefix,text in zip(prefixes,labels)]
         assert page.locator('#fill-list .edit-card > label').evaluate_all('(labels) => labels.every(el => el.scrollWidth <= el.clientWidth && el.scrollHeight <= el.clientHeight)')
         for index, field in enumerate(page.evaluate('FILL_FIELDS.map(f => f.id)')):
+            if field=='solution-type':
+                continue
             source = page.locator('#' + field)
             panel = page.locator('#panel-' + field)
             expected_max = str(expected_limits[index]) if expected_limits[index] else None

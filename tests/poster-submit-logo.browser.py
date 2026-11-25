@@ -141,5 +141,51 @@ with sync_playwright() as pw:
     reopened.locator('#poster-editor-language').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
+    # Solution type is independent from the 135-character description and survives language/save/reopen.
+    expect(reopened.locator('#panel-solution-type')).to_have_value('')
+    description='ת' * 135
+    reopened.locator('#panel-short-desc').fill(description)
+    for kind in ['physical','smart','app','web','digital']:
+        reopened.locator('#panel-solution-type').select_option(kind)
+        expected_ratio=9/16 if kind=='app' else 16/9 if kind in ['web','digital'] else 1
+        for selector in ['#main-image-box','#img-pair .image-box']:
+            for box in reopened.locator(selector).all():
+                bounds=box.bounding_box();assert abs(bounds['width']/bounds['height']-expected_ratio)<0.02
+        expect(reopened.locator('#short-desc')).to_have_value(description)
+        expect(reopened.locator('#panel-counter-short-desc')).to_have_text('135/135')
+    assert reopened.locator('#panel-solution-type option[value=other]').count()==0
+    reopened.locator('#poster-editor-language').click()
+    reopened.locator('#panel-solution-type').select_option('digital')
+    expect(reopened.locator('#poster-solution-type')).to_have_text('(מערכת דיגיטלית)')
+    reopened.locator('#poster-submit').click();expect(reopened.locator('#poster-submit-status')).to_contain_text('בהצלחה')
+    assert posters[ids[2]]['state']['values']['solution-type']=='digital'
+    assert posters[ids[2]]['state']['values']['short-desc']==description
+    again=resume(context(browser),'222224');again.locator('[data-tab=content]').click()
+    expect(again.locator('#panel-solution-type')).to_have_value('digital')
+    expect(again.locator('#short-desc')).to_have_value(description)
+    again.locator('#poster-editor-language').click()
+    expect(again.locator('#poster-solution-type')).to_have_text('(نظام رقمي)')
+    before=again.locator('#solution-description-heading').text_content()
+    again.emulate_media(media='print')
+    expect(again.locator('#solution-description-heading')).to_have_text(before)
+    expect(again.locator('#solution-description-heading')).to_be_visible()
+    again.emulate_media(media='null')
+    with again.expect_popup() as popup:
+        again.locator('#poster-visualization').click()
+    visual=popup.value
+    visual.wait_for_load_state()
+    assert visual.evaluate('state.kind')=='digital'
+    assert visual.evaluate('state.lang')=='ar'
+    assert visual.evaluate('state.values.purpose')==description
+    for kind in ['physical','smart','app','web','digital']:
+        visual.evaluate('(kind)=>{state.kind=kind;state.values.appearance="A described solution";generate()}',kind)
+        prompt=visual.evaluate('state.outputs[0].body')
+        assert 'IMAGE 1' in prompt and 'IMAGE 2' in prompt and 'IMAGE 3' in prompt
+        if kind=='digital':assert 'Digital system' in prompt and 'MAIN INTERFACE' in prompt
+        expected_aspect='9:16' if kind=='app' else '16:9' if kind in ['web','digital'] else '1:1'
+        assert expected_aspect+' aspect ratio each' in prompt
+    # Import is one-time and the token carries no student answers in the URL.
+    assert description not in visual.url
+    assert visual.evaluate('localStorage.getItem("spacetech.poster.visualization."+new URLSearchParams(location.search).get("posterBrief"))') is None
     assert not errors,errors
     print('PASS: responsive header, final actions, language/state, save/submit/retry/idempotency, manager logo, school isolation, existing posters, removal and A4 PDF')

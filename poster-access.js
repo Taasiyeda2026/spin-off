@@ -1,5 +1,5 @@
-import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic } from './poster-language.js?v=20261125-editable-school-class';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-editable-school-class';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic } from './poster-language.js?v=20261125-solution-type';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-solution-type';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
