@@ -6,8 +6,8 @@ create table if not exists public.schools(id bigint primary key,school_name text
 alter table public.activities add column if not exists school_id bigint references public.schools(id);
 insert into public.schools values (1,'Fixture A'),(2,'Fixture B');
 update public.activities set school_id=case when row_id in ('space','team-a','outside-team') then 1 else 2 end;
-\ir ../supabase/migrations/20261125165221_spacetech_submission_school_logos.sql
-\ir ../supabase/migrations/20261125172620_restrict_school_logo_rpc_to_staff.sql
+\ir ../supabase/migrations/20261125172304_spacetech_submission_school_logos.sql
+\ir ../supabase/migrations/20261125172643_restrict_school_logo_rpc_to_staff.sql
 reset role;
 insert into storage.objects(bucket_id,name) values('spacetech-posters','schools/1/'||repeat('a',64)),('spacetech-posters','schools/2/'||repeat('b',64));
 select id::text as poster_a from poster_private.posters where activity_id='team-a' \gset
