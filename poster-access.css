@@ -311,3 +311,5 @@ body:has(.poster-access.is-home:not([hidden])) {
 .poster-school-logos{border:1px solid #cdd7e7;border-radius:12px;padding:16px;margin:16px 0}
 .poster-school-logos img{display:block;width:120px;height:90px;object-fit:contain;margin:12px 0}.poster-school-logos img[hidden]{display:none}
 @media print{.poster-final-actions{display:none!important}#school-logo-box{background:transparent!important}}
+
+#sp #fill-list .edit-card > textarea{overflow-y:hidden;resize:none}

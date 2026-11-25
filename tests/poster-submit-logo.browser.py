@@ -20,7 +20,7 @@ def handle(route):
     if not req.url.startswith(origin+'/'):
         route.abort();return
     if path=='/rest/v1/rpc/lookup_login_user_by_username':
-        route.fulfill(json=[{'auth_email':'manager@example.invalid','role':'activities_manager'}]);return
+        route.fulfill(json=[{'auth_email':'manager@example.invalid','auth_user_id':'fixture','role':'activities_manager'}]);return
     if path=='/auth/v1/token':
         route.fulfill(json={'access_token':'fixture-manager','user':{'id':'fixture'}});return
     if path=='/functions/v1/poster-media':
