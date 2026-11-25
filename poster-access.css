@@ -263,3 +263,26 @@ body:has(.poster-access.is-home:not([hidden])) {
 
 /* Keep language switching separate from the absolute home icon on every access screen. */
 .poster-access > a[lang], .poster-access.is-home > a[lang], .poster-access:has(#poster-access-content > form) > a[lang] { display:block; width:fit-content; margin:0 auto 12px; position:relative; }
+
+/* Uniform, RTL research fields, scoped to editor only. */
+@media screen {
+  #sp, #tab-content { direction:rtl; text-align:right; }
+  #sp .spb { min-height:0; overflow-x:hidden; }
+  #sp #fill-list { display:flex; flex-direction:column; gap:12px; width:100%; min-width:0; }
+  #sp #fill-list .edit-card { display:flex; flex-direction:column; align-items:stretch; min-width:0; width:100%; gap:5px; padding:0 0 11px; border-bottom:1px solid #dbe4f0; }
+  #sp #fill-list .edit-card > label { display:block; width:100%; margin:0; font-size:13px; line-height:1.5; font-weight:700; color:#172b4a; text-align:right; overflow-wrap:anywhere; }
+  #sp #fill-list .edit-card > :is(input,textarea) { display:block; width:100%; min-width:0; max-width:100%; margin:0; border:1px solid #b4c4d9; border-radius:7px; padding:8px 9px; font:400 13px/1.5 Heebo,Arial,sans-serif; direction:rtl; text-align:right; background:#fff; color:#142641; }
+  #sp #fill-list .edit-card > input { height:36px; }
+  #sp #fill-list .edit-card > textarea { height:76px; min-height:76px; resize:vertical; }
+  #sp #fill-list .edit-card > :is(input,textarea):focus { border-color:#008fba; outline:2px solid #00a9c52b; }
+  #sp #fill-list .edit-card > input[readonly] { background:#e8edf5; color:#50647e; }
+  #sp #fill-list .panel-counter { display:block; align-self:flex-end; font-size:11px; line-height:1.2; color:#66778e; font-variant-numeric:tabular-nums; text-align:left; }
+  #sp #fill-list .panel-counter.full { color:#a62e39; }
+  #sp #fill-list .panel-counter.good { color:#08794c; }
+  #sp .poster-image-question .pb { min-height:36px; font-size:12px; }
+  .sp-heading-actions { display:flex; align-items:center; gap:8px; }
+  .poster-language-toggle { background:#123b55; border:1px solid #3988a0; border-radius:6px; color:#a5f7ff; cursor:pointer; padding:5px 9px; font-size:12px; font-weight:700; white-space:nowrap; }
+  #sp .poster-language-toggle:focus-visible, #toolbar .poster-language-toggle:focus-visible { outline:2px solid #8cf5ff; }
+  #toolbar .tb-acts { flex-wrap:wrap; min-width:0; }
+}
+@media print { .poster-language-toggle { display:none!important; } }

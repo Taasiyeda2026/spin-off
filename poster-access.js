@@ -59,6 +59,10 @@ function syncLanguageControls() {
   language.textContent = arabic ? 'עברית' : 'العربية';
   language.lang = arabic ? 'he' : 'ar';
   language.href = languageDestination().href;
+  for(const toggle of document.querySelectorAll('#poster-editor-language,#poster-panel-language')){
+    toggle.textContent=language.textContent;toggle.lang=language.lang;
+    toggle.setAttribute('aria-label',arabic?'מעבר לעברית':'التبديل إلى العربية');
+  }
   accessRoot.lang = toolbar.lang = arabic ? 'ar' : 'he';
   const homeLabel = arabic ? 'العودة إلى الصفحة الرئيسية' : 'חזרה לדף הבית';
   for (const link of [document.getElementById('poster-access-home'), editorHome]) {
@@ -67,6 +71,17 @@ function syncLanguageControls() {
   }
 }
 syncLanguageControls();
+function switchEditorLanguage() {
+  const destination=languageDestination();
+  history.replaceState(history.state,'',destination.href);
+  setArabic(!arabic);
+  syncLanguageControls();
+  for(const control of toolbar.querySelectorAll('[data-translation-key]'))control.textContent=t(control.dataset.translationKey);
+  for(const control of toolbar.querySelectorAll('[data-poster-code]'))control.textContent=t('קוד הפוסטר')+': '+control.dataset.posterCode;
+  for(const control of toolbar.querySelectorAll('[data-status-key]'))control.textContent=t(control.dataset.statusKey);
+  window.dispatchEvent(new Event('poster:language-changed'));
+}
+for(const toggle of document.querySelectorAll('#poster-editor-language,#poster-panel-language'))toggle.addEventListener('click',switchEditorLanguage);
 language.addEventListener('click', (event) => {
   if (!staff || !managementLanguageRefresh || accessRoot.hidden) return;
   // Keep the authenticated bearer exclusively in memory. Do not reload or persist credentials.
@@ -89,6 +104,7 @@ function element(tag, text, parent = root) {
 function button(text, action, parent = root, primary = false) {
   const control = element('button', t(text), parent);
   control.type = 'button';
+  control.dataset.translationKey = text;
   if (primary) control.dataset.primary = '';
   control.addEventListener('click', action);
   return control;
@@ -322,8 +338,9 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
     }
   }
   toolbar.replaceChildren();
-  element('strong', t('קוד הפוסטר') + ': ' + poster.code, toolbar);
+  element('strong', t('קוד הפוסטר') + ': ' + poster.code, toolbar).dataset.posterCode=poster.code;
   const indicator = element('span', '', toolbar);
+  function setIndicator(key){indicator.dataset.statusKey=key;indicator.textContent=t(key)}
   indicator.setAttribute('role', 'status');
   const retry = button('ניסיון שמירה מחדש', () => editor.save(), toolbar);
   retry.hidden = true;
@@ -338,7 +355,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       const current = await posterRequest('load', { id: poster.id }, access);
       await openPoster(current, access, back, readOnly, true);
     } catch (error) {
-      indicator.textContent = t(messages[error.message] ?? messages.network);
+      setIndicator(messages[error.message] ?? messages.network);
     }
   }, toolbar);
   reconcile.hidden = true;
@@ -380,7 +397,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
     // Keep the offline snapshot current while an older request is still in flight.
     const backup = writeLocal(local).then(() => true, () => false);
     const operation = saveQueue.then(async () => {
-      indicator.textContent = t('שומר...');
+      setIndicator('שומר...');
       retry.hidden = true;
       const backedUp = await backup;
       if (sequence === latest && local.revision !== revision) {
@@ -394,13 +411,13 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
         revision = saved.revision;
         if (sequence === latest) {
           await writeLocal({ revision, draft: snapshot, pending: false }).catch(() => {});
-          indicator.textContent = t('נשמר');
+          setIndicator('נשמר');
         }
       } catch (error) {
         conflicted = error.message === 'conflict';
         reconcile.hidden = !conflicted;
         retry.hidden = conflicted;
-        indicator.textContent = t(conflicted
+        setIndicator(conflicted
           ? (backedUp ? 'יש גרסה חדשה בענן. הטיוטה נשמרה בדפדפן.' : 'יש גרסה חדשה בענן. הטיוטה המקומית לא נשמרה.')
           : (messages[error.message] && ['denied', 'image'].includes(error.message)
             ? messages[error.message]
