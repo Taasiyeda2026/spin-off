@@ -260,3 +260,6 @@ body:has(.poster-access.is-home:not([hidden])) {
 .poster-access .poster-activity-id bdi { font-family:ui-monospace,Consolas,monospace; overflow-wrap:anywhere; user-select:all; }
 .poster-access .poster-activity-id button { padding:2px 7px; font-size:inherit; line-height:1.45; color:#d4e3f6; background:transparent; border:1px solid #45617e; border-radius:5px; }
 .poster-access .poster-activity-id button:hover { background:#254668; }
+
+/* Keep language switching separate from the absolute home icon on every access screen. */
+.poster-access > a[lang], .poster-access.is-home > a[lang], .poster-access:has(#poster-access-content > form) > a[lang] { display:block; width:fit-content; margin:0 auto 12px; position:relative; }
