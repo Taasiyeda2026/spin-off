@@ -66,6 +66,24 @@ header::after{content:"";position:absolute;inset:5px;border-radius:9px;pointer-e
 .panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,transparent,#52c7d93b,transparent) top/100% 1px no-repeat}
 .progress .active{box-shadow:0 0 18px #42d3de22}
 @media(max-width:560px){body::before{background-position:60% center}}
+
+/* Cyan / turquoise neon emphasis */
+:root{--accent:#62f2f4;--glow:rgba(50,229,240,.24)}
+body::after{opacity:1;background:radial-gradient(ellipse at 0% 30%,rgba(0,210,233,.22),transparent 36%),radial-gradient(ellipse at 100% 70%,rgba(0,238,214,.18),transparent 33%),radial-gradient(ellipse at 50% 0%,rgba(28,175,224,.11),transparent 46%)}
+header{border-color:#408b9a;box-shadow:0 0 22px #21d9e426,0 12px 32px #0008}
+header::after{opacity:.95;filter:drop-shadow(0 0 4px #58e9f3)}
+header h1{color:#d9ffff;text-shadow:0 0 14px #47dfe34d}
+.panel{border-color:#326878;box-shadow:0 0 24px #29d9df12,0 14px 36px #0007}
+.panel::before{background:linear-gradient(90deg,transparent,#53e6ec9e,transparent) top/100% 1px no-repeat}
+.progress .active{border-color:#65e9ef;box-shadow:0 0 15px #35dbe635,inset 0 0 14px #35dbe612;color:#caffff}
+.chip:has(input:checked){background:#10404d;border-color:#6af6f4;color:#e1ffff;box-shadow:0 0 11px #26e8e63d,inset 0 0 9px #26e8e619}
+.chip:hover{border-color:#48cbd9;box-shadow:0 0 9px #38d7e21f}
+.btn.primary{background:linear-gradient(110deg,#83faff,#31d6d9 62%,#27b9d9);border-color:#a0ffff;color:#041921;box-shadow:0 0 17px #30e4e45c,0 0 34px #30e4e41c}
+.btn.primary:hover{background:#a0ffff;box-shadow:0 0 22px #30e4e478}
+.domain-selected{border-color:#388a97;box-shadow:0 0 10px #29dce51a}.domain-selected strong{color:#74f4ef;text-shadow:0 0 8px #39e4e444}
+.finishHero{border-color:#43a2af;box-shadow:0 0 20px #31e3e62b}
+.finish .launchers .provider:hover{border-color:#66f4f0;box-shadow:0 0 18px #39e5ea46}
+.provider-action,.other summary{color:#85e6ed}
 </style></head><body><main><header><div class="top"><a href="index.html" id="home">⌂</a><button class="btn" id="lang">العربية</button><button class="btn" id="reset"></button></div><h1 id="title"></h1><p id="intro"></p></header><div class="progress" id="progress"></div><div id="panel" class="panel"></div><div class="nav bottom"><button class="btn" id="back"></button><span class="muted" id="status" role="status"></span><button class="btn primary" id="next"></button></div></main>
 <script>
 'use strict';
