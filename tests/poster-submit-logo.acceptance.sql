@@ -56,3 +56,13 @@ select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as r
 select public.poster_assert(:'reloaded_edit'::jsonb#>>'{state,values,poster-school}'='مدرسة معدّلة' and :'reloaded_edit'::jsonb#>>'{state,values,poster-class}'='الصف الخامس ب','edited school and class persist across reopening');
 select public.poster_assert(:'reloaded_edit'::jsonb->>'schoolDefault' is not null and :'reloaded_edit'::jsonb->>'classDefault' is not null,'automatic defaults available separately from edited display labels');
 reset role;
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000201',false);
+select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as before_type \gset
+select public.spacetech_poster('save',jsonb_build_object('id',:'poster_a',
+ 'revision',(:'before_type'::jsonb->>'revision')::bigint,
+ 'state',jsonb_set(:'before_type'::jsonb->'state','{values}',
+ (:'before_type'::jsonb#>'{state,values}')||jsonb_build_object('solution-type','smart','short-desc',repeat('x',135))))) as saved_type \gset
+select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as type_reloaded \gset
+select public.poster_assert(:'type_reloaded'::jsonb#>>'{state,values,solution-type}'='smart' and length(:'type_reloaded'::jsonb#>>'{state,values,short-desc}')=135,'type and 135-character description persist independently');
+reset role;
