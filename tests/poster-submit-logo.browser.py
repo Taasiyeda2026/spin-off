@@ -1,5 +1,6 @@
 """Acceptance with isolated network fixtures; never changes live posters or schools."""
-import base64, copy, hashlib, json, os, re
+import base64, copy, hashlib, io, json, os, re
+from PIL import Image
 import fitz
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -79,6 +80,29 @@ with sync_playwright() as pw:
     entry.get_by_role('button',name='חזרה',exact=True).click()
     expect(entry.get_by_role('button',name='יצירת פוסטר חדש',exact=True)).to_be_visible()
     student=resume(context(browser),'222222');student.locator('[data-tab=content]').click()
+    # Reproduce Chrome's autofill highlight without relying on a saved browser profile.
+    title=student.locator('#poster-project');original_title=title.input_value()
+    cdp=student.context.new_cdp_session(student);cdp.send('DOM.enable');cdp.send('CSS.enable')
+    document_id=cdp.send('DOM.getDocument')['root']['nodeId']
+    title_node=cdp.send('DOM.querySelector',{'nodeId':document_id,'selector':'#poster-project'})['nodeId']
+    cdp.send('CSS.forcePseudoState',{'nodeId':title_node,'forcedPseudoClasses':['autofill']})
+    assert title.evaluate('(el)=>el.matches(":autofill")')
+    highlight=student.add_style_tag(content='#poster-project:autofill{background-color:rgb(232,240,254)!important;color:black!important}')
+    for language in ['he','ar']:
+        if language=='ar':student.locator('#poster-editor-language').click()
+        assert title.evaluate('(el)=>getComputedStyle(el).webkitTextFillColor')=='rgb(238, 251, 255)'
+        assert title.evaluate('(el)=>getComputedStyle(el).backgroundClip')=='text'
+        expect(title).to_have_value(original_title)
+        for medium in ['screen','print']:
+            student.emulate_media(media=medium)
+            with Image.open(io.BytesIO(title.screenshot())) as picture:
+                rgb=picture.convert('RGB');blue=sum(pixel==(232,240,254) for pixel in rgb.getdata())
+                assert blue<rgb.width*rgb.height*.02, (medium,blue,rgb.size)
+        student.emulate_media(media='null')
+    student.locator('#poster-editor-language').click()
+    highlight.evaluate('(el)=>el.remove()')
+    cdp.send('CSS.forcePseudoState',{'nodeId':title_node,'forcedPseudoClasses':[]});cdp.detach()
+    assert title.get_attribute('maxlength')=='40'
     assert student.locator('#toolbar [id$="language"]').count()==1
     assert student.locator('#poster-panel-language,#logo-file').count()==0
     assert student.locator('#toolbar').get_by_role('button',name=re.compile('PDF')).count()==0
