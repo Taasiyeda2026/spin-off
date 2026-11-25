@@ -43,3 +43,16 @@ reset role;
 select public.poster_assert(not has_table_privilege('authenticated','poster_private.school_logos','UPDATE'),'no direct logo table writes');
 select public.poster_assert(not has_table_privilege('anon','poster_private.submissions','SELECT'),'receipts are private');
 select 'PASS: school scope, roles, inherited logo, removal, submission binding, stale revision and idempotency';
+\ir ../supabase/migrations/20261125174151_editable_poster_school_class.sql
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000201',false);
+select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as before_edit \gset
+select public.spacetech_poster('save',jsonb_build_object('id',:'poster_a',
+ 'revision',(:'before_edit'::jsonb->>'revision')::bigint,
+ 'state',jsonb_set(:'before_edit'::jsonb->'state','{values}',
+ (:'before_edit'::jsonb#>'{state,values}')||'{"poster-school":"مدرسة معدّلة","poster-class":"الصف الخامس ب"}'::jsonb))) as after_edit \gset
+select public.poster_assert(:'after_edit'::jsonb->>'schoolId'=:'before_edit'::jsonb->>'schoolId','editable display labels do not change school ownership');
+select public.spacetech_poster('load',jsonb_build_object('id',:'poster_a')) as reloaded_edit \gset
+select public.poster_assert(:'reloaded_edit'::jsonb#>>'{state,values,poster-school}'='مدرسة معدّلة' and :'reloaded_edit'::jsonb#>>'{state,values,poster-class}'='الصف الخامس ب','edited school and class persist across reopening');
+select public.poster_assert(:'reloaded_edit'::jsonb->>'schoolDefault' is not null and :'reloaded_edit'::jsonb->>'classDefault' is not null,'automatic defaults available separately from edited display labels');
+reset role;

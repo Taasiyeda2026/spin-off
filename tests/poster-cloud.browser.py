@@ -127,7 +127,7 @@ with sync_playwright() as playwright:
     click(student, "יצירת פוסטר")
     expect(student.get_by_text("קוד הפוסטר: 222222")).to_be_visible()
     expect(student.locator("#poster-school")).to_have_value("Fixture School")
-    expect(student.locator("#poster-school")).to_have_js_property("readOnly", True)
+    expect(student.locator("#poster-school")).to_have_js_property("readOnly", False)
     expect(student.locator("#tab-students")).to_be_visible()
     expect(student.locator("#poster-students")).to_have_value("")
     student.locator("#pc-cnt").select_option("2")

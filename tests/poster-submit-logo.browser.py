@@ -119,5 +119,27 @@ with sync_playwright() as pw:
         manager.get_by_role('button',name='הסרת לוגו',exact=True).click()
     expect(manager.get_by_text('הלוגו עודכן בכל הפוסטרים של בית הספר.',exact=True)).to_be_visible()
     no_logo=resume(context(browser),'222223');expect(no_logo.locator('#school-logo-box')).to_be_hidden()
+    # Automatic defaults follow the interface language; manual edits survive both switching and reopening.
+    localized=posters[ids[2]]
+    localized.update(schoolId='2914',schoolDefault='מאי זיאדה -אלשיכון',classDefault='קבוצה 1')
+    localized['state']['values'].update({'poster-school':'מאי זיאדה -אלשיכון','poster-class':'קבוצה 1'})
+    logos['2914']=None
+    edited=resume(context(browser),'222224');edited.locator('[data-tab=content]').click()
+    expect(edited.locator('#panel-poster-school')).to_be_editable();expect(edited.locator('#panel-poster-class')).to_be_editable()
+    expect(edited.locator('#c-research .bq > span')).to_have_text('מה למדנו מטכנולוגיות החלל?')
+    edited.locator('#poster-editor-language').click()
+    expect(edited.locator('#panel-poster-school')).to_have_value('مي زيادة - حي شيكون العرب')
+    expect(edited.locator('#panel-poster-class')).to_have_value('المجموعة 1')
+    expect(edited.locator('#c-research .bq > span')).to_have_text('ماذا تعلمنا من تكنولوجيا الفضاء؟')
+    edited.locator('#panel-poster-school').fill('مدرسة معدّلة للاختبار')
+    edited.locator('#panel-poster-class').fill('الصف الخامس ب')
+    edited.locator('#poster-submit').click();expect(edited.locator('#poster-submit-status')).to_have_text('تم حفظ الملصق وإرساله بنجاح إلى نظام الإدارة.')
+    assert posters[ids[2]]['schoolId']=='2914'
+    reopened=resume(context(browser),'222224');reopened.locator('[data-tab=content]').click()
+    expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
+    expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
+    reopened.locator('#poster-editor-language').click()
+    expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
+    expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
     assert not errors,errors
     print('PASS: responsive header, final actions, language/state, save/submit/retry/idempotency, manager logo, school isolation, existing posters, removal and A4 PDF')
