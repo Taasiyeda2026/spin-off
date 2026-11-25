@@ -6,7 +6,6 @@ on:
       - 'poster-backgrounds/*.png'
       - 'poster-backgrounds/*.jpg'
       - 'poster-backgrounds/*.jpeg'
-      - '.github/workflows/poster-backgrounds.yml'
   workflow_dispatch:
 permissions:
   contents: write
