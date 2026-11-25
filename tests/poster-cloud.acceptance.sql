@@ -95,14 +95,47 @@ set role anon;
 select set_config('request.jwt.claim.sub', '', false);
 select public.poster_assert(public.spacetech_poster('load', :'access')->>'error' = 'denied', 'old session revoked');
 select public.poster_assert(public.spacetech_poster('resume', jsonb_build_object('code', :'created'::jsonb->>'code', 'session', :'session'))->>'error' = 'code', 'old code rejected');
--- Move the global budget close to exhaustion, avoiding the time boundary during the loop.
+-- Exercise a rush of successful classroom requests and a separate failure budget
+-- without affecting fixtures used by the hierarchy suite.
+begin;
+reset role;
+truncate poster_private.attempts;
+update public.activities set emp_id = 101 where row_id = 'space';
+select jsonb_build_object('code', :'original'::jsonb->>'code') as valid_teacher \gset
+set role anon;
+select set_config('test.valid_teacher', :'valid_teacher', true);
 do $$
 declare r jsonb;
 begin
-  for i in 1..31 loop r := public.spacetech_poster('resume', '{"code":"000000"}'); end loop;
+  for i in 1..90 loop
+    r := public.spacetech_poster('activities', current_setting('test.valid_teacher')::jsonb ||
+      jsonb_build_object('ticket', replace(gen_random_uuid()::text, '-', '') || replace(gen_random_uuid()::text, '-', '')));
+    if not (r ? 'activities') then raise exception 'Classroom request % rejected: %', i, r; end if;
+  end loop;
+  perform public.poster_assert(true, '90 valid classroom lookups share one instructor code');
+end
+$$;
+
+reset role;
+select min(format('%s', n)) as wrong_code
+  from generate_series(100000, 100040) n
+  where not exists (select 1 from poster_private.issued_codes c where c.code = n::text) \gset
+set role anon;
+select set_config('test.wrong_code', :'wrong_code', true);
+do $$
+declare r jsonb;
+begin
+  for i in 1..31 loop
+    r := public.spacetech_poster('resume', jsonb_build_object(
+      'code', current_setting('test.wrong_code'), 'session', repeat('b',64)));
+  end loop;
   perform public.poster_assert(r->>'error' = 'rate_limit', 'failed code attempts rate limited');
 end
 $$;
+select public.poster_assert(public.spacetech_poster('resume',
+  jsonb_build_object('code', :'rotated'::jsonb->>'code', 'session', repeat('d',64)))->>'error' = 'rate_limit',
+  'exhausted failure budget denies even a valid code before lookup');
+rollback;
 
 reset role;
 delete from public.activities where row_id = 'space';

@@ -12,9 +12,12 @@ The public entry stays at `/spin-off/poster.html`. The existing content, artwork
 - The private schema has RLS and no direct browser access. The public RPC checks every operation. Only an authorized instructor, activity manager or admin can delete or rotate a code, and archive, unarchive and restore are admin actions. Dashboard grants and policies on activities and users are untouched.
 - Images are stored by poster UUID and SHA-256 digest in the private `spacetech-posters` bucket. The Edge Function rechecks poster access via the RPC before using the server-only key. It validates content type, size and digest. Previous images are immutable. The RPC checks that every saved image belongs to that poster, and reads through the Edge Function are restricted to images in the current revision. IndexedDB keeps local image data for retry. Supabase JSON stores only references.
 - Writes require the revision read by the editor. Identical retried states are idempotent. A genuine revision conflict preserves a browser draft and offers viewing it without writing over the cloud version. The save indicator confirms success after the RPC acknowledges it. Local drafts use the same browser database as the previous editor with separate keys per poster. The previous local draft remains available from the entry screen.
-- Code attempts are bounded by shared counters per action at 30 per minute and 500 per UTC day, including misses. These caps hold regardless of client headers and are deliberately shared, so traffic can exhaust capacity for all classes. Review them under representative burst traffic and decide whether to add a trusted gateway quota before production. Uploads also have per-poster quotas. Retired codes, expired tokens and stale image versions are retained by this migration. Agree on maintenance and school-year retention policy before adding any cleanup job.
+- Successful lookups have separate budgets per instructor (120/minute, 2,400/UTC day) or per group poster (20/minute, 200/UTC day). Valid classroom traffic does not consume a shared failure budget. Each action still has a server-wide budget of 30 failed guesses/minute and 500/UTC day. The database serializes the failure check and charges misses, and stops all lookups before checking any code if that budget is exhausted. This preserves the guessing bound across clients and still means sustained attacks can temporarily block legitimate lookups. Uploads retain per-poster budgets. Retired codes, expired tokens and stale image versions are retained. Agree on school-year retention before adding cleanup.
+
 
 ## Read-only facts to verify on the existing project
+
+Run [supabase-production-readonly.sql](supabase-production-readonly.sql) via the authorized production reader and share its single report cell. The queries return schema metadata and aggregate counts. Separately confirm the Auth password/MFA policy and whether Dashboard activity IDs can be reused.
 
 The supplied read confirms the project `szinlhjuwyiyszdpsdop`, the `activities` fields and 47 matches for 57651, plus the `users` identity fields. Before deploying, obtain these additional read-only results through the authorized connection. Aggregate counts and metadata are sufficient.
 
@@ -27,6 +30,8 @@ The supplied read confirms the project `szinlhjuwyiyszdpsdop`, the `activities` 
 7. Confirm the organization policy for archive/restore and how long pupil names and images may be retained, the expected number of simultaneous groups and the target end-of-year handling of instructor codes.
 
 ## Verification
+
+See the [25-scenario acceptance record](cloud-posters-acceptance.md) for local results and the remaining hosted checks.
 
 ### Local
 
@@ -47,7 +52,17 @@ Use a fresh disposable PostgreSQL database with `pgcrypto` available and run the
 3. `tests/poster-cloud.acceptance.sql`
 4. `tests/poster-manager.acceptance.sql`
 
-### Separate Supabase project required
+### Local Supabase integration
+
+Start a fresh disposable Supabase CLI project, with its bundled gateway, Auth, Storage, PostgREST and Edge Runtime. Apply `tests/poster-supabase-fixture.sql` and then the feature migration. Copy the `poster-media` function into that project's `supabase/functions`, serve it with gateway JWT verification disabled and set `POSTER_ALLOWED_ORIGINS=http://127.0.0.1:8123`. Serve this checkout on port 8123. Run:
+
+```sh
+POSTER_SUPABASE_PUBLIC_KEY=... POSTER_SUPABASE_SERVICE_KEY=... python3 tests/poster-supabase.browser.py
+```
+
+Use only the throwaway keys from the local CLI stack. The script creates synthetic users with the real Auth admin API. It requires an empty fixture and refuses non-loopback hosts. The service key stays entirely in the Python fixture process.
+
+### Hosted Supabase Staging
 
 Use the actual Supabase gateway, Auth, PostgREST, Storage and Edge runtime in staging, with synthetic primary, secondary, unassigned, disabled and admin users and synthetic activities. Include two activity managers with disjoint teams and activities, plus one activity that matches only the owner and one that matches only the roster. Seed the existing username lookup contract and activity assignments. Run the 25 approved acceptance scenarios across two fresh browser profiles. In particular:
 

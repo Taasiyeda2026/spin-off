@@ -79,6 +79,30 @@ begin
 end
 $$;
 
+-- Serialize the check and any charge. A saturated failure bucket denies all
+-- guesses before lookup, so it cannot become an oracle for valid codes.
+create function poster_private.code_failure_budget(p_action text)
+returns boolean language plpgsql set search_path = pg_catalog as $$
+begin
+  perform pg_advisory_xact_lock(hashtextextended(p_action, 754492));
+  return not exists (
+    select 1 from poster_private.attempts a
+    where a.action = p_action || ':failure'
+      and a.bucket = floor(extract(epoch from clock_timestamp()) / a.window_seconds)
+      and ((a.window_seconds = 60 and a.used >= 30) or
+           (a.window_seconds = 86400 and a.used >= 500))
+  );
+end
+$$;
+
+create function poster_private.charge_code_failure(p_action text)
+returns void language plpgsql set search_path = pg_catalog as $$
+begin
+  perform poster_private.admit(p_action || ':failure', 60, 30);
+  perform poster_private.admit(p_action || ':failure', 86400, 500);
+end
+$$;
+
 create function poster_private.activity_member(p_activity public.activities, p_employee text)
 returns boolean language sql immutable set search_path = pg_catalog as $$
   select coalesce(nullif(btrim(p_employee), '') is not null and
@@ -170,18 +194,26 @@ begin
   admin := staff and actor.role::text = 'admin';
 
   if p_action = 'activities' then
-    -- Global budgets apply before lookup, including misses, independent of client headers.
-    if not poster_private.admit(p_action, 60, 30) or not poster_private.admit(p_action, 86400, 500) then
+    if ticket is null or coalesce(p->>'code', '') !~ '^[0-9]{4}$' then
+      return jsonb_build_object('error', 'invalid');
+    end if;
+    if not poster_private.code_failure_budget(p_action) then
       return jsonb_build_object('error', 'rate_limit');
     end if;
-    if ticket is null then return jsonb_build_object('error', 'invalid'); end if;
     select u.* into instructor
       from poster_private.instructor_codes c join public.users u on u.user_id::text = c.user_id
       where c.code = p->>'code' and u.is_active is true and u.role::text = 'instructor';
     select coalesce(jsonb_agg(poster_private.activity_info(a) order by a.school, a.grade, a.class_group, a.row_id), '[]')
       into result from public.activities a
       where a.gefen_number = '57651' and poster_private.activity_member(a, instructor.emp_id::text);
-    if result = '[]'::jsonb then return jsonb_build_object('error', 'code'); end if;
+    if result = '[]'::jsonb then
+      perform poster_private.charge_code_failure(p_action);
+      return jsonb_build_object('error', 'code');
+    end if;
+    if not poster_private.admit(p_action || ':' || instructor.user_id::text, 60, 120)
+      or not poster_private.admit(p_action || ':' || instructor.user_id::text, 86400, 2400) then
+      return jsonb_build_object('error', 'rate_limit');
+    end if;
     insert into poster_private.tickets values (ticket, instructor.user_id::text, now() + interval '20 minutes')
       on conflict do nothing;
     return jsonb_build_object('activities', result);
@@ -237,13 +269,23 @@ begin
   end if;
 
   if p_action = 'resume' then
-    if not poster_private.admit(p_action, 60, 30) or not poster_private.admit(p_action, 86400, 500) then
+    if session_hash is null or coalesce(p->>'code', '') !~ '^[1-9][0-9]{5}$' then
+      return jsonb_build_object('error', 'invalid');
+    end if;
+    if not poster_private.code_failure_budget(p_action) then
       return jsonb_build_object('error', 'rate_limit');
     end if;
     select x.* into poster from poster_private.posters x
       where x.code = p->>'code' and x.deleted_at is null and x.archived_at is null
         and exists (select 1 from public.activities a where a.row_id = x.activity_id and a.gefen_number = '57651');
-    if not found or session_hash is null then return jsonb_build_object('error', 'code'); end if;
+    if not found then
+      perform poster_private.charge_code_failure(p_action);
+      return jsonb_build_object('error', 'code');
+    end if;
+    if not poster_private.admit(p_action || ':' || poster.id::text, 60, 20)
+      or not poster_private.admit(p_action || ':' || poster.id::text, 86400, 200) then
+      return jsonb_build_object('error', 'rate_limit');
+    end if;
     insert into poster_private.sessions values (session_hash, poster.id, now() + interval '8 hours')
       on conflict do nothing;
     return poster_private.poster_info(poster) || jsonb_build_object('state', poster.state);
@@ -385,4 +427,5 @@ $$;
 
 revoke all on function public.spacetech_poster(text, jsonb) from public;
 grant execute on function public.spacetech_poster(text, jsonb) to anon, authenticated;
+notify pgrst, 'reload schema';
 commit;
