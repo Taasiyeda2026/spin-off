@@ -466,7 +466,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
     const panel=document.getElementById('sp'),art=document.getElementById('poster');
     const languageControl=document.getElementById('poster-editor-language');
     const submit=document.getElementById('poster-submit'),message=document.getElementById('poster-submit-status');
-    panel.inert=art.inert=true;languageControl.disabled=true;submit.disabled=true;
+    panel.inert=art.inert=true;document.getElementById('toolbar').inert=true;languageControl.disabled=true;submit.disabled=true;
     message.textContent=t('שומר ושולח...');
     try {
       await editor.flush();await saveQueue;
@@ -477,7 +477,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       setIndicator('נשמר ונשלח');
     } catch(error) {
       message.textContent=t(error.message==='unsaved'?'לא ניתן לשלוח לפני השלמת השמירה. הנתונים נשמרו בטיוטה.':(messages[error.message]??'השליחה נכשלה. הנתונים נשמרו, נסו שוב.'));
-    } finally {submitting=false;panel.inert=art.inert=false;languageControl.disabled=false;submit.disabled=false;}
+    } finally {submitting=false;panel.inert=art.inert=false;document.getElementById('toolbar').inert=false;languageControl.disabled=false;submit.disabled=false;}
   };
   await editor.open({ id: poster.id, draft, save, readOnly: readOnly || poster.archived });
   await updateSchoolLogo();
