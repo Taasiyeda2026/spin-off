@@ -64,6 +64,20 @@ def resume(c,code):
     expect(p.locator('#poster-project')).to_have_value('Existing answer');return p
 with sync_playwright() as pw:
     browser=pw.chromium.launch(executable_path=os.getenv('CHROMIUM_PATH','/usr/bin/chromium'))
+    # The same header serves entry forms, management and the editor.
+    entry=context(browser).new_page();entry.goto(url)
+    expect(entry.locator('#poster-editor-language')).to_be_visible()
+    assert entry.locator('#poster-access a[lang],#poster-access-home').count()==0
+    assert entry.locator('#toolbar button[onclick]:visible').count()==0
+    expect(entry.locator('#poster-editor-home')).to_be_visible()
+    entry.get_by_role('button',name='המשך עבודה על פוסטר',exact=True).click()
+    entry.get_by_label('קוד הפוסטר',exact=True).fill('222222')
+    entry.locator('#poster-editor-language').click()
+    expect(entry.get_by_label('رمز الملصق',exact=True)).to_have_value('222222')
+    entry.locator('#poster-editor-language').click()
+    expect(entry.get_by_label('קוד הפוסטר',exact=True)).to_have_value('222222')
+    entry.get_by_role('button',name='חזרה',exact=True).click()
+    expect(entry.get_by_role('button',name='יצירת פוסטר חדש',exact=True)).to_be_visible()
     student=resume(context(browser),'222222');student.locator('[data-tab=content]').click()
     assert student.locator('#toolbar [id$="language"]').count()==1
     assert student.locator('#poster-panel-language,#logo-file').count()==0
@@ -102,7 +116,13 @@ with sync_playwright() as pw:
     manager.get_by_label('שם משתמש',exact=True).fill('manager');manager.get_by_label('סיסמה',exact=True).fill('fixture');manager.get_by_role('button',name='כניסה',exact=True).click()
     expect(manager.locator('.poster-school-logos')).to_be_visible()
     assert manager.get_by_text('הוגש',exact=False).count()>=1
+    assert manager.locator('#toolbar button[onclick]:visible').count()==0
     manager.get_by_label('העלאת לוגו',exact=True).set_input_files({'name':'logo.png','mimeType':'image/png','buffer':png})
+    expect(manager.get_by_role('button',name='שמירת לוגו',exact=True)).to_be_enabled()
+    manager.locator('#poster-editor-language').click()
+    expect(manager.get_by_role('button',name='حفظ الشعار',exact=True)).to_be_enabled()
+    assert manager.get_by_label('رفع شعار',exact=True).evaluate('(el)=>el.files.length')==1
+    manager.locator('#poster-editor-language').click()
     manager.get_by_role('button',name='שמירת לוגו',exact=True).click()
     expect(manager.get_by_text('הלוגו עודכן בכל הפוסטרים של בית הספר.',exact=True)).to_be_visible()
     assert logos['1']==hash_ and logos['2'] is None

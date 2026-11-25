@@ -188,12 +188,12 @@ body.panel-open #wrap{padding-right:344px}
 #poster.approved-background::before,#poster.approved-background::after,#poster.approved-background #space-overlay{display:none}
 @media print{#poster,#approved-bg-image{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style>
-<link rel="stylesheet" href="poster-access.css?v=20261125-answer-only">
+<link rel="stylesheet" href="poster-access.css?v=20261125-unified-controls">
 <style>@media screen{#toolbar .poster-cloud-toolbar,#toolbar .poster-cloud-toolbar>strong{color:#e6f6ff}#toolbar .poster-cloud-toolbar>strong{font-weight:700}#toolbar .poster-cloud-toolbar>span{color:#b5efff;font-weight:500}}</style>
 </head>
 <body class="panel-open">
 <main id="poster-access" class="poster-access">
-  <a href="index.html" id="poster-access-home" class="poster-home-icon" title="חזרה לדף הבית" aria-label="חזרה לדף הבית"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h5v-7h4v7h5V9"/></svg></a>
+
   <h1 id="poster-access-title" tabindex="-1">SpaceTech | פוסטר חקר</h1>
   <div id="poster-access-content"></div>
   <p id="poster-access-status" role="status"></p>
@@ -551,6 +551,7 @@ updateEditorToolbarHeight();
 const blankPoster = collectDraft();
 window.posterEditor = {
   async open({ id = null, draft, save, readOnly = false, defaults = null } = {}) {
+    document.body.classList.remove('poster-access-mode');
     identityDefaults=defaults;
     clearTimeout(autosaveTimer);
     draftDirty = false;
@@ -587,7 +588,9 @@ window.posterEditor = {
     if (flush) await saveDraft();
     restoringDraft = true;
     cloudEditor = null;
-    [G('toolbar'), G('sp'), G('wrap')].forEach(element => { element.hidden = true; });
+    [G('sp'), G('wrap')].forEach(element => { element.hidden = true; });
+    G('toolbar').hidden=false;document.body.classList.add('poster-access-mode');
+    G('toolbar').querySelector('.poster-cloud-toolbar').replaceChildren();
     G('poster-access').hidden = false;
   },
   save: saveDraft,
@@ -601,7 +604,7 @@ window.posterEditor = {
   hasUnsavedChanges: () => draftDirty,
 };
 </script>
-<script type="module" src="poster-access.js?v=20261125-answer-only"></script>
+<script type="module" src="poster-access.js?v=20261125-unified-controls"></script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>

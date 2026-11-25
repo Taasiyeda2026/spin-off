@@ -1,5 +1,5 @@
-import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic } from './poster-language.js?v=20261125-answer-only';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-answer-only';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261125-unified-controls';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-unified-controls';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -26,9 +26,11 @@ let staff = null;
 let waitForPosterSave = () => Promise.resolve();
 const editorHome = document.getElementById('poster-editor-home');
 let managementLanguageRefresh = null;
+let accessChoicesRefresh = null;
 let leavingForHome = false;
 editorHome.addEventListener('click', async (event) => {
   event.preventDefault();
+  if(!accessRoot.hidden){window.location.assign(editorHome.href);return;}
   if (leavingForHome) return;
   leavingForHome = true;
   editorHome.setAttribute('aria-busy', 'true');
@@ -46,9 +48,9 @@ editorHome.addEventListener('click', async (event) => {
   }
 });
 
-const language = document.createElement('a');
+const language = document.getElementById('poster-editor-language');
 const accessRoot = document.getElementById('poster-access');
-accessRoot.prepend(language);
+
 function languageDestination() {
   const url = new URL(location.href);
   if (arabic) url.searchParams.delete('lang');
@@ -58,14 +60,14 @@ function languageDestination() {
 function syncLanguageControls() {
   language.textContent = arabic ? 'עברית' : 'العربية';
   language.lang = arabic ? 'he' : 'ar';
-  language.href = languageDestination().href;
+
   for(const toggle of document.querySelectorAll('#poster-editor-language')){
     toggle.textContent=language.textContent;toggle.lang=language.lang;
     toggle.setAttribute('aria-label',arabic?'מעבר לעברית':'التبديل إلى العربية');
   }
   accessRoot.lang = toolbar.lang = arabic ? 'ar' : 'he';
   const homeLabel = arabic ? 'العودة إلى الصفحة الرئيسية' : 'חזרה לדף הבית';
-  for (const link of [document.getElementById('poster-access-home'), editorHome]) {
+  for (const link of [editorHome]) {
     link.title = homeLabel;
     link.setAttribute('aria-label', homeLabel);
   }
@@ -80,19 +82,21 @@ function switchEditorLanguage() {
   for(const control of toolbar.querySelectorAll('[data-poster-code]'))control.textContent=t('קוד הפוסטר')+': '+control.dataset.posterCode;
   for(const control of toolbar.querySelectorAll('[data-status-key]'))control.textContent=t(control.dataset.statusKey);
   window.dispatchEvent(new Event('poster:language-changed'));
+  if(!accessRoot.hidden){
+    const walker=document.createTreeWalker(accessRoot,NodeFilter.SHOW_TEXT);
+    while(walker.nextNode()){
+      const node=walker.currentNode;
+      if(node.parentElement.closest('article,summary,option,input,textarea'))continue;
+      node.nodeValue=translateInterfaceText(node.nodeValue);
+    }
+    for(const el of accessRoot.querySelectorAll('[aria-label],[alt],[title]'))for(const attr of ['aria-label','alt','title']){
+      if(el.hasAttribute(attr))el.setAttribute(attr,translateInterfaceText(el.getAttribute(attr)));
+    }
+    accessChoicesRefresh?.();managementLanguageRefresh?.();
+  }
 }
 for(const toggle of document.querySelectorAll('#poster-editor-language'))toggle.addEventListener('click',switchEditorLanguage);
-language.addEventListener('click', (event) => {
-  if (!staff || !managementLanguageRefresh || accessRoot.hidden) return;
-  // Keep the authenticated bearer exclusively in memory. Do not reload or persist credentials.
-  event.preventDefault();
-  const destination = languageDestination();
-  history.replaceState(history.state, '', destination.href);
-  setArabic(!arabic);
-  syncLanguageControls();
-  window.dispatchEvent(new Event('poster:language-changed'));
-  managementLanguageRefresh();
-});
+
 
 function element(tag, text, parent = root) {
   const node = document.createElement(tag);
@@ -111,7 +115,9 @@ function button(text, action, parent = root, primary = false) {
 }
 
 function screen(heading, back) {
-  managementLanguageRefresh = null;
+  managementLanguageRefresh = null;accessChoicesRefresh=null;
+  document.body.classList.add('poster-access-mode');
+  document.getElementById('toolbar').hidden=false;toolbar.replaceChildren();
   document.getElementById('poster-access').classList.remove('is-home');
   root.replaceChildren();
   status.textContent = '';
@@ -192,6 +198,7 @@ function createDetails(ticket, activities) {
   activity.required = true;
   if (activities.length > 1) element('option', t('בחרו פעילות'), activity).value = '';
   for (const item of activities) element('option', activityLabel(item), activity).value = item.id;
+  accessChoicesRefresh=()=>{for(const option of activity.options){const item=activities.find(item=>item.id===option.value);option.textContent=item?activityLabel(item):t('בחרו פעילות')}};
   const access = { session: newToken() };
   const requestId = crypto.randomUUID();
   let created;
@@ -319,10 +326,7 @@ function renderManagement(data, previous = null) {
   }
   search.addEventListener('input', () => render());
   render(previous?.expanded);
-  managementLanguageRefresh = () => renderManagement(data, {
-    query: search.value,
-    expanded: new Set(Array.from(results.querySelectorAll('details[open]'), row => row.dataset.activityId))
-  });
+  managementLanguageRefresh = () => render(new Set(Array.from(results.querySelectorAll('details[open]'), row => row.dataset.activityId)));
 }
 
 async function openPoster(poster, access, back, readOnly = false, useCloud = false) {
@@ -500,6 +504,7 @@ function renderSchoolLogos(schools) {
   const label=element('label',t('בחירת בית הספר'),section);
   const select=element('select','',label);
   for(const school of schools)element('option',arabic?schoolNameArabic(school.id,school.name):school.name,select).value=school.id;
+  accessChoicesRefresh=()=>{for(const option of select.options){const school=schools.find(s=>s.id===option.value);option.textContent=arabic?schoolNameArabic(school.id,school.name):school.name}};
   const preview=element('img','',section);preview.alt=t('תצוגה מקדימה של הלוגו');preview.hidden=true;
   const fileLabel=element('label',t('העלאת לוגו'),section);
   const input=element('input','',fileLabel);input.type='file';input.accept='image/png,image/jpeg,image/webp,image/gif,image/avif';
