@@ -332,3 +332,10 @@ body:has(.poster-access.is-home:not([hidden])) {
  body.poster-access-mode #toolbar .poster-cloud-toolbar{display:none!important}
  body.poster-access-mode .poster-access{margin-top:calc(var(--editor-toolbar-height,72px) + 18px)}
 }
+
+/* Closing answer only: centered, emphasized and legible on every approved background. */
+#c-slogan #slogan[hidden]{display:none!important}
+#c-slogan .bi{gap:0}
+#slogan-output{flex:1;min-height:0;min-width:0;display:flex;align-items:center;justify-content:center;width:100%;text-align:center;font-weight:800;font-size:15px;line-height:1.2;color:#fff;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#slogan-output > span{display:block;max-width:100%;min-width:0;padding:2px 6px;overflow-wrap:anywhere;white-space:pre-wrap;text-align:center;background:rgba(4,12,28,.9);border-radius:3px;box-shadow:0 0 5px 2px rgba(4,12,28,.9);text-shadow:0 1px 2px #000}
+#slogan-output > span:empty{display:none}

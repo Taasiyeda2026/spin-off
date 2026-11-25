@@ -202,6 +202,32 @@ with sync_playwright() as pw:
     expect(again.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
     expect(again.locator('#c-slogan .bq')).to_be_hidden()
     expect(again.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
+    # The closing answer has its own presentation; the form, frame and 140 limit stay intact.
+    closing_label=again.locator('label[for=panel-slogan]').text_content()
+    frame_before=again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')
+    question_style=again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')
+    for sentence in ['פתרון קטן שעושה שינוי גדול', 'حلّ صغير يصنع فرقًا كبيرًا', 'ת'*140, 'م'*140, 'W'*140, ('שורה\n'*28)[:140]]:
+        again.locator('#panel-slogan').fill(sentence)
+        expect(again.locator('#slogan')).to_have_value(sentence)
+        expect(again.locator('#slogan-output')).to_have_text(re.sub(r'\s+', ' ', sentence).strip())
+        metrics=again.locator('#slogan-output').evaluate('''(el)=>{const text=el.firstElementChild,a=el.getBoundingClientRect(),b=text.getBoundingClientRect(),style=getComputedStyle(el);return {fit:text.scrollHeight<=el.clientHeight&&text.scrollWidth<=el.clientWidth,dx:Math.abs((a.left+a.width/2)-(b.left+b.width/2)),dy:Math.abs((a.top+a.height/2)-(b.top+b.height/2)),bold:Number(style.fontWeight)>=700,color:style.color,size:parseFloat(style.fontSize)}}''')
+        assert metrics['fit'] and metrics['dx']<1 and metrics['dy']<1 and metrics['bold'],metrics
+        assert metrics['color']=='rgb(255, 255, 255)'
+    again.locator('#panel-slogan').fill('פתרון קטן שעושה שינוי גדול')
+    assert again.locator('#slogan-output').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')>again.locator('#problem').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')
+    assert again.locator('#panel-slogan').get_attribute('maxlength')=='140'
+    assert again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')==frame_before
+    assert again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')==question_style
+    assert again.locator('label[for=panel-slogan]').text_content()==closing_label
+    again.locator('[data-tab=design]').click()
+    for bg in ['bg1','bg2','bg3','bg4']:
+        again.locator('[data-background-id="'+bg+'"]').click()
+        assert again.locator('#slogan-output > span').evaluate('(el)=>getComputedStyle(el).backgroundColor')=='rgba(4, 12, 28, 0.9)'
+    assert again.evaluate('async()=>await backgroundReady')
+    again.locator('[data-tab=content]').click()
+    again.locator('#poster-editor-language').click()
+    expect(again.locator('#slogan-output')).to_have_text('פתרון קטן שעושה שינוי גדול')
+    again.locator('#poster-editor-language').click()
     before=again.locator('#solution-description-heading').text_content()
     again.emulate_media(media='print')
     expect(again.locator('#solution-description-heading')).to_have_text(before)
@@ -211,6 +237,9 @@ with sync_playwright() as pw:
     pdf=fitz.open(stream=again.pdf(prefer_css_page_size=True),filetype='pdf')
     assert len(pdf)==1
     assert 'كيف نعرض' not in pdf[0].get_text()
+    expect(again.locator('#slogan-output')).to_be_visible()
+    assert again.locator('#slogan-output').evaluate('(el)=>getComputedStyle(el).fontWeight')=='800'
+    assert again.locator('#slogan-output').evaluate('(el)=>el.firstElementChild.scrollHeight<=el.clientHeight')
     again.emulate_media(media='null')
     with again.expect_popup() as popup:
         again.locator('#poster-visualization').click()
