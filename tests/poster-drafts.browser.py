@@ -26,12 +26,16 @@ with sync_playwright() as playwright:
       setGlow('title', 'light');
     }""")
     png = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFtUAAAAASUVORK5CYII=")
-    for field in ("img-main-file", "bg-up"):
-        page.locator("#" + field).set_input_files({"name": "fixture.png", "mimeType": "image/png", "buffer": png})
+    assert page.locator("#bg-up").count() == 0
+    assert page.locator("#poster-background-gallery button").count() >= 4
+    page.locator("#img-main-file").set_input_files({"name": "fixture.png", "mimeType": "image/png", "buffer": png})
+    page.locator('[data-background-id="bg2"]').click()
+    expect(page.locator('[data-background-id="bg2"]')).to_have_attribute("aria-pressed", "true")
+    assert page.evaluate("async () => await backgroundReady")
     for attempt in range(20):
         if page.evaluate("""async () => {
           const draft = await posterDrafts.read(null);
-          return draft?.images.main.startsWith('data:') && draft.design.bgImage.includes('data:');
+          return draft?.images.main.startsWith('data:') && draft.design.bgId === 'bg2' && !('bgImage' in draft.design);
         }"""):
             break
         page.wait_for_timeout(100)
@@ -51,7 +55,9 @@ with sync_playwright() as playwright:
     expect(page.locator("#border-color")).to_have_value("#ff0000")
     expect(page.locator("#img-main")).to_have_attribute("src", re.compile("^data:image/png"))
     assert page.locator("#pcf input").evaluate_all("(inputs) => inputs.map(input => input.value)") == ["שם א", "", "שם ב"]
-    assert page.evaluate("G('bg-layer').style.backgroundImage.includes('data:')")
+    expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg2.webp")
+    assert page.evaluate("async () => await backgroundReady")
+    expect(page.locator('[data-background-id="bg2"]')).to_have_attribute("aria-pressed", "true")
     assert page.evaluate("SZ.h === 38 && glowState.title === 'light'")
     assert page.evaluate("""async () => {
       await posterDrafts.write('poster-a', {value: 'a'});
@@ -62,7 +68,9 @@ with sync_playwright() as playwright:
     }""")
     with TemporaryDirectory() as directory:
         pdf = Path(directory) / "poster.pdf"
-        page.pdf(path=pdf, prefer_css_page_size=True)
+        page.pdf(path=pdf, prefer_css_page_size=True, print_background=False)
+        image_info = subprocess.check_output(["pdfimages", "-list", str(pdf)], text=True)
+        assert any(int(match.group(1)) >= 500 for match in re.finditer(r"^\s*1\s+\d+\s+image\s+(\d+)\s+\d+", image_info, re.MULTILINE)), image_info
         metadata = subprocess.check_output(["pdfinfo", str(pdf)], text=True)
         assert re.search(r"^Pages:\s+1$", metadata, re.MULTILINE), metadata
         assert re.search(r"^Page size:.*\(A4\)$", metadata, re.MULTILINE), metadata
