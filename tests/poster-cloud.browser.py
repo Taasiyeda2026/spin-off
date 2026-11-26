@@ -32,20 +32,16 @@ def handle(route):
     path = urlsplit(request.url).path
     if not request.url.startswith(origin + "/"):
         route.abort()
-    elif path.startswith("/rest/v1/rpc/lookup_"):
-        username = request.post_data_json["p_username"]
-        assert username in ("fixture-instructor", "fixture-manager")
-        role = "activities_manager" if username == "fixture-manager" else "instructor"
-        route.fulfill(json=[{"auth_email": username + "@example.invalid", "auth_user_id": "fixture", "role": role}])
+    elif path == "/auth/v1/user":
+        if request.headers.get("authorization") == "Bearer invalid-token":
+            route.fulfill(status=401, json={})
+        else:
+            route.fulfill(json={"id":"fixture"})
+    elif path == "/rest/v1/rpc/get_current_app_user":
+        role = "activities_manager" if request.headers.get("authorization") == "Bearer manager-token" else "instructor"
+        route.fulfill(json=[{"auth_user_id":"fixture","is_active":True,"role":role}])
     elif path == "/rest/v1/rpc/spacetech_school_logo":
-        route.fulfill(json={"schools": []})
-    elif path == "/auth/v1/token":
-        if request.post_data_json["password"] == "wrong-password":
-            route.fulfill(status=400, json={"error_code": "invalid_credentials"})
-            return
-        assert request.post_data_json["password"] == "fake-password"
-        token = "manager-token" if request.post_data_json["email"].startswith("fixture-manager") else "fixture-token"
-        route.fulfill(json={"user": {"id": "fixture"}, "access_token": token})
+        route.fulfill(json={"schools":[]})
     elif path == "/functions/v1/poster-media":
         image_key = urlsplit(request.url).query
         if request.method == "PUT":
@@ -97,6 +93,22 @@ def handle(route):
     else:
         route.continue_()
 
+
+def dashboard_sso(page, token):
+    # Simulate only the trusted popup handoff; no real credentials or network login.
+    page.evaluate("""token => {
+      window.open = (url) => {
+        const popup = {closed:false, close(){this.closed=true;}};
+        const state = new URL(url).searchParams.get('state');
+        setTimeout(() => {
+          const event = new Event('message');
+          Object.defineProperties(event, {origin:{value:'https://taasiyeda2026.github.io'},source:{value:popup},data:{value:{type:'spin-off:session',state,access_token:token}}});
+          window.dispatchEvent(event);
+        }, 10);
+        return popup;
+      };
+    }""", token)
+    page.get_by_role('button',name='התחברות דרך הדשבורד',exact=True).click()
 
 def new_context(browser):
     context = browser.new_context()
@@ -222,14 +234,9 @@ with sync_playwright() as playwright:
 
     staff = open_page(new_context(browser))
     click(staff, "כניסת מדריכים")
-    expect(staff.get_by_role("button", name="שכחתי סיסמה")).to_be_visible()
-    staff.get_by_label("שם משתמש").fill("  FIXTURE-INSTRUCTOR  ")
-    staff.get_by_label("סיסמה").fill("wrong-password")
-    click(staff, "כניסה")
-    expect(staff.get_by_role("status")).to_contain_text("הכניסה לא הצליחה")
-    expect(staff.get_by_role("status")).to_contain_text("שכחתי סיסמה")
-    staff.get_by_label("סיסמה").fill("  fake-password  ")
-    click(staff, "כניסה")
+    dashboard_sso(staff, "invalid-token")
+    expect(staff.get_by_role("status")).to_contain_text("ההתחברות לא הושלמה")
+    dashboard_sso(staff, "fixture-token")
     expect(staff.get_by_role("heading", name="ניהול הפוסטרים שלי")).to_be_visible()
     staff.get_by_role("searchbox").fill("Remote update")
     staff.evaluate("window.__languageSessionMarker = true")
@@ -265,9 +272,7 @@ with sync_playwright() as playwright:
     expect(third.locator("#poster-project")).to_have_value("Instructor update")
     manager = open_page(new_context(browser))
     click(manager, "כניסת מדריכים")
-    manager.get_by_label("שם משתמש").fill("fixture-manager")
-    manager.get_by_label("סיסמה").fill("fake-password")
-    click(manager, "כניסה")
+    dashboard_sso(manager, "manager-token")
     expect(manager.get_by_role("heading", name="ניהול הפוסטרים שלי")).to_be_visible()
     expect(manager.get_by_text("Fixture Manager", exact=True)).to_be_visible()
     expect(manager.get_by_role("button", name="העתקת קוד מדריך")).to_have_count(0)
