@@ -168,6 +168,12 @@ with sync_playwright() as playwright:
     assert "background" not in poster["state"]["media"]
     assert "bgImage" not in poster["state"]["design"]
 
+    student.locator('[data-tab="content"]').click()
+    student.locator("#panel-problem").fill("Full problem text")
+    student.locator("#panel-requirements1").fill("Requirement one")
+    student.locator("#panel-solution-type").select_option("smart")
+    expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
+    assert poster["state"]["values"]["problem"] == "Full problem text"
     fail_save = True
     student.locator("#poster-project").fill("Fixture Project")
     expect(student.get_by_role("button", name="ניסיון שמירה מחדש")).to_be_visible()
@@ -257,6 +263,13 @@ with sync_playwright() as playwright:
     manager.get_by_role("searchbox").fill("Instructor update")
     click(manager, "צפייה")
     expect(manager.locator("#poster-project")).to_have_value("Instructor update")
+    for viewer in (manager,):
+        expect(viewer.locator("#problem")).to_have_value("Full problem text")
+        expect(viewer.locator("#requirements1-out")).to_have_text("Requirement one")
+        expect(viewer.locator("#solution-type")).to_have_value("smart")
+        expect(viewer.locator("#poster-students")).to_have_value("Student A, Student B")
+        expect(viewer.locator("#img-main")).to_be_visible()
+        expect(viewer.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
     arabic = open_page(new_context(browser))
     arabic.locator("#poster-editor-language").click()
     expect(arabic.locator("#poster-access")).to_have_attribute("lang", "ar")

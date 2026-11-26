@@ -24,6 +24,7 @@ const messages = {
 
 let staff = null;
 let waitForPosterSave = () => Promise.resolve();
+window.addEventListener('poster:dirty',()=>{const el=toolbar.querySelector('[role=status]');if(el){el.dataset.statusKey='שומר...';el.textContent=t('שומר...');}});
 const editorHome = document.getElementById('poster-editor-home');
 let managementLanguageRefresh = null;
 let accessChoicesRefresh = null;
@@ -35,7 +36,7 @@ editorHome.addEventListener('click', async (event) => {
   leavingForHome = true;
   editorHome.setAttribute('aria-busy', 'true');
   try {
-    await editor.save();
+    await editor.flush();
     await waitForPosterSave();
     if (editor.hasUnsavedChanges() &&
         !confirm(t('יש שינויים שטרם נשמרו בענן. לחזור בכל זאת?'))) return;
@@ -382,7 +383,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
   const preserved = readOnly ? null : await drafts.read(poster.id + ':conflict').catch(() => null);
   if (preserved?.draft) {
     button('צפייה בטיוטה המקומית', async () => {
-      await editor.save();
+      await editor.flush();
       await saveQueue;
       if (editor.hasUnsavedChanges() && !confirm(t('לעבור לתצוגת הטיוטה המקומית?'))) return;
       const current = await drafts.read(poster.id + ':conflict').catch(() => null);
@@ -431,7 +432,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
         revision = saved.revision;
         if (sequence === latest) {
           await writeLocal({ revision, draft: snapshot, pending: false }).catch(() => {});
-          setIndicator('נשמר');
+          if (!editor.hasUnsavedChanges()) setIndicator('נשמר');
         }
       } catch (error) {
         conflicted = error.message === 'conflict';
