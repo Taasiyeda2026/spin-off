@@ -343,3 +343,46 @@ body:has(.poster-access.is-home:not([hidden])) {
 /* Keep the poster title transparent even when Chrome supplies an autofill highlight. */
 #poster-project{appearance:none;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:var(--title);caret-color:var(--title)}
 #poster-project:is(:autofill,:-webkit-autofill){-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:var(--title)!important;caret-color:var(--title)!important;box-shadow:none!important}
+
+/* Compact management only; never affects editor or print. */
+@media screen {
+body .poster-access:has(.pm-panel){width:min(1180px,calc(100% - 28px));max-width:none;padding:18px 24px;font-size:15px}
+.pm-panel{display:grid;gap:10px}
+.pm-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.pm-stats>div{display:grid;justify-items:center;background:#142b48;border:1px solid #315277;border-radius:8px;padding:8px}
+.pm-stats strong{font-size:24px;color:#a6eaff;line-height:1.1}
+.pm-stats span{font-size:13px;color:#c7dbea}
+.poster-access .pm-panel :is(input,select){background:#102a43;color:#eefbff;border-color:#47708d;min-width:0;width:100%;padding:7px 10px}
+.pm-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pm-controls{display:flex;justify-content:flex-end;gap:6px}
+.poster-access .pm-controls button{font-size:12px;padding:4px 9px}
+.poster-access .pm-settings{padding:8px 12px;border:1px solid #315277;border-radius:8px;margin-bottom:12px}
+.poster-access .pm-settings .poster-school-logos{margin:8px 0 0;padding:10px}
+.poster-access .pm-activity{padding:8px 4px}
+.poster-access .pm-activity>summary{display:flex;align-items:center;gap:10px;list-style:none;padding:3px 4px}
+.pm-activity>summary::-webkit-details-marker,.pm-menu>summary::-webkit-details-marker{display:none}
+.pm-activity>summary::before{content:'▸';color:#8bdcf0}
+.pm-activity[open]>summary::before{content:'▾'}
+.pm-heading{display:grid;flex:1;min-width:0;gap:2px}
+.pm-heading strong{font-size:16px;overflow-wrap:anywhere}
+.pm-heading small{font-size:12px;font-weight:400;color:#b2c3d8}
+.pm-count{font-size:12px;white-space:nowrap;color:#bce8f6}
+.poster-access .pm-activity .poster-activity-id{margin:3px 10px;font-size:11px;flex-wrap:nowrap}
+.pm-activity .poster-activity-id bdi{max-width:18ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal}
+.poster-access article.pm-card{padding:8px 12px;margin:5px 8px;background:#142b48;border:1px solid #284b66;display:grid;gap:4px}
+.pm-card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.poster-access .pm-card h2{font-size:16px;margin:0;flex:1;min-width:100px;overflow-wrap:anywhere}
+.pm-status{font-size:11px;border-radius:5px;background:#38455c;padding:2px 7px;color:#e5edf7}
+.pm-status.draft{color:#ffdc98;background:#493b26}
+.pm-status.submitted{color:#a2f5cb;background:#174537}
+.poster-access .pm-card .pm-code{font-size:12px;direction:ltr;padding:3px 7px;background:transparent;color:#bce8f6}
+.poster-access .pm-card .pm-meta{font-size:12px;margin:0;color:#bdccdf;overflow-wrap:anywhere}
+.pm-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.poster-access .pm-actions button{font-size:12px;padding:4px 10px;min-height:30px;margin:0}
+.poster-access .pm-menu{position:relative;margin-inline-start:auto;padding:0;border:0}
+.pm-menu>summary{list-style:none;border:1px solid #47708d;border-radius:6px;padding:2px 12px;color:#d5f4ff}
+.pm-menu-body{position:absolute;inset-inline-end:0;top:100%;z-index:20;display:grid;gap:4px;min-width:155px;padding:6px;background:#10243c;border:1px solid #47708d;border-radius:8px;box-shadow:0 5px 16px #0008}
+.poster-access .pm-menu-body button{text-align:start;white-space:nowrap}
+.poster-access .pm-menu-body button.pm-danger{color:#ffb3b9}
+@media(max-width:650px){body .poster-access:has(.pm-panel){padding:12px;width:calc(100% - 20px)}.pm-filters,.pm-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.poster-access article.pm-card{margin-inline:0}.pm-card-top{gap:5px}}
+}
