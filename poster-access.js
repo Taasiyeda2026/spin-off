@@ -168,6 +168,7 @@ function home() {
   actions.setAttribute('aria-label', t(homeTitle));
   button('יצירת פוסטר חדש', createEntry, actions, true);
   button('המשך עבודה על פוסטר', resumeEntry, actions, true);
+  const researchEntry=button(arabic?'أسئلة الاستقصاء':'שאלות חקר',()=>resumeEntry(true),actions,true);
   button('כניסת מדריכים', instructorEntry, actions);
 }
 
@@ -211,11 +212,12 @@ function createDetails(ticket, activities) {
   });
 }
 
-function resumeEntry() {
+function resumeEntry(research = false) {
   codeForm('המשך עבודה על פוסטר', 'קוד הפוסטר', '[1-9][0-9]{5}', 6, async (code) => {
     const access = { session: newToken() };
     const poster = await posterRequest('resume', { code }, access);
     await openPoster(poster, access, home);
+    if(research===true) window.researchWorksheet?.show();
   });
 }
 
@@ -505,6 +507,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
 
 window.addEventListener('online', () => editor.save());
 if (new URLSearchParams(location.search).get('view') === 'management') instructorEntry();
+else if(new URLSearchParams(location.search).get('view')==='research') resumeEntry(true);
 else home();
 
 window.addEventListener('focus',()=>window.refreshSchoolLogo?.().catch(()=>{}));
