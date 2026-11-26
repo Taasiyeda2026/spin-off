@@ -27,25 +27,25 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name="חזרה", exact=True).click()
     page.evaluate("window.posterEditor.open()")
     expect(page.locator("#poster-editor-home")).to_be_visible()
-    expected_labels = ['שם הפתרון שלנו?', 'תיאור הפתרון שלנו?', 'כיתה', 'שם בית הספר', 'איזו בעיה בחרנו לפתור?', 'מי נתקל בבעיה ומה הוא צריך?', 'מה הפתרון חייב לעשות? – דרישה ראשונה', 'מה הפתרון חייב לעשות? – דרישה שנייה', 'מה הפתרון חייב לעשות? – דרישה שלישית', 'מה למדנו מטכנולוגיות החלל?', 'איך טכנולוגיות החלל תרמו לפתרון?', 'איזה רעיון לפתרון הצענו? – רעיון ראשון', 'איזה רעיון לפתרון הצענו? – רעיון שני', 'איזה רעיון לפתרון הצענו? – רעיון שלישי', 'איזה רעיון בחרנו ולמה?', 'מה כולל הפתרון שלנו?', 'איך הפתרון אמור לעבוד? – שלב ראשון', 'איך הפתרון אמור לעבוד? – שלב שני', 'איך הפתרון אמור לעבוד? – שלב שלישי', 'מה בדקנו בתכנון הפתרון שלנו?', 'איזה משוב קיבלנו על הפתרון?', 'מה שיפרנו בעקבות המשוב?', 'איך נציג את הפתרון שלנו במשפט אחד?']
-    expected_arabic = ['اسم حلّنا؟', 'وصف حلّنا؟', 'الصف', 'اسم المدرسة', 'أي مشكلة اخترنا حلّها؟', 'من يواجه المشكلة وماذا يحتاج؟', 'ماذا يجب أن يفعل الحل؟ – المتطلب الأول', 'ماذا يجب أن يفعل الحل؟ – المتطلب الثاني', 'ماذا يجب أن يفعل الحل؟ – المتطلب الثالث', 'ماذا تعلمنا من تكنولوجيا الفضاء؟', 'كيف ساهمت تكنولوجيا الفضاء في الحل؟', 'أي فكرة للحل اقترحنا؟ – الفكرة الأولى', 'أي فكرة للحل اقترحنا؟ – الفكرة الثانية', 'أي فكرة للحل اقترحنا؟ – الفكرة الثالثة', 'أي فكرة اخترنا ولماذا؟', 'ماذا يتضمّن حلّنا؟', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الأولى', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الثانية', 'كيف يُفترض أن يعمل الحل؟ – الخطوة الثالثة', 'ماذا فحصنا في تصميم حلّنا؟', 'ما الملاحظات التي تلقّيناها حول الحل؟', 'ماذا حسّنّا بناءً على الملاحظات؟', 'كيف نعرض حلّنا في جملة واحدة؟']
-    expected_labels.insert(1, 'סוג הפתרון שלנו')
-    expected_arabic.insert(1, 'نوع حلّنا')
-    expected_limits = [40,None,135,None,None,120,110,55,55,55,50,50,50,50,50,125,115,55,55,55,110,110,110,90]
+    expected_labels = ["1. שם הפתרון שלנו?","2א. סוג הפתרון שלנו","2ב. תיאור הפתרון שלנו?","3. כיתה","4. שם בית הספר","5. איזו בעיה בחרנו לפתור?","6. מי נתקל בבעיה ומה הוא צריך?","7. מה למדנו מטכנולוגיות החלל?","8. איך טכנולוגיות החלל תרמו לפתרון?","9א. רעיון ראשון","9ב. רעיון שני","9ג. רעיון שלישי","10. איזה רעיון בחרנו ולמה?","11א. דרישה ראשונה","11ב. דרישה שנייה","11ג. דרישה שלישית","12. מה כולל הפתרון שלנו?","13א. שלב ראשון","13ב. שלב שני","13ג. שלב שלישי","14. מה בדקנו בתכנון הפתרון שלנו?","15. איזה משוב קיבלנו על הפתרון?","16. מה שיפרנו בעקבות המשוב?","17. איך נציג את הפתרון שלנו במשפט אחד?"]
+    expected_arabic = ["1. اسم حلّنا؟","2أ. نوع حلّنا","2ب. وصف حلّنا؟","3. الصف","4. اسم المدرسة","5. أي مشكلة اخترنا حلّها؟","6. من يواجه المشكلة وماذا يحتاج؟","7. ماذا تعلمنا من تكنولوجيا الفضاء؟","8. كيف ساهمت تكنولوجيا الفضاء في الحل؟","9أ. الفكرة الأولى","9ب. الفكرة الثانية","9ج. الفكرة الثالثة","10. أي فكرة اخترنا ولماذا؟","11أ. المتطلب الأول","11ب. المتطلب الثاني","11ج. المتطلب الثالث","12. ماذا يتضمّن حلّنا؟","13أ. الخطوة الأولى","13ب. الخطوة الثانية","13ج. الخطوة الثالثة","14. ماذا فحصنا في تصميم حلّنا؟","15. ما الملاحظات التي تلقّيناها حول الحل؟","16. ماذا حسّنّا بناءً على الملاحظات؟","17. كيف نعرض حلّنا في جملة واحدة؟"]
+    expected_limits = [35,None,105,None,None,85,80,55,55,55,55,55,125,60,60,60,115,60,60,60,60,60,60,85]
     page.locator('[data-tab="content"]').click()
     for language, labels in [('he', expected_labels), ('ar', expected_arabic)]:
         if language == 'ar':
             page.locator('#poster-editor-language').click()
-        expect(page.locator('#fill-list .edit-card > label').first).to_have_text('1. ' + labels[0])
-        prefixes = ['1. ', '2א. ' if language=='he' else '2أ. ', '2ב. ' if language=='he' else '2ب. '] + [f'{i}. ' for i in range(3,24)]
-        assert page.locator('#fill-list .edit-card > label').all_text_contents()[:24] == [prefix+text for prefix,text in zip(prefixes,labels)]
+        expect(page.locator('#fill-list .edit-card > label').first).to_have_text(labels[0])
+        assert page.locator('#fill-list .edit-card > label').all_text_contents()[:24] == labels
+        expect(page.locator('#fill-list .fill-question-group')).to_have_count(4)
+        assert page.locator('#fill-list .fill-question-heading').all_text_contents() == (['2. סוג הפתרון שלנו ותיאורו?', '9. אילו רעיונות לפתרון הצענו?', '11. מה הפתרון חייב לעשות?', '13. איך הפתרון אמור לעבוד?'] if language=='he' else ['2. نوع حلّنا ووصفه؟', '9. ما الأفكار التي اقترحناها للحل؟', '11. ماذا يجب أن يفعل الحل؟', '13. كيف يُفترض أن يعمل الحل؟'])
         assert page.locator('#fill-list .edit-card > label').evaluate_all('(labels) => labels.every(el => el.scrollWidth <= el.clientWidth && el.scrollHeight <= el.clientHeight)')
         for index, field in enumerate(page.evaluate('FILL_FIELDS.map(f => f.id)')):
             if field=='solution-type':
                 continue
             source = page.locator('#' + field)
             panel = page.locator('#panel-' + field)
-            expected_max = str(expected_limits[index]) if expected_limits[index] else None
+            limit = (40 if index==0 else 85 if index==2 else expected_limits[index]) if language=='ar' else expected_limits[index]
+            expected_max = str(limit) if limit else None
             assert panel.get_attribute('maxlength') == expected_max
             assert panel.get_attribute('maxlength') == (source.get_attribute('data-max') or source.get_attribute('maxlength'))
             if expected_max:
@@ -68,9 +68,23 @@ with sync_playwright() as playwright:
       setParts(3, ['שם א', '', 'שם ב']);
       G('border-color').value = '#ff0000';
       applyDesign();
-      chSz('h', 2);
+      G('arrow-color').value = '#ff0000';
+      G('box-opacity').value = '0';
+      applyDesign();
+      scheduleAutosave();
       setGlow('title', 'light');
     }""")
+    assert page.locator('[onclick*="chSz"]').count() == 0
+    for selector, size, weight in [('#poster-project','30px','700'),('#c-problem .bq','14px','500'),('#problem','12px','300'),('#feedback','11px','400'),('#c-feedback .bq','13px','500'),('#solution-description-heading','13px','400'),('#poster-school','13px','400'),('#poster-students','12px','300'),('#slogan-output','15px','500')]:
+        assert page.locator(selector).evaluate('(el)=>[getComputedStyle(el).fontSize,getComputedStyle(el).fontWeight]') == [size,weight], selector
+    assert page.evaluate("getComputedStyle(G('arrow-feedback-improvement').querySelector('.head')).borderTopColor") == 'rgb(255, 0, 0)'
+    assert page.evaluate("boxOpacityActual()") == 30
+    assert page.evaluate("Object.isFrozen(SZ)")
+    assert page.locator('#research svg.research-answer-icon').count() == 2
+    assert page.evaluate("(()=>{const ids=['c-problem','c-target','c-research','c-findings','c-question','c-requirements'];return ids.every((id,i)=>!i||LAYOUT[id].top>LAYOUT[ids[i-1]].top)})()")
+    short_width=page.evaluate("G('poster-project').value='א';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
+    long_width=page.evaluate("G('poster-project').value='מערכת ניסיונית';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
+    assert long_width > short_width > 0
     png = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFtUAAAAASUVORK5CYII=")
     assert page.locator("#bg-up").count() == 0
     assert page.locator("#poster-background-gallery button").count() >= 4
@@ -109,7 +123,7 @@ with sync_playwright() as playwright:
     expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg2.webp")
     assert page.evaluate("async () => await backgroundReady")
     expect(page.locator('[data-background-id="bg2"]')).to_have_attribute("aria-pressed", "true")
-    assert page.evaluate("SZ.h === 38 && glowState.title === 'light'")
+    assert page.evaluate("SZ.h === 30 && glowState.title === 'light' && boxOpacityActual() === 30 && G('arrow-color').value === '#ff0000'")
     assert page.evaluate("""async () => {
       await posterDrafts.write('poster-a', {value: 'a'});
       await posterDrafts.write('poster-b', {value: 'b'});
