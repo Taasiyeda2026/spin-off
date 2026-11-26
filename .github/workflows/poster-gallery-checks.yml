@@ -75,6 +75,10 @@ jobs:
           server=$!
           trap 'kill "$server" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 20); do if curl -fsS http://127.0.0.1:8000/poster.html >/dev/null; then break; fi; sleep 1; done
-          python tests/poster-drafts.browser.py
-          python tests/poster-cloud.browser.py
-          python tests/poster-submit-logo.browser.py
+          failures=0
+          for suite in tests/poster-drafts.browser.py tests/poster-cloud.browser.py tests/poster-submit-logo.browser.py; do
+            echo "::group::$suite"
+            python "$suite" || failures=1
+            echo '::endgroup::'
+          done
+          exit "$failures"
