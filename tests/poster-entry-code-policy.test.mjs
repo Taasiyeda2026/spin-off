@@ -1,62 +1,54 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-globalThis.window = { posterCloudConfig: { url: 'https://test.invalid', publishableKey: 'test' } };
-const source = await readFile(new URL('../poster-cloud.js', import.meta.url), 'utf8');
-const { signIn, completePasswordRecovery } = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
-const identity = { auth_email: 'test@example.invalid', auth_user_id: 'test-id', role: 'instructor' };
-function mock(expectedPassword, { status = 400, id = identity.auth_user_id, role = identity.role } = {}) {
-  const attempts = [];
-  globalThis.fetch = async (url, options) => {
-    const body = JSON.parse(options.body);
-    if (url.includes('lookup_login_user_by_username')) return Response.json([{ ...identity, role }]);
-    if (url.includes('/auth/v1/token')) {
-      attempts.push(body.password);
-      if (body.password !== expectedPassword) return new Response('{}', { status });
-      return Response.json({ user: { id }, access_token: 'test-token' });
-    }
-    if (url.includes('management-password-reset')) { attempts.push(body.new_password); return Response.json({ ok: true }); }
-    throw new Error('unexpected request');
-  };
-  return attempts;
+const source = await readFile(new URL('../poster-dashboard-login.js', import.meta.url), 'utf8');
+const { dashboardLogin } = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
+const origin = 'https://taasiyeda2026.github.io';
+function fixture(blocked = false) {
+  const listeners = new Map();
+  const popup = {closed:false,close(){this.closed=true;}};
+  let opened;
+  const win = {location:{origin},open(url){opened=new URL(url);return blocked?null:popup;},addEventListener(type,fn){listeners.set(type,fn);},removeEventListener(type){listeners.delete(type);}};
+  const random = {getRandomValues(bytes){return bytes.fill(7);}};
+  const promise = dashboardLogin({win,random,timeoutMs:1000});
+  const message = {origin,source:popup,data:{type:'spin-off:session',state:opened.searchParams.get('state'),access_token:'test-token'}};
+  return {promise,message,popup,opened,listeners,send(event){listeners.get('message')?.(event);}};
 }
-for (const [input, expected, sequence] of [
-  ['0123','c:0123',['0123','c:0123']], ['01234','c:01234',['01234','c:01234']],
-  ['012345','012345',['012345']], ['1234567','1234567',['1234567']],
-  ['Legacy!123','Legacy!123',['Legacy!123']], ['1234','1234',['1234']]
-]) test('login compatibility '+input, async () => {
-  const attempts = mock(expected);
-  assert.equal(await signIn(' TEST ', input), 'test-token');
-  assert.deepEqual(attempts, sequence);
+test('SSO validates origin, popup source and nonce before accepting token', async()=>{
+  const f=fixture();
+  assert.equal(f.opened.pathname,'/dashboard_system/spin-off-bridge.html');
+  assert.equal(f.opened.searchParams.size,2);
+  f.send({...f.message,origin:'https://evil.invalid'});
+  f.send({...f.message,source:{}});
+  f.send({...f.message,data:{...f.message.data,state:'wrong'}});
+  assert.equal(f.popup.closed,false);
+  f.send(f.message);
+  assert.equal(await f.promise,'test-token');
+  assert.equal(f.listeners.size,0);
 });
-test('no retry for network or rate limit error', async () => {
-  for (const status of [429,500]) {
-    const attempts = mock('other', {status});
-    await assert.rejects(signIn('test','0123'), /network/);
-    assert.deepEqual(attempts,['0123']);
+test('blocked popup and missing token rejected',async()=>{
+  await assert.rejects(fixture(true).promise,/popup_blocked/);
+  const f=fixture();
+  f.send({...f.message,data:{...f.message.data,access_token:''}});
+  await assert.rejects(f.promise,/login/);
+});
+test('poster staff verification keeps active account and allowed roles',async()=>{
+  globalThis.window={posterCloudConfig:{url:'https://test.invalid',publishableKey:'test'}};
+  const cloud=await readFile(new URL('../poster-cloud.js',import.meta.url),'utf8');
+  const {verifyPosterStaff}=await import('data:text/javascript;base64,'+Buffer.from(cloud).toString('base64'));
+  let row={auth_user_id:'one',is_active:true,role:'instructor'};
+  globalThis.fetch=async(url)=>Response.json(url.endsWith('/auth/v1/user')?{id:'one'}:[row]);
+  assert.equal(await verifyPosterStaff('test'),true);
+  for(const invalid of [{...row,is_active:false},{...row,role:'unauthorized'},{...row,auth_user_id:'two'}]){
+    row=invalid;await assert.rejects(verifyPosterStaff('test'),/denied/);
   }
 });
-test('wrong code and mismatched identity rejected', async () => {
-  const attempts = mock('other');
-  await assert.rejects(signIn('test','0123'), /login/);
-  assert.deepEqual(attempts,['0123','c:0123']);
-  mock('0123',{id:'different'});
-  await assert.rejects(signIn('test','0123'),/login/);
-});
-test('existing role restriction preserved', async () => {
-  const attempts = mock('0123',{role:'unauthorized'});
-  await assert.rejects(signIn('test','0123'),/login/);
-  assert.deepEqual(attempts,[]);
-});
-test('recovery encodes only valid new codes', async () => {
-  for (const [password, expected] of [['0123','c:0123'],['01234','c:01234'],['012345','012345']]) {
-    const attempts = mock('');
-    assert.equal(await completePasswordRecovery({challengeId:'test',code:'123456',password}),true);
-    assert.deepEqual(attempts,[expected]);
-  }
-  for (const password of ['123','1234567','abcd','12a4']) {
-    const attempts = mock('');
-    await assert.rejects(completePasswordRecovery({challengeId:'test',code:'123456',password}),/invalid_entry_code/);
-    assert.deepEqual(attempts,[]);
-  }
+test('poster login no longer accepts credentials; student entry remains independent',async()=>{
+  const access=await readFile(new URL('../poster-access.js',import.meta.url),'utf8');
+  const cloud=await readFile(new URL('../poster-cloud.js',import.meta.url),'utf8');
+  assert.match(access,/await dashboardLogin\(\)/);
+  assert.match(access,/await verifyPosterStaff\(token\)/);
+  assert.doesNotMatch(cloud,/grant_type=password|management-password-reset/);
+  assert.match(access,/codeForm\('יצירת פוסטר חדש', 'קוד מדריך'/);
+  assert.match(access,/codeForm\('המשך עבודה על פוסטר', 'קוד הפוסטר'/);
 });
