@@ -468,14 +468,23 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
   const reconcile = button('פתיחת גרסת הענן', async () => {
     if (!confirm(t('לפתוח את גרסת הענן? הטיוטה המקומית תישמר בנפרד.'))) return;
     try {
-      // A conflicted save must not be retried when selecting the cloud version.
+      // Stop new edits and autosaves while selecting the authoritative version.
+      reconcile.disabled = true;
+      document.getElementById('sp').inert = true;
+      document.getElementById('poster').inert = true;
+      await editor.flush();
       await saveQueue;
+      await localQueue;
       const local = await drafts.read(poster.id);
       if (local?.pending) await drafts.write(poster.id + ':conflict', local);
       const current = await posterRequest('load', { id: poster.id }, access);
       await openPoster(current, access, back, readOnly, true);
     } catch (error) {
+      console.error('Poster cloud reconciliation failed', error);
       setIndicator(messages[error.message] ?? messages.network);
+      document.getElementById('sp').inert = Boolean(readOnly);
+      document.getElementById('poster').inert = Boolean(readOnly);
+      reconcile.disabled = false;
     }
   }, toolbar);
   reconcile.hidden = true;

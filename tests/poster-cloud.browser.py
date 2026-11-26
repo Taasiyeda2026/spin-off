@@ -108,6 +108,7 @@ def new_context(browser):
 def open_page(context):
     page = context.new_page()
     page.on("pageerror", lambda error: errors.append(str(error)))
+    page.on("console", lambda message: print("Browser error:", message.text, flush=True) if message.type == "error" else None)
     page.goto(url)
     return page
 
@@ -205,8 +206,16 @@ with sync_playwright() as playwright:
     conflict = True
     second.locator("#poster-project").fill("Local update")
     expect(second.get_by_role("button", name="פתיחת גרסת הענן")).to_be_visible()
-    second.once("dialog", lambda dialog: dialog.accept())
-    click(second, "פתיחת גרסת הענן")
+    dialogs = []
+    def accept_conflict_dialog(dialog):
+        dialogs.append(dialog.message)
+        dialog.accept()
+    second.once("dialog", accept_conflict_dialog)
+    with second.expect_response(lambda response: urlsplit(response.url).path == "/rest/v1/rpc/spacetech_poster" and response.request.post_data_json.get("p_action") == "load") as cloud_response:
+        click(second, "פתיחת גרסת הענן")
+    assert dialogs, "Cloud recovery confirmation was not shown"
+    assert cloud_response.value.json()["state"]["values"]["poster-project"] == "Remote update"
+    print("Cloud response verified; editor status:", second.locator(".poster-cloud-toolbar").inner_text(), flush=True)
     expect(second.locator("#poster-project")).to_have_value("Remote update")
     click(second, "צפייה בטיוטה המקומית")
     expect(second.locator("#poster-project")).to_have_value("Local update")

@@ -224,9 +224,9 @@ body.panel-open #wrap{padding-right:344px}
 #poster:lang(ar) #slogan-output{font-weight:800}
 </style>
 <style id="poster-grouped-fill-style">
-#sp #fill-list .fill-question-group{display:grid;gap:5px;min-width:0;border:1px solid #b4c4d9;border-radius:8px;padding:8px;margin:0}
+#sp #fill-list .fill-question-group{display:grid;gap:5px;min-width:0;border:0;border-radius:8px;padding:0;margin:0;outline:1px solid #b4c4d9;outline-offset:2px}
 #sp #fill-list .fill-question-heading{font-size:14px;font-weight:800;color:#142641;margin:0 0 3px}
-#sp #fill-list .fill-question-group .edit-card{margin:0;border:0;padding:4px;background:transparent;box-shadow:none}
+#sp #fill-list .fill-question-group .edit-card{margin:0;border:0;padding:0;background:transparent;box-shadow:none}
 #sp #fill-list .fill-project{margin-bottom:0;padding-bottom:3px;border-bottom:0}
 #sp #fill-list .fill-solution-group{margin-top:-4px}
 #sp #fill-list .fill-identity-start{margin-top:8px}
@@ -742,7 +742,7 @@ window.posterEditor = {
   hasUnsavedChanges: () => draftDirty,
 };
 </script>
-<script type="module" src="poster-access.js?v=20261126-compact-management"></script>
+<script type="module" src="poster-access.js?v=20261126-conflict-recovery"></script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>

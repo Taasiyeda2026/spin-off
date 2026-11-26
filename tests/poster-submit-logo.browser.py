@@ -187,7 +187,7 @@ with sync_playwright() as pw:
     reopened.locator('#poster-editor-language').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
-    # Solution type is independent from the 135-character description and survives language/save/reopen.
+    # Solution type is independent from the 85-character description and survives language/save/reopen.
     expect(reopened.locator('#panel-solution-type')).to_have_value('')
     # Only submitted answers appear on the poster; editing questions remain in the panel.
     reopened.locator('#panel-short-desc').fill('תיק דיגיטלי לניהול משימות')
@@ -196,11 +196,11 @@ with sync_playwright() as pw:
     reopened.locator('#panel-slogan').fill('המשימות שלנו תמיד איתנו')
     expect(reopened.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
     expect(reopened.locator('#c-slogan .bq')).to_be_hidden()
-    expect(reopened.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
+    expect(reopened.locator('label[for=panel-slogan]')).to_have_text('17. كيف نعرض حلّنا في جملة واحدة؟')
     # Empty type on older posters shows only their description.
     reopened.locator('#panel-solution-type').select_option('')
     expect(reopened.locator('#solution-description-heading')).to_have_text('תיק דיגיטלי לניהול משימות')
-    description='ת' * 135
+    description='ת' * 85
     reopened.locator('#panel-short-desc').fill(description)
     for kind in ['physical','smart','app','web','digital']:
         reopened.locator('#panel-solution-type').select_option(kind)
@@ -209,7 +209,7 @@ with sync_playwright() as pw:
             for box in reopened.locator(selector).all():
                 bounds=box.bounding_box();assert abs(bounds['width']/bounds['height']-expected_ratio)<0.02
         expect(reopened.locator('#short-desc')).to_have_value(description)
-        expect(reopened.locator('#panel-counter-short-desc')).to_have_text('135/135')
+        expect(reopened.locator('#panel-counter-short-desc')).to_have_text('85/85')
     assert reopened.locator('#panel-solution-type option[value=other]').count()==0
     reopened.locator('#poster-editor-language').click()
     reopened.locator('#panel-solution-type').select_option('digital')
@@ -225,21 +225,21 @@ with sync_playwright() as pw:
     expect(again.locator('#poster-solution-description')).to_have_text(description)
     expect(again.locator('#slogan')).to_have_value('המשימות שלנו תמיד איתנו')
     expect(again.locator('#c-slogan .bq')).to_be_hidden()
-    expect(again.locator('label[for=panel-slogan]')).to_have_text('23. كيف نعرض حلّنا في جملة واحدة؟')
-    # The closing answer has its own presentation; the form, frame and 90 limit stay intact.
+    expect(again.locator('label[for=panel-slogan]')).to_have_text('17. كيف نعرض حلّنا في جملة واحدة؟')
+    # The closing answer has its own presentation; the form, frame and 85 limit stay intact.
     closing_label=again.locator('label[for=panel-slogan]').text_content()
     frame_before=again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')
     question_style=again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')
-    for sentence in ['פתרון קטן שעושה שינוי גדול', 'حلّ صغير يصنع فرقًا كبيرًا', 'ת'*90, 'م'*90, 'W'*90, ('שורה\n'*18)[:90]]:
+    for sentence in ['פתרון קטן שעושה שינוי גדול', 'حلّ صغير يصنع فرقًا كبيرًا', 'ת'*85, 'م'*85, 'W'*85, ('שורה\n'*18)[:85]]:
         again.locator('#panel-slogan').fill(sentence)
         expect(again.locator('#slogan')).to_have_value(sentence)
         expect(again.locator('#slogan-output')).to_have_text(re.sub(r'\s+', ' ', sentence).strip())
-        metrics=again.locator('#slogan-output').evaluate('''(el)=>{const text=el.firstElementChild,a=el.getBoundingClientRect(),b=text.getBoundingClientRect(),style=getComputedStyle(el);return {fit:text.scrollHeight<=el.clientHeight&&text.scrollWidth<=el.clientWidth,dx:Math.abs((a.left+a.width/2)-(b.left+b.width/2)),dy:Math.abs((a.top+a.height/2)-(b.top+b.height/2)),bold:Number(style.fontWeight)>=700,color:style.color,size:parseFloat(style.fontSize)}}''')
+        metrics=again.locator('#slogan-output').evaluate('''(el)=>{const text=el.firstElementChild,a=el.getBoundingClientRect(),b=text.getBoundingClientRect(),style=getComputedStyle(el);return {fit:text.scrollHeight<=el.clientHeight&&text.scrollWidth<=el.clientWidth,dx:Math.abs((a.left+a.width/2)-(b.left+b.width/2)),dy:Math.abs((a.top+a.height/2)-(b.top+b.height/2)),bold:Number(style.fontWeight)===500,color:style.color,size:parseFloat(style.fontSize)}}''')
         assert metrics['fit'] and metrics['dx']<1 and metrics['dy']<1 and metrics['bold'],metrics
         assert metrics['color']=='rgb(255, 255, 255)'
     again.locator('#panel-slogan').fill('פתרון קטן שעושה שינוי גדול')
     assert again.locator('#slogan-output').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')>again.locator('#problem').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)')
-    assert again.locator('#panel-slogan').get_attribute('maxlength')=='90'
+    assert again.locator('#panel-slogan').get_attribute('maxlength')=='85'
     assert again.locator('#c-slogan').evaluate('(el)=>({width:el.offsetWidth,height:el.offsetHeight})')==frame_before
     assert again.locator('#panel-slogan').evaluate('(el)=>({font:getComputedStyle(el).font,weight:getComputedStyle(el).fontWeight})')==question_style
     assert again.locator('label[for=panel-slogan]').text_content()==closing_label
@@ -262,7 +262,7 @@ with sync_playwright() as pw:
     assert len(pdf)==1
     assert 'كيف نعرض' not in pdf[0].get_text()
     expect(again.locator('#slogan-output')).to_be_visible()
-    assert again.locator('#slogan-output').evaluate('(el)=>getComputedStyle(el).fontWeight')=='800'
+    assert again.locator('#slogan-output').evaluate('(el)=>getComputedStyle(el).fontWeight')=='500'
     assert again.locator('#slogan-output').evaluate('(el)=>el.firstElementChild.scrollHeight<=el.clientHeight')
     again.emulate_media(media='null')
     with again.expect_popup() as popup:
@@ -283,7 +283,7 @@ with sync_playwright() as pw:
     assert description not in visual.url
     assert visual.evaluate('localStorage.getItem("spacetech.poster.visualization."+new URLSearchParams(location.search).get("posterBrief"))') is None
     # Earlier saved answers above the reduced limits survive open/language/unrelated save.
-    legacy_limits={'research1':50,'research2':50,'solution':115,'feedback':110,'improvement':110,'value':110,'slogan':90}
+    legacy_limits={'research1':55,'research2':55,'solution':115,'feedback':60,'improvement':60,'value':60,'slogan':85}
     legacy_lengths={'research1':70,'research2':90,'solution':140,'feedback':120,'improvement':120,'value':120,'slogan':140}
     legacy_values={key:'ת'*length for key,length in legacy_lengths.items()}
     posters[ids[2]]['state']['values'].update(legacy_values)
@@ -293,19 +293,19 @@ with sync_playwright() as pw:
         expect(legacy.locator('#panel-'+key)).to_have_value(value)
         assert legacy.locator('#panel-'+key).get_attribute('maxlength')==str(legacy_limits[key])
         expect(legacy.locator('#panel-counter-'+key)).to_have_text(f'{len(value)}/{legacy_limits[key]}')
-    expect(legacy.locator('.counter[data-for=research]')).to_have_text('160/100')
+    expect(legacy.locator('.counter[data-for=research]')).to_have_text('160/110')
     for key in ['requirements1','requirements2','requirements3']:
-        legacy.locator('#panel-'+key).fill('م'*56)
-        expect(legacy.locator('#panel-'+key)).to_have_value('م'*55)
-    expect(legacy.locator('.counter[data-for=requirements]')).to_have_text('165/165')
+        legacy.locator('#panel-'+key).fill('م'*61)
+        expect(legacy.locator('#panel-'+key)).to_have_value('م'*60)
+    expect(legacy.locator('.counter[data-for=requirements]')).to_have_text('180/180')
     legacy.locator('#poster-editor-language').click()
     legacy.locator('#panel-problem').fill('An unrelated edit')
     legacy.locator('#poster-submit').click()
     expect(legacy.locator('#poster-submit-status')).to_contain_text('بنجاح')
     for key,value in legacy_values.items():
         assert posters[ids[2]]['state']['values'][key]==value
-    legacy.locator('#panel-slogan').fill('م'*91)
-    expect(legacy.locator('#panel-slogan')).to_have_value('م'*90)
-    expect(legacy.locator('#panel-counter-slogan')).to_have_text('90/90')
+    legacy.locator('#panel-slogan').fill('م'*86)
+    expect(legacy.locator('#panel-slogan')).to_have_value('م'*85)
+    expect(legacy.locator('#panel-counter-slogan')).to_have_text('85/85')
     assert not errors,errors
     print('PASS: responsive header, final actions, language/state, save/submit/retry/idempotency, manager logo, school isolation, existing posters, removal and A4 PDF')
