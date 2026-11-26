@@ -313,8 +313,18 @@ function renderManagement(data, previous = null) {
             const control = event.currentTarget;
             control.disabled = true;
             try {
-              await posterRequest(action, { id: poster.id }, staff);
-              await manage();
+              const updated = await posterRequest(action, { id: poster.id }, staff);
+              // The RPC returns the authoritative status. Keep the management
+              // screen, filters, open activities and scroll position intact.
+              const index = activity.posters.findIndex(item => item.id === poster.id);
+              if (index !== -1) {
+                if (updated.deleted && !data.admin) activity.posters.splice(index, 1);
+                else activity.posters[index] = { ...activity.posters[index], ...updated };
+              }
+              const expanded = new Set(Array.from(results.querySelectorAll('details[open]'), item => item.dataset.activityId));
+              const scrollTop = window.scrollY;
+              render(expanded);
+              window.scrollTo(0, scrollTop);
             } catch (error) {
               showError(error);
               control.disabled = false;
