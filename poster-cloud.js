@@ -41,10 +41,14 @@ export async function signIn(username, password) {
   const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: login });
   const email = identity?.auth_email?.trim().toLowerCase();
   if (!email || !['instructor', 'activities_manager', 'admin'].includes(identity.role)) throw new Error('login');
-  const session = await jsonRequest('/auth/v1/token?grant_type=password', {
-    email,
-    password: submittedPassword,
-  });
+  let session;
+  try {
+    session = await jsonRequest('/auth/v1/token?grant_type=password', { email, password: submittedPassword });
+  } catch (error) {
+    // Preserve existing secrets first; retry only rejected short numeric credentials.
+    if (error.message !== 'login' || !/^\d{4,5}$/.test(submittedPassword)) throw error;
+    session = await jsonRequest('/auth/v1/token?grant_type=password', { email, password: 'c:' + submittedPassword });
+  }
   if (session.user?.id !== identity.auth_user_id || !session.access_token) throw new Error('login');
   return session.access_token;
 }
@@ -62,11 +66,13 @@ export async function requestPasswordRecovery(email) {
 
 export async function completePasswordRecovery({ challengeId, code, password }) {
   const trimmedPassword = String(password || '').trim();
+  if (!/^\d{4,6}$/.test(trimmedPassword)) throw new Error('invalid_entry_code');
+  const encodedPassword = trimmedPassword.length < 6 ? 'c:' + trimmedPassword : trimmedPassword;
   const result = await jsonRequest('/functions/v1/management-password-reset', {
     action: 'complete',
     challenge_id: String(challengeId || '').trim(),
     code: String(code || '').trim(),
-    new_password: trimmedPassword,
+    new_password: encodedPassword,
   });
   if (!result?.ok) throw new Error('invalid');
   return true;
