@@ -348,7 +348,7 @@ body:has(.poster-access.is-home:not([hidden])) {
 @media screen {
 body .poster-access:has(.pm-panel){width:min(1180px,calc(100% - 28px));max-width:none;padding:18px 24px;font-size:15px}
 .pm-panel{display:grid;gap:10px}
-.pm-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pm-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .pm-stats>div{display:grid;justify-items:center;background:#142b48;border:1px solid #315277;border-radius:8px;padding:8px}
 .pm-stats strong{font-size:24px;color:#a6eaff;line-height:1.1}
 .pm-stats span{font-size:13px;color:#c7dbea}
