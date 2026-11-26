@@ -1,5 +1,5 @@
 import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261125-final-limits';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261125-final-limits';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, requestPasswordRecovery, completePasswordRecovery, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261126-login-recovery-v1';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -15,11 +15,13 @@ const messages = {
   code: 'הקוד לא נמצא או שאינו זמין. בדקו אותו ונסו שוב.',
   denied: 'אין גישה לפוסטר. נסו להיכנס מחדש.',
   rate_limit: 'בוצעו ניסיונות רבים. המתינו ונסו שוב.',
-  login: 'הכניסה לא הצליחה. בדקו את שם המשתמש והסיסמה.',
+  login: 'הכניסה לא הצליחה. בדקו את שם המשתמש והסיסמה, או אפסו סיסמה דרך שכחתי סיסמה.',
   network: 'לא ניתן להתחבר כרגע. בדקו את החיבור ונסו שוב.',
   image: 'בחרו תמונת PNG, JPEG, WebP, GIF או AVIF בגודל של עד 8 MB.',
   invalid: 'בדקו את הפרטים ונסו שוב.',
   capacity: 'אין אפשרות להקצות קוד כרגע.',
+  recovery_sent: 'אם החשבון מורשה, קוד אימות נשלח למייל. הקוד תקף ל-10 דקות.',
+  recovery_done: 'הסיסמה עודכנה. אפשר להתחבר עם הסיסמה החדשה.',
 };
 
 let staff = null;
@@ -247,6 +249,57 @@ function instructorEntry() {
       throw error.message === 'network' ? error : new Error('login');
     }
   });
+  button('שכחתי סיסמה', instructorPasswordRecovery, form);
+}
+
+function instructorPasswordRecovery() {
+  screen('שחזור סיסמת מדריך', instructorEntry);
+  const requestForm = element('form');
+  const email = field(requestForm, 'מייל רשום במערכת', {
+    required: true,
+    type: 'email',
+    autocomplete: 'email',
+    dir: 'ltr',
+  });
+  submit(requestForm, 'שליחת קוד', async () => {
+    const challengeId = await requestPasswordRecovery(email.value);
+    status.textContent = t(messages.recovery_sent);
+    requestForm.remove();
+    const completeForm = element('form');
+    const code = field(completeForm, 'קוד אימות', {
+      required: true,
+      inputMode: 'numeric',
+      autocomplete: 'one-time-code',
+      maxLength: 6,
+      dir: 'ltr',
+    });
+    const nextPassword = field(completeForm, 'סיסמה חדשה', {
+      required: true,
+      type: 'password',
+      autocomplete: 'new-password',
+      minLength: 8,
+    });
+    const confirmPassword = field(completeForm, 'אימות סיסמה חדשה', {
+      required: true,
+      type: 'password',
+      autocomplete: 'new-password',
+      minLength: 8,
+    });
+    submit(completeForm, 'שמירת סיסמה חדשה', async () => {
+      const passwordValue = String(nextPassword.value || '').trim();
+      if (passwordValue.length < 8) throw new Error('invalid');
+      if (passwordValue !== String(confirmPassword.value || '').trim()) throw new Error('invalid');
+      await completePasswordRecovery({
+        challengeId,
+        code: code.value,
+        password: passwordValue,
+      });
+      status.textContent = t(messages.recovery_done);
+      setTimeout(() => instructorEntry(), 1200);
+    });
+    code.focus();
+  });
+  email.focus();
 }
 
 function copyCode(code) {
