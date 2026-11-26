@@ -323,34 +323,48 @@ async function manage() {
 function renderManagement(data, previous = null) {
   screen('ניהול הפוסטרים שלי', home);
   element('p', data.name);
-  if(data.logoSchools?.length) renderSchoolLogos(data.logoSchools);
+  const L=(he,ar)=>arabic?ar:he;
+  if(data.logoSchools?.length){const settings=element('details','');settings.className='pm-settings';element('summary',L('הגדרות פעילות · לוגו בית הספר','إعدادات النشاط · شعار المدرسة'),settings);renderSchoolLogos(data.logoSchools,settings);}
   if (data.code) {
     element('p', t('קוד מדריך') + ': ' + data.code);
     button('העתקת קוד מדריך', () => copyCode(data.code));
   }
-  const search = field(root, 'חיפוש לפי שם המוצר, משתתפים או קוד', { type: 'search' });
-  const results = element('div');
+  const panel=element('section','');panel.className='pm-panel';
+  const stats=element('div','',panel);stats.className='pm-stats';
+  const search = field(panel, 'חיפוש לפי שם המוצר, משתתפים או קוד', { type: 'search' });
+  const filters=element('div','',panel);filters.className='pm-filters';
+  const school=element('select','',filters), group=element('select','',filters), state=element('select','',filters), sort=element('select','',filters);
+  const options=(select,items)=>{const old=select.value;select.replaceChildren();for(const [value,label] of items)element('option',label,select).value=value;if(items.some(([v])=>v===old))select.value=old;};
+  const refreshFilters=()=>{options(school,[['',L('כל בתי הספר','جميع المدارس')],...Array.from(new Map(data.activities.map(a=>[String(a.schoolId??a.school),arabic?schoolNameArabic(a.schoolId,a.school):a.school])).entries())]);options(group,[['',L('כל הקבוצות','جميع المجموعات')],...Array.from(new Set(data.activities.map(a=>String(a.classGroup??'')).filter(Boolean))).map(v=>[v,arabic?classNameArabic(v):v])]);options(state,[['',L('כל הסטטוסים','جميع الحالات')],['draft',L('טיוטה','مسودة')],['submitted',L('הוגש','تم التسليم')],['archive',L('בארכיון','في الأرشيف')]]);options(sort,[['default',L('מיון לפי פעילות','الترتيب حسب النشاط')],['recent',L('עדכון אחרון','آخر تحديث')]]);for(const [el,he,ar] of [[school,'בית ספר','المدرسة'],[group,'קבוצה','المجموعة'],[state,'סטטוס','الحالة'],[sort,'מיון','الترتيب']])el.setAttribute('aria-label',L(he,ar));};refreshFilters();
+  const controls=element('div','',panel);controls.className='pm-controls';
+  const results = element('div','',panel);results.className='pm-results';
+  const expand=button('פתח הכל',()=>results.querySelectorAll('.pm-activity').forEach(r=>r.open=true),controls);const collapse=button('סגור הכל',()=>results.querySelectorAll('.pm-activity').forEach(r=>r.open=false),controls);
+  const refreshLabels=()=>{expand.textContent=L('פתח הכל','فتح الكل');collapse.textContent=L('סגור הכל','إغلاق الكل');const settings=root.querySelector('.pm-settings summary');if(settings)settings.textContent=L('הגדרות פעילות · לוגו בית הספר','إعدادات النشاط · شعار المدرسة');};refreshLabels();
   search.value = previous?.query ?? '';
   function render(expanded = null) {
     results.replaceChildren();
     const query = search.value.trim().toLocaleLowerCase();
     const count = activity => activity.posters.filter(p=>!p.deleted).length;
-    const ordered = [...data.activities].sort((a,b)=>Number(count(b)>0)-Number(count(a)>0));
+    const all=data.activities.flatMap(a=>a.posters.filter(p=>!p.deleted));stats.replaceChildren();for(const [n,label] of [[data.activities.length,L('פעילויות','أنشطة')],[all.length,L('פוסטרים','ملصقات')],[all.filter(p=>!p.archived&&!p.submittedAt).length,L('טיוטות','مسودات')],[all.filter(p=>!p.archived&&p.submittedAt).length,L('הוגשו','تم تسليمها')]]){const tile=element('div','',stats);element('strong',String(n),tile);element('span',label,tile);}
+    const latest=a=>Math.max(0,...a.posters.filter(p=>!p.deleted).map(p=>Date.parse(p.updatedAt)||0));
+    const ordered = [...data.activities].sort((a,b)=>sort.value==='recent'?latest(b)-latest(a):Number(count(b)>0)-Number(count(a)>0));
     for (const activity of ordered) {
-      const matching = activity.posters.filter(p=>!p.deleted).filter((poster) =>
+      if(school.value&&String(activity.schoolId??activity.school)!==school.value||group.value&&String(activity.classGroup??'')!==group.value)continue;
+      const matching = activity.posters.filter(p=>!p.deleted).filter(p=>!state.value||(p.archived?'archive':p.submittedAt?'submitted':'draft')===state.value).filter((poster) =>
         [poster.title, poster.participants, poster.code].some((value) => String(value ?? '').toLocaleLowerCase().includes(query)));
-      if (query && !matching.length) continue;
+      if ((query||state.value) && !matching.length) continue;
+      if(sort.value==='recent')matching.sort((a,b)=>(Date.parse(b.updatedAt)||0)-(Date.parse(a.updatedAt)||0));
       const row = element('details', '', results);
-      row.dataset.activityId = activity.id;
-      row.open = expanded ? expanded.has(activity.id) : Boolean(query);
+      row.className='pm-activity';row.dataset.activityId = activity.id;
+      row.open = expanded ? expanded.has(activity.id) : Boolean(query||state.value);
       row.classList.toggle('no-posters', count(activity)===0);
-      const summary=element('summary', [activityLabel(activity), t('טכנולוגיות החלל'), count(activity) + ' ' + t('פוסטרים')].join(' · '), row);
+      const summary=element('summary','',row);const heading=element('span','',summary);heading.className='pm-heading';element('strong',(arabic?schoolNameArabic(activity.schoolId,activity.school):activity.school)||activity.id,heading);element('small',[arabic?classNameArabic(activity.grade??''):activity.grade,arabic?classNameArabic(activity.classGroup??''):activity.classGroup,t('טכנולוגיות החלל')].filter(Boolean).join(' · '),heading);element('span',String(matching.length)+' '+t('פוסטרים'),summary).className='pm-count';
       if(!count(activity))element('span',arabic?'لم يبدأ بعد':'טרם התחילו',summary).className='empty-poster-status';
       const idLine = element('div', '', row);
       idLine.className = 'poster-activity-id';
       element('span', t('מזהה פעילות') + ':', idLine);
       const identifier = element('bdi', activity.id, idLine);
-      identifier.dir = 'ltr';
+      identifier.dir = 'ltr';identifier.title=activity.id;
       const copy = button('העתק', async () => {
         try {
           await navigator.clipboard.writeText(activity.id);
@@ -364,18 +378,15 @@ function renderManagement(data, previous = null) {
       copy.setAttribute('aria-label', t('העתקת מזהה פעילות'));
       for (const poster of matching) {
         const card = element('article', '', row);
-        element('h2', poster.title || t('פוסטר ללא שם'), card);
-        element('p', [poster.participants, poster.code, new Date(poster.updatedAt).toLocaleString(arabic ? 'ar' : 'he-IL'),
-          poster.submittedAt ? t('הוגש') : t('טיוטה'),
-          poster.deleted ? t('נמחק') : poster.archived ? t('בארכיון') : ''].filter(Boolean).join(' · '), card);
+        card.className='pm-card';const top=element('div','',card);top.className='pm-card-top';element('h2',poster.title||t('פוסטר ללא שם'),top);const badge=element('span',t(poster.archived?'בארכיון':poster.submittedAt?'הוגש':'טיוטה'),top);badge.className='pm-status '+(poster.archived?'archive':poster.submittedAt?'submitted':'draft');const code=button('העתקת קוד',()=>copyCode(poster.code),top);code.textContent=String(poster.code??'')+' ⧉';code.className='pm-code';code.setAttribute('aria-label',t('העתקת קוד'));const meta=element('p',[poster.participants,new Date(poster.updatedAt).toLocaleString(arabic?'ar':'he-IL')].filter(Boolean).join(' · '),card);meta.className='pm-meta';const bar=element('div','',card);bar.className='pm-actions';
         if (!poster.deleted) {
-          button('צפייה', () => openFromManagement(poster.id, 'view').catch(showError), card);
-          if (!poster.archived) button('עריכה', () => openFromManagement(poster.id, 'edit').catch(showError), card);
-          button('PDF', () => openFromManagement(poster.id, 'pdf').catch(showError), card);
-          button('העתקת קוד', () => copyCode(poster.code), card);
+          button('צפייה', () => openFromManagement(poster.id, 'view').catch(showError), bar,true);
+          if (!poster.archived) button('עריכה', () => openFromManagement(poster.id, 'edit').catch(showError), bar);
+          button('PDF', () => openFromManagement(poster.id, 'pdf').catch(showError), bar);
         }
         const actions = [['delete', 'מחיקה'], ...(!poster.archived ? [['rotate', 'החלפת קוד']] : []),
             ...(data.admin ? [poster.archived ? ['unarchive', 'הוצאה מהארכיון'] : ['archive', 'ארכוב']] : [])];
+        const menu=element('details','',bar);menu.className='pm-menu';const trigger=element('summary','⋯',menu);trigger.setAttribute('aria-label',L('פעולות נוספות','إجراءات إضافية'));const menuBody=element('div','',menu);menuBody.className='pm-menu-body';
         for (const [action, label] of actions) {
           button(label, async (event) => {
             if (!confirm(t(label) + ' – ' + t('להמשיך?'))) return;
@@ -390,7 +401,7 @@ function renderManagement(data, previous = null) {
                 if (action==='delete' || updated.deleted) activity.posters.splice(index, 1);
                 else activity.posters[index] = { ...activity.posters[index], ...updated };
               }
-              const expanded = new Set(Array.from(results.querySelectorAll('details[open]'), item => item.dataset.activityId));
+              const expanded = new Set(Array.from(results.querySelectorAll('.pm-activity[open]'), item => item.dataset.activityId));
               const scrollTop = window.scrollY;
               render(expanded);
               window.scrollTo(0, scrollTop);
@@ -398,15 +409,16 @@ function renderManagement(data, previous = null) {
               showError(error);
               control.disabled = false;
             }
-          }, card);
+          }, menuBody).classList.toggle('pm-danger',action==='delete');
         }
       }
     }
     if (!results.childElementCount) element('p', t('לא נמצאו פעילויות או פוסטרים מתאימים.'), results);
   }
   search.addEventListener('input', () => render());
+  for(const filter of [school,group,state,sort])filter.addEventListener('change',()=>render());
   render(previous?.expanded);
-  managementLanguageRefresh = () => render(new Set(Array.from(results.querySelectorAll('details[open]'), row => row.dataset.activityId)));
+  managementLanguageRefresh = () => {refreshFilters();refreshLabels();render(new Set(Array.from(results.querySelectorAll('.pm-activity[open]'),row=>row.dataset.activityId)));};
 }
 
 async function openPoster(poster, access, back, readOnly = false, useCloud = false) {
@@ -587,8 +599,8 @@ else home();
 
 window.addEventListener('focus',()=>window.refreshSchoolLogo?.().catch(()=>{}));
 
-function renderSchoolLogos(schools) {
-  const section=element('section','');section.className='poster-school-logos';
+function renderSchoolLogos(schools,parent=root) {
+  const section=element('section','',parent);section.className='poster-school-logos';
   element('h2',t('לוגו בית הספר'),section);
   const label=element('label',t('בחירת בית הספר'),section);
   const select=element('select','',label);
