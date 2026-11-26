@@ -379,7 +379,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
   const reconcile = button('פתיחת גרסת הענן', async () => {
     if (!confirm(t('לפתוח את גרסת הענן? הטיוטה המקומית תישמר בנפרד.'))) return;
     try {
-      await editor.save();
+      // A conflicted save must not be retried when selecting the cloud version.
       await saveQueue;
       const local = await drafts.read(poster.id);
       if (local?.pending) await drafts.write(poster.id + ':conflict', local);
