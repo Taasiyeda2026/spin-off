@@ -222,10 +222,11 @@ with sync_playwright() as playwright:
     def accept_conflict_dialog(dialog):
         dialogs.append(dialog.message)
         dialog.accept()
-    second.once("dialog", accept_conflict_dialog)
+    second.on("dialog", accept_conflict_dialog)
     with second.expect_response(lambda response: urlsplit(response.url).path == "/rest/v1/rpc/spacetech_poster" and response.request.post_data_json.get("p_action") == "load") as cloud_response:
         click(second, "פתיחת גרסת הענן")
-    assert dialogs, "Cloud recovery confirmation was not shown"
+    second.remove_listener("dialog", accept_conflict_dialog)
+    assert any("לפתוח את גרסת הענן" in message for message in dialogs), dialogs
     assert cloud_response.value.json()["state"]["values"]["poster-project"] == "Remote update"
     print("Cloud response verified; editor status:", second.locator(".poster-cloud-toolbar").inner_text(), flush=True)
     expect(second.locator("#poster-project")).to_have_value("Remote update")
