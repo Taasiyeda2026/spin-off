@@ -345,7 +345,7 @@ function renderManagement(data, previous = null) {
     results.replaceChildren();
     const query = search.value.trim().toLocaleLowerCase();
     const count = activity => activity.posters.filter(p=>!p.deleted).length;
-    const all=data.activities.flatMap(a=>a.posters.filter(p=>!p.deleted));stats.replaceChildren();for(const [n,label] of [[data.activities.length,L('פעילויות','أنشطة')],[all.length,L('פוסטרים','ملصقات')],[all.filter(p=>!p.archived&&!p.submittedAt).length,L('טיוטות','مسودات')],[all.filter(p=>!p.archived&&p.submittedAt).length,L('הוגשו','تم تسليمها')]]){const tile=element('div','',stats);element('strong',String(n),tile);element('span',label,tile);}
+    const all=data.activities.flatMap(a=>a.posters.filter(p=>!p.deleted));stats.replaceChildren();for(const [n,label] of [[data.activities.length,L('פעילויות','أنشطة')],[all.length,L('פוסטרים','ملصقات')],[all.filter(p=>!p.archived&&!p.submittedAt).length,L('טיוטות','مسودات')],[all.filter(p=>!p.archived&&p.submittedAt).length,L('הוגשו','تم تسليمها')],[all.filter(p=>p.archived).length,L('בארכיון','في الأرشيف')]]){const tile=element('div','',stats);element('strong',String(n),tile);element('span',label,tile);}
     const latest=a=>Math.max(0,...a.posters.filter(p=>!p.deleted).map(p=>Date.parse(p.updatedAt)||0));
     const ordered = [...data.activities].sort((a,b)=>sort.value==='recent'?latest(b)-latest(a):Number(count(b)>0)-Number(count(a)>0));
     for (const activity of ordered) {
@@ -356,7 +356,7 @@ function renderManagement(data, previous = null) {
       if(sort.value==='recent')matching.sort((a,b)=>(Date.parse(b.updatedAt)||0)-(Date.parse(a.updatedAt)||0));
       const row = element('details', '', results);
       row.className='pm-activity';row.dataset.activityId = activity.id;
-      row.open = expanded ? expanded.has(activity.id) : Boolean(query||state.value);
+      row.open = expanded ? expanded.has(activity.id) : Boolean(query||state.value||school.value||group.value);
       row.classList.toggle('no-posters', count(activity)===0);
       const summary=element('summary','',row);const heading=element('span','',summary);heading.className='pm-heading';element('strong',(arabic?schoolNameArabic(activity.schoolId,activity.school):activity.school)||activity.id,heading);element('small',[arabic?classNameArabic(activity.grade??''):activity.grade,arabic?classNameArabic(activity.classGroup??''):activity.classGroup,t('טכנולוגיות החלל')].filter(Boolean).join(' · '),heading);element('span',String(matching.length)+' '+t('פוסטרים'),summary).className='pm-count';
       if(!count(activity))element('span',arabic?'لم يبدأ بعد':'טרם התחילו',summary).className='empty-poster-status';
@@ -384,8 +384,8 @@ function renderManagement(data, previous = null) {
           if (!poster.archived) button('עריכה', () => openFromManagement(poster.id, 'edit').catch(showError), bar);
           button('PDF', () => openFromManagement(poster.id, 'pdf').catch(showError), bar);
         }
-        const actions = [['delete', 'מחיקה'], ...(!poster.archived ? [['rotate', 'החלפת קוד']] : []),
-            ...(data.admin ? [poster.archived ? ['unarchive', 'הוצאה מהארכיון'] : ['archive', 'ארכוב']] : [])];
+        const actions = [...(!poster.archived ? [['rotate', 'החלפת קוד']] : []),
+            ...(data.admin ? [poster.archived ? ['unarchive', 'הוצאה מהארכיון'] : ['archive', 'ארכוב']] : []), ['delete', 'מחיקה']];
         const menu=element('details','',bar);menu.className='pm-menu';const trigger=element('summary','⋯',menu);trigger.setAttribute('aria-label',L('פעולות נוספות','إجراءات إضافية'));const menuBody=element('div','',menu);menuBody.className='pm-menu-body';
         for (const [action, label] of actions) {
           button(label, async (event) => {
