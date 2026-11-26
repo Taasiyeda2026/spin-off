@@ -49,6 +49,29 @@ export async function signIn(username, password) {
   return session.access_token;
 }
 
+export async function requestPasswordRecovery(email) {
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!normalized || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) throw new Error('invalid');
+  const result = await jsonRequest('/functions/v1/management-password-reset', {
+    action: 'request',
+    email: normalized,
+  });
+  if (!result?.challenge_id) throw new Error('network');
+  return String(result.challenge_id);
+}
+
+export async function completePasswordRecovery({ challengeId, code, password }) {
+  const trimmedPassword = String(password || '').trim();
+  const result = await jsonRequest('/functions/v1/management-password-reset', {
+    action: 'complete',
+    challenge_id: String(challengeId || '').trim(),
+    code: String(code || '').trim(),
+    new_password: trimmedPassword,
+  });
+  if (!result?.ok) throw new Error('invalid');
+  return true;
+}
+
 export function posterRequest(action, params = {}, access = {}) {
   return jsonRequest('/rest/v1/rpc/spacetech_poster', {
     p_action: action,
