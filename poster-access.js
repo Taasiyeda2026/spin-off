@@ -1,5 +1,7 @@
-import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261127-shared-entry-code';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, requestPasswordRecovery, completePasswordRecovery, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261127-shared-entry-code';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261127-central-sso';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, verifyPosterStaff, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261127-central-sso';
+
+import { dashboardLogin } from './poster-dashboard-login.js?v=20261127-central-sso';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -15,14 +17,15 @@ const messages = {
   code: 'הקוד לא נמצא או שאינו זמין. בדקו אותו ונסו שוב.',
   denied: 'אין גישה לפוסטר. נסו להיכנס מחדש.',
   rate_limit: 'בוצעו ניסיונות רבים. המתינו ונסו שוב.',
-  login: 'הכניסה לא הצליחה. בדקו את שם המשתמש וקוד הכניסה, או השתמשו בשכחתי קוד כניסה.',
+  login: 'ההתחברות לא הושלמה. יש להתחבר דרך הדשבורד ולנסות שוב.',
   network: 'לא ניתן להתחבר כרגע. בדקו את החיבור ונסו שוב.',
   image: 'בחרו תמונת PNG, JPEG, WebP, GIF או AVIF בגודל של עד 8 MB.',
   invalid: 'בדקו את הפרטים ונסו שוב.',
   invalid_entry_code: 'קוד הכניסה החדש חייב להכיל 4–6 ספרות בלבד.',
   capacity: 'אין אפשרות להקצות קוד כרגע.',
-  recovery_sent: 'אם החשבון מורשה, קוד אימות נשלח למייל. הקוד תקף ל-10 דקות.',
-  recovery_done: 'קוד הכניסה עודכן. אפשר להתחבר עם הקוד החדש.',
+  popup_blocked: 'חלון ההתחברות נחסם. יש לאפשר חלונות קופצים ולנסות שוב.',
+  popup_closed: 'חלון ההתחברות נסגר לפני השלמת האימות. אפשר לנסות שוב.',
+  popup_timeout: 'זמן ההתחברות הסתיים. אפשר לנסות שוב.',
 };
 
 let staff = null;
@@ -235,80 +238,21 @@ function resumeEntry(research = false) {
 }
 
 function instructorEntry() {
+  staff = null;
   screen('כניסת מדריכים', home);
   const form = element('form');
-  const username = field(form, 'שם משתמש', { required: true, autocomplete: 'username' });
-  const password = field(form, 'קוד כניסה', { required: true, type: 'password', autocomplete: 'current-password' });
-  submit(form, 'כניסה', async () => {
-    const submitted = password.value;
-    password.value = '';
+  element('p', t('התחברות באמצעות חשבון דשבורד תעשיידע.'), form);
+  submit(form, 'התחברות דרך הדשבורד', async () => {
     try {
-      staff = { bearer: await signIn(username.value.trim(), submitted) };
+      const token = await dashboardLogin();
+      await verifyPosterStaff(token);
+      staff = { bearer: token };
       await manage();
     } catch (error) {
       staff = null;
-      throw error.message === 'network' ? error : new Error('login');
+      throw error;
     }
   });
-  button('שכחתי קוד כניסה', instructorPasswordRecovery, form);
-}
-
-function instructorPasswordRecovery() {
-  screen('שחזור קוד כניסה', instructorEntry);
-  const requestForm = element('form');
-  const email = field(requestForm, 'מייל רשום במערכת', {
-    required: true,
-    type: 'email',
-    autocomplete: 'email',
-    dir: 'ltr',
-  });
-  submit(requestForm, 'שליחת קוד', async () => {
-    const challengeId = await requestPasswordRecovery(email.value);
-    status.textContent = t(messages.recovery_sent);
-    requestForm.remove();
-    const completeForm = element('form');
-    const code = field(completeForm, 'קוד אימות', {
-      required: true,
-      inputMode: 'numeric',
-      autocomplete: 'one-time-code',
-      maxLength: 6,
-      dir: 'ltr',
-    });
-    const nextPassword = field(completeForm, 'קוד כניסה חדש', {
-      required: true,
-      type: 'password',
-      autocomplete: 'new-password',
-      minLength: 4,
-      maxLength: 6,
-      inputMode: 'numeric',
-      pattern: '[0-9]{4,6}',
-      dir: 'ltr',
-    });
-    const confirmPassword = field(completeForm, 'אימות קוד כניסה חדש', {
-      required: true,
-      type: 'password',
-      autocomplete: 'new-password',
-      minLength: 4,
-      maxLength: 6,
-      inputMode: 'numeric',
-      pattern: '[0-9]{4,6}',
-      dir: 'ltr',
-    });
-    submit(completeForm, 'שמירת קוד כניסה חדש', async () => {
-      const passwordValue = String(nextPassword.value || '').trim();
-      if (!/^\d{4,6}$/.test(passwordValue)) throw new Error('invalid_entry_code');
-      if (passwordValue !== String(confirmPassword.value || '').trim()) throw new Error('invalid');
-      await completePasswordRecovery({
-        challengeId,
-        code: code.value,
-        password: passwordValue,
-      });
-      status.textContent = t(messages.recovery_done);
-      setTimeout(() => instructorEntry(), 1200);
-    });
-    code.focus();
-  });
-  email.focus();
 }
 
 function copyCode(code) {

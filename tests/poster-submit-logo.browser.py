@@ -21,10 +21,10 @@ def handle(route):
     req=route.request;u=urlsplit(req.url);path=u.path
     if not req.url.startswith(origin+'/'):
         route.abort();return
-    if path=='/rest/v1/rpc/lookup_login_user_by_username':
-        route.fulfill(json=[{'auth_email':'manager@example.invalid','auth_user_id':'fixture','role':'activities_manager'}]);return
-    if path=='/auth/v1/token':
-        route.fulfill(json={'access_token':'fixture-manager','user':{'id':'fixture'}});return
+    if path=='/auth/v1/user':
+        route.fulfill(json={'id':'fixture'});return
+    if path=='/rest/v1/rpc/get_current_app_user':
+        route.fulfill(json=[{'auth_user_id':'fixture','is_active':True,'role':'activities_manager'}]);return
     if path=='/functions/v1/poster-media':
         q=parse_qs(u.query);key=(q.get('schoolId',['poster'])[0],q['image'][0])
         if req.method=='PUT':stored[key]=req.post_data_buffer;route.fulfill(status=204)
@@ -56,6 +56,22 @@ def handle(route):
         else:raise AssertionError(a)
         route.fulfill(json=result);return
     route.continue_()
+def dashboard_sso(page, token):
+    # Simulate only the trusted popup handoff; no real credentials or network login.
+    page.evaluate("""token => {
+      window.open = (url) => {
+        const popup = {closed:false, close(){this.closed=true;}};
+        const state = new URL(url).searchParams.get('state');
+        setTimeout(() => {
+          const event = new Event('message');
+          Object.defineProperties(event, {origin:{value:'https://taasiyeda2026.github.io'},source:{value:popup},data:{value:{type:'spin-off:session',state,access_token:token}}});
+          window.dispatchEvent(event);
+        }, 10);
+        return popup;
+      };
+    }""", token)
+    page.get_by_role('button',name='התחברות דרך הדשבורד',exact=True).click()
+
 def context(browser):
     c=browser.new_context();c.add_init_script(f'window.posterCloudConfig={{url:{json.dumps(origin)},publishableKey:"fixture"}}');c.route('**/*',handle);return c
 
@@ -102,7 +118,7 @@ with sync_playwright() as pw:
     student.locator('#poster-editor-language').click()
     highlight.evaluate('(el)=>el.remove()')
     cdp.send('CSS.forcePseudoState',{'nodeId':title_node,'forcedPseudoClasses':[]});cdp.detach()
-    assert title.get_attribute('maxlength')=='40'
+    assert title.get_attribute('maxlength')=='35'
     assert student.locator('#toolbar [id$="language"]').count()==1
     assert student.locator('#poster-panel-language,#logo-file').count()==0
     assert student.locator('#toolbar').get_by_role('button',name=re.compile('PDF')).count()==0
@@ -137,7 +153,8 @@ with sync_playwright() as pw:
     student.locator('#poster-submit').click();expect(student.locator('#poster-submit-status')).to_contain_text('לא ניתן להתחבר')
     fail_submit=False;student.locator('#poster-submit').click();expect(student.locator('#poster-submit-status')).to_contain_text('בהצלחה')
     manager=context(browser).new_page();manager.goto(url);manager.get_by_role('button',name='כניסת מדריכים',exact=True).click()
-    manager.get_by_label('שם משתמש',exact=True).fill('manager');manager.get_by_label('סיסמה',exact=True).fill('fixture');manager.get_by_role('button',name='כניסה',exact=True).click()
+    dashboard_sso(manager, 'fixture-manager')
+    manager.locator('.pm-settings > summary').click()
     expect(manager.locator('.poster-school-logos')).to_be_visible()
     assert manager.get_by_text('הוגש',exact=False).count()>=1
     assert manager.locator('#toolbar button[onclick]:visible').count()==0
