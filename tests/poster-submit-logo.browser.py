@@ -154,6 +154,7 @@ with sync_playwright() as pw:
     fail_submit=False;student.locator('#poster-submit').click();expect(student.locator('#poster-submit-status')).to_contain_text('בהצלחה')
     manager=context(browser).new_page();manager.goto(url);manager.get_by_role('button',name='כניסת מדריכים',exact=True).click()
     dashboard_sso(manager, 'fixture-manager')
+    manager.locator('.pm-settings > summary').click()
     expect(manager.locator('.poster-school-logos')).to_be_visible()
     assert manager.get_by_text('הוגש',exact=False).count()>=1
     assert manager.locator('#toolbar button[onclick]:visible').count()==0
