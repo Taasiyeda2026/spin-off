@@ -23,9 +23,6 @@ async function jsonRequest(path, body, bearer) {
     signal: AbortSignal.timeout(20000),
   });
   if (!response.ok) {
-    if (path === '/auth/v1/token?grant_type=password' && [400, 401, 422].includes(response.status)) {
-      throw new Error('login');
-    }
     throw new Error(response.status === 401 ? 'denied' : 'network');
   }
   const result = await response.json();
@@ -33,48 +30,19 @@ async function jsonRequest(path, body, bearer) {
   return result;
 }
 
-export async function signIn(username, password) {
-  // Use the same credential normalization as loginWithSupabaseAuth in Dashboard.
-  const login = username.trim().toLowerCase();
-  const submittedPassword = password.trim();
-  if (!login || !submittedPassword) throw new Error('login');
-  const [identity] = await jsonRequest('/rest/v1/rpc/lookup_login_user_by_username', { p_username: login });
-  const email = identity?.auth_email?.trim().toLowerCase();
-  if (!email || !['instructor', 'activities_manager', 'admin'].includes(identity.role)) throw new Error('login');
-  let session;
-  try {
-    session = await jsonRequest('/auth/v1/token?grant_type=password', { email, password: submittedPassword });
-  } catch (error) {
-    // Preserve existing secrets first; retry only rejected short numeric credentials.
-    if (error.message !== 'login' || !/^\d{4,5}$/.test(submittedPassword)) throw error;
-    session = await jsonRequest('/auth/v1/token?grant_type=password', { email, password: 'c:' + submittedPassword });
-  }
-  if (session.user?.id !== identity.auth_user_id || !session.access_token) throw new Error('login');
-  return session.access_token;
-}
-
-export async function requestPasswordRecovery(email) {
-  const normalized = String(email || '').trim().toLowerCase();
-  if (!normalized || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) throw new Error('invalid');
-  const result = await jsonRequest('/functions/v1/management-password-reset', {
-    action: 'request',
-    email: normalized,
+// Staff credentials are handled exclusively by the dashboard bridge.
+export async function verifyPosterStaff(token) {
+  if (typeof token !== 'string' || !token) throw new Error('login');
+  const response = await fetch(project + '/auth/v1/user', {
+    headers: { apikey: publicKey, Authorization: 'Bearer ' + token },
+    cache: 'no-store', signal: AbortSignal.timeout(20000),
   });
-  if (!result?.challenge_id) throw new Error('network');
-  return String(result.challenge_id);
-}
-
-export async function completePasswordRecovery({ challengeId, code, password }) {
-  const trimmedPassword = String(password || '').trim();
-  if (!/^\d{4,6}$/.test(trimmedPassword)) throw new Error('invalid_entry_code');
-  const encodedPassword = trimmedPassword.length < 6 ? 'c:' + trimmedPassword : trimmedPassword;
-  const result = await jsonRequest('/functions/v1/management-password-reset', {
-    action: 'complete',
-    challenge_id: String(challengeId || '').trim(),
-    code: String(code || '').trim(),
-    new_password: encodedPassword,
-  });
-  if (!result?.ok) throw new Error('invalid');
+  if (!response.ok) throw new Error(response.status === 401 || response.status === 403 ? 'login' : 'network');
+  const identity = await response.json();
+  const result = await jsonRequest('/rest/v1/rpc/get_current_app_user', {}, token);
+  const row = Array.isArray(result) ? result.length === 1 ? result[0] : null : result;
+  if (!identity?.id || row?.is_active !== true || String(row.auth_user_id || '') !== String(identity.id) ||
+      !['instructor', 'activities_manager', 'admin'].includes(row.role)) throw new Error('denied');
   return true;
 }
 
