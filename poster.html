@@ -210,6 +210,18 @@ body.panel-open #wrap{padding-right:344px}
 @media(max-width:560px){.poster-access.is-home .poster-home-actions{max-width:100%;gap:9px}.poster-access.is-home .poster-home-actions>button{font-size:clamp(12px,3.5vw,14px);min-height:48px}}
 </style>
 <style>.poster-access details.no-posters{opacity:.68}.empty-poster-status{display:inline-block;margin-inline-start:9px;padding:2px 7px;border:1px solid #71869e;border-radius:5px;font-size:11px;color:#cad9e9}#poster-editor-language:disabled{opacity:.55;cursor:default}</style>
+<style id="poster-arabic-font">
+@font-face{font-family:'Tajawal';src:url('fonts/Tajawal-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'Tajawal';src:url('fonts/Tajawal-Medium.ttf') format('truetype');font-style:normal;font-weight:500;font-display:swap}
+@font-face{font-family:'Tajawal';src:url('fonts/Tajawal-Bold.ttf') format('truetype');font-style:normal;font-weight:700;font-display:swap}
+@font-face{font-family:'Tajawal';src:url('fonts/Tajawal-ExtraBold.ttf') format('truetype');font-style:normal;font-weight:800;font-display:swap}
+@font-face{font-family:'Tajawal';src:url('fonts/Tajawal-Black.ttf') format('truetype');font-style:normal;font-weight:900;font-display:swap}
+#poster:lang(ar),#poster:lang(ar) input,#poster:lang(ar) textarea,#poster:lang(ar) select,#poster:lang(ar) button{font-family:'Tajawal',Arial,sans-serif;letter-spacing:normal}
+#poster:lang(ar) #poster-project{font-weight:900}
+#poster:lang(ar) .bq{font-weight:700}
+#poster:lang(ar) .box textarea,#poster:lang(ar) .box input,#poster:lang(ar) .numbered-answer,#poster:lang(ar) #poster-students,#poster:lang(ar) .bar-mf input{font-weight:500}
+#poster:lang(ar) #slogan-output{font-weight:800}
+</style>
 </head>
 <body class="panel-open">
 <main id="poster-access" class="poster-access">
@@ -415,6 +427,7 @@ function applyEditorLanguage() {
   }
   scroll.scrollTop=top;
   autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();
+  document.fonts?.ready.then(()=>{autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();});
 }
 
 const approvedBackgrounds = Array.isArray(window.posterBackgroundCatalog) ? window.posterBackgroundCatalog.filter(entry =>
@@ -526,7 +539,7 @@ async function offerRestoreDraft() {
 }
 function wireAutosave(){document.addEventListener('input',e=>{if(e.target?.matches?.('#wrap input,#wrap textarea,#sp input,#sp textarea,#sp select'))scheduleAutosave()},true);document.addEventListener('change',e=>{if(e.target?.matches?.('#wrap input,#wrap textarea,#sp input,#sp textarea,#sp select'))scheduleAutosave()},true);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()})}
 function fitPreview(){if(window.matchMedia?.('print')?.matches)return;const poster=G('poster');if(!poster)return;const narrow=window.innerWidth<=720;const panel=document.body.classList.contains('panel-open')&&!narrow;const reserved=panel?380:40;const available=Math.max(260,window.innerWidth-reserved);const scale=Math.max(.33,Math.min(1,available/824));poster.style.zoom=String(scale);fitSolutionDescription();fitSlogan()}
-async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC()?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}try{await window.refreshSchoolLogo?.()}catch{alert(BG_ARABIC()?'تعذّر تحميل شعار المدرسة. حاولوا مجددًا.':'לא ניתן לטעון את לוגו בית הספר. נסו שוב.');return}await window.posterEditor.flush();if(cloudEditor&&!cloudEditor.readOnly&&draftDirty){alert(BG_ARABIC()?'تعذّر حفظ التغييرات.':'השינויים טרם נשמרו. נסו שוב.');return}printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר חקר';window.print()}
+async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC()?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}try{await window.refreshSchoolLogo?.()}catch{alert(BG_ARABIC()?'تعذّر تحميل شعار المدرسة. حاولوا مجددًا.':'לא ניתן לטעון את לוגו בית הספר. נסו שוב.');return}await window.posterEditor.flush();if(cloudEditor&&!cloudEditor.readOnly&&draftDirty){alert(BG_ARABIC()?'تعذّر حفظ التغييرات.':'השינויים טרם נשמרו. נסו שוב.');return}if(document.fonts){await document.fonts.ready;fitSolutionDescription();fitSlogan();}printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר חקר';window.print()}
 const LAYOUT={'c-problem':{left:407,top:277,width:357,height:65},'c-target':{left:407,top:370,width:357,height:65},'c-question':{left:407,top:463,width:357,height:80},'img-pair':{left:407,top:561,width:357,height:170},'c-research':{left:407,top:755,width:357,height:74},'c-findings':{left:407,top:839,width:357,height:92},'c-requirements':{left:407,top:944,width:357,height:92},'c-solution':{left:30,top:277,width:357,height:85},'main-image-box':{left:84,top:384,width:250,height:250},'c-use':{left:30,top:656,width:357,height:95},'c-feedback':{left:30,top:770,width:357,height:70},'c-improvement':{left:30,top:868,width:357,height:70},'c-value':{left:30,top:966,width:357,height:70},'c-slogan':{left:30,top:1054,width:734,height:56}};
 function positionFlowArrows(){[['c-feedback','c-improvement','arrow-feedback-improvement'],['c-improvement','c-value','arrow-improvement-value']].forEach(([fromId,toId,arrowId])=>{const from=G(fromId),to=G(toId),arrow=G(arrowId);if(!from||!to||!arrow)return;const arrowWidth=24,left=from.offsetLeft+(from.offsetWidth/2)-(arrowWidth/2),gap=6,top=from.offsetTop+from.offsetHeight+gap,end=to.offsetTop-gap,height=Math.max(14,end-top);Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'})})}
 function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});updatePosterImageLayout();positionFlowArrows()}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
