@@ -190,7 +190,7 @@ body.panel-open #wrap{padding-right:344px}
 </style>
 <link rel="stylesheet" href="poster-access.css?v=20261125-final-limits">
 <style>@media screen{#toolbar .poster-cloud-toolbar,#toolbar .poster-cloud-toolbar>strong{color:#e6f6ff}#toolbar .poster-cloud-toolbar>strong{font-weight:700}#toolbar .poster-cloud-toolbar>span{color:#b5efff;font-weight:500}}</style>
-<style id="school-logo-placement">#p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:62px;height:62px}#p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}</style>
+<style id="school-logo-placement">#p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:84px;height:84px}#p-hdr .logo-area #logo-box{width:84px;height:84px}#p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}</style>
 <link rel="stylesheet" href="research.css?v=1">
 <script defer src="research-data.js?v=1"></script>
 <script defer src="research.js?v=1"></script>
@@ -199,6 +199,7 @@ body.panel-open #wrap{padding-right:344px}
 .poster-access.is-home .poster-home-actions>button{width:100%;min-width:0;min-height:44px;margin:0}
 @media(max-width:560px){.poster-access.is-home .poster-home-actions{max-width:100%;gap:9px}.poster-access.is-home .poster-home-actions>button{font-size:clamp(12px,3.5vw,14px);min-height:48px}}
 </style>
+<style>.poster-access details.no-posters{opacity:.68}.empty-poster-status{display:inline-block;margin-inline-start:9px;padding:2px 7px;border:1px solid #71869e;border-radius:5px;font-size:11px;color:#cad9e9}#poster-editor-language:disabled{opacity:.55;cursor:default}</style>
 </head>
 <body class="panel-open">
 <main id="poster-access" class="poster-access">
@@ -461,7 +462,7 @@ function queueLocalWrite(operation) {
   localWrite = pending.catch(() => {});
   return pending;
 }
-function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',opacity:G('box-opacity')?.value||'78',sizes:{...SZ},glow:{...glowState},bgId:selectedBackgroundId},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
+function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),language:BG_ARABIC()?'ar':'he',values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',opacity:G('box-opacity')?.value||'78',sizes:{...SZ},glow:{...glowState},bgId:selectedBackgroundId},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
 async function saveDraft() {
   clearTimeout(autosaveTimer);
   if (restoringDraft || !draftDirty) return;
@@ -618,7 +619,7 @@ window.posterEditor = {
   hasUnsavedChanges: () => draftDirty,
 };
 </script>
-<script type="module" src="poster-access.js?v=20261126-research"></script>
+<script type="module" src="poster-access.js?v=20261126-management-language"></script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>

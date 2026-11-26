@@ -74,7 +74,16 @@ function syncLanguageControls() {
   }
 }
 syncLanguageControls();
+function setPosterLanguage(value) {
+  const destination=new URL(location.href);
+  if(value) destination.searchParams.set('lang','ar');else destination.searchParams.delete('lang');
+  history.replaceState(history.state,'',destination.href);
+  setArabic(value);
+  syncLanguageControls();
+  window.dispatchEvent(new Event('poster:language-changed'));
+}
 function switchEditorLanguage() {
+  if(language.disabled)return;
   const destination=languageDestination();
   history.replaceState(history.state,'',destination.href);
   setArabic(!arabic);
@@ -94,7 +103,7 @@ function switchEditorLanguage() {
       if(el.hasAttribute(attr))el.setAttribute(attr,translateInterfaceText(el.getAttribute(attr)));
     }
     accessChoicesRefresh?.();managementLanguageRefresh?.();
-  }
+  } else {editor.markChanged();}
 }
 for(const toggle of document.querySelectorAll('#poster-editor-language'))toggle.addEventListener('click',switchEditorLanguage);
 
@@ -116,6 +125,7 @@ function button(text, action, parent = root, primary = false) {
 }
 
 function screen(heading, back) {
+  language.disabled=false;
   managementLanguageRefresh = null;accessChoicesRefresh=null;
   document.body.classList.add('poster-access-mode');
   document.getElementById('toolbar').hidden=false;toolbar.replaceChildren();
@@ -244,8 +254,10 @@ function copyCode(code) {
 }
 
 async function openFromManagement(id, mode) {
+  const managementArabic=arabic;
   const poster = await posterRequest('load', { id }, staff);
-  await openPoster(poster, staff, manage, mode !== 'edit');
+  const back=async()=>{setPosterLanguage(managementArabic);await manage();};
+  await openPoster(poster, staff, back, mode !== 'edit');
   if (mode === 'pdf') await window.producePdf();
 }
 
@@ -269,14 +281,18 @@ function renderManagement(data, previous = null) {
   function render(expanded = null) {
     results.replaceChildren();
     const query = search.value.trim().toLocaleLowerCase();
-    for (const activity of data.activities) {
-      const matching = activity.posters.filter((poster) =>
+    const count = activity => activity.posters.filter(p=>!p.deleted).length;
+    const ordered = [...data.activities].sort((a,b)=>Number(count(b)>0)-Number(count(a)>0));
+    for (const activity of ordered) {
+      const matching = activity.posters.filter(p=>!p.deleted).filter((poster) =>
         [poster.title, poster.participants, poster.code].some((value) => String(value ?? '').toLocaleLowerCase().includes(query)));
       if (query && !matching.length) continue;
       const row = element('details', '', results);
       row.dataset.activityId = activity.id;
       row.open = expanded ? expanded.has(activity.id) : Boolean(query);
-      element('summary', [activityLabel(activity), t('טכנולוגיות החלל'), activity.posters.length + ' ' + t('פוסטרים')].join(' · '), row);
+      row.classList.toggle('no-posters', count(activity)===0);
+      const summary=element('summary', [activityLabel(activity), t('טכנולוגיות החלל'), count(activity) + ' ' + t('פוסטרים')].join(' · '), row);
+      if(!count(activity))element('span',arabic?'لم يبدأ بعد':'טרם התחילו',summary).className='empty-poster-status';
       const idLine = element('div', '', row);
       idLine.className = 'poster-activity-id';
       element('span', t('מזהה פעילות') + ':', idLine);
@@ -305,9 +321,7 @@ function renderManagement(data, previous = null) {
           button('PDF', () => openFromManagement(poster.id, 'pdf').catch(showError), card);
           button('העתקת קוד', () => copyCode(poster.code), card);
         }
-        const actions = poster.deleted
-          ? (data.admin ? [['restore', 'שחזור']] : [])
-          : [['delete', 'מחיקה'], ...(!poster.archived ? [['rotate', 'החלפת קוד']] : []),
+        const actions = [['delete', 'מחיקה'], ...(!poster.archived ? [['rotate', 'החלפת קוד']] : []),
             ...(data.admin ? [poster.archived ? ['unarchive', 'הוצאה מהארכיון'] : ['archive', 'ארכוב']] : [])];
         for (const [action, label] of actions) {
           button(label, async (event) => {
@@ -320,7 +334,7 @@ function renderManagement(data, previous = null) {
               // screen, filters, open activities and scroll position intact.
               const index = activity.posters.findIndex(item => item.id === poster.id);
               if (index !== -1) {
-                if (updated.deleted && !data.admin) activity.posters.splice(index, 1);
+                if (action==='delete' || updated.deleted) activity.posters.splice(index, 1);
                 else activity.posters[index] = { ...activity.posters[index], ...updated };
               }
               const expanded = new Set(Array.from(results.querySelectorAll('details[open]'), item => item.dataset.activityId));
@@ -370,6 +384,14 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       await drafts.write(poster.id + ':conflict', backup);
     }
   }
+  const savedLanguage=draft.language;
+  if(savedLanguage==='ar'||savedLanguage==='he') setPosterLanguage(savedLanguage==='ar');
+  else if(access.bearer || poster.revision>0){
+    const authored=Object.entries(draft.values??{}).filter(([k])=>!['poster-school','poster-class'].includes(k)).map(([,v])=>String(v)).join(' ');
+    const arCount=(authored.match(/[\u0600-\u06ff]/g)||[]).length, heCount=(authored.match(/[\u0590-\u05ff]/g)||[]).length;
+    if(arCount||heCount)setPosterLanguage(arCount>heCount);
+  }
+  language.disabled=Boolean(readOnly||poster.archived);
   toolbar.replaceChildren();
   element('strong', t('קוד הפוסטר') + ': ' + poster.code, toolbar).dataset.posterCode=poster.code;
   const indicator = element('span', '', toolbar);
@@ -500,9 +522,9 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
       message.textContent=t(error.message==='unsaved'?'לא ניתן לשלוח לפני השלמת השמירה. הנתונים נשמרו בטיוטה.':(messages[error.message]??'השליחה נכשלה. הנתונים נשמרו, נסו שוב.'));
     } finally {submitting=false;panel.inert=art.inert=false;document.getElementById('toolbar').inert=false;languageControl.disabled=false;submit.disabled=false;}
   };
-  await editor.open({ id: poster.id, draft, save, defaults, readOnly: readOnly || poster.archived });
+  await editor.open({ id: poster.id, draft, save, defaults:access.bearer?null:defaults, readOnly: readOnly || poster.archived });
   await updateSchoolLogo();
-  if (pendingBackup) editor.markChanged();
+  if (pendingBackup || (!access.bearer && !poster.archived && !readOnly && !savedLanguage)) editor.markChanged();
 }
 
 window.addEventListener('online', () => editor.save());
