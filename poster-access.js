@@ -1,5 +1,5 @@
-import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261125-final-limits';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, requestPasswordRecovery, completePasswordRecovery, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261126-login-recovery-v1';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261127-shared-entry-code';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, signIn, requestPasswordRecovery, completePasswordRecovery, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261127-shared-entry-code';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');
@@ -15,13 +15,14 @@ const messages = {
   code: 'הקוד לא נמצא או שאינו זמין. בדקו אותו ונסו שוב.',
   denied: 'אין גישה לפוסטר. נסו להיכנס מחדש.',
   rate_limit: 'בוצעו ניסיונות רבים. המתינו ונסו שוב.',
-  login: 'הכניסה לא הצליחה. בדקו את שם המשתמש והסיסמה, או אפסו סיסמה דרך שכחתי סיסמה.',
+  login: 'הכניסה לא הצליחה. בדקו את שם המשתמש וקוד הכניסה, או השתמשו בשכחתי קוד כניסה.',
   network: 'לא ניתן להתחבר כרגע. בדקו את החיבור ונסו שוב.',
   image: 'בחרו תמונת PNG, JPEG, WebP, GIF או AVIF בגודל של עד 8 MB.',
   invalid: 'בדקו את הפרטים ונסו שוב.',
+  invalid_entry_code: 'קוד הכניסה החדש חייב להכיל 4–6 ספרות בלבד.',
   capacity: 'אין אפשרות להקצות קוד כרגע.',
   recovery_sent: 'אם החשבון מורשה, קוד אימות נשלח למייל. הקוד תקף ל-10 דקות.',
-  recovery_done: 'הסיסמה עודכנה. אפשר להתחבר עם הסיסמה החדשה.',
+  recovery_done: 'קוד הכניסה עודכן. אפשר להתחבר עם הקוד החדש.',
 };
 
 let staff = null;
@@ -237,7 +238,7 @@ function instructorEntry() {
   screen('כניסת מדריכים', home);
   const form = element('form');
   const username = field(form, 'שם משתמש', { required: true, autocomplete: 'username' });
-  const password = field(form, 'סיסמה', { required: true, type: 'password', autocomplete: 'current-password' });
+  const password = field(form, 'קוד כניסה', { required: true, type: 'password', autocomplete: 'current-password' });
   submit(form, 'כניסה', async () => {
     const submitted = password.value;
     password.value = '';
@@ -249,11 +250,11 @@ function instructorEntry() {
       throw error.message === 'network' ? error : new Error('login');
     }
   });
-  button('שכחתי סיסמה', instructorPasswordRecovery, form);
+  button('שכחתי קוד כניסה', instructorPasswordRecovery, form);
 }
 
 function instructorPasswordRecovery() {
-  screen('שחזור סיסמת מדריך', instructorEntry);
+  screen('שחזור קוד כניסה', instructorEntry);
   const requestForm = element('form');
   const email = field(requestForm, 'מייל רשום במערכת', {
     required: true,
@@ -273,21 +274,29 @@ function instructorPasswordRecovery() {
       maxLength: 6,
       dir: 'ltr',
     });
-    const nextPassword = field(completeForm, 'סיסמה חדשה', {
+    const nextPassword = field(completeForm, 'קוד כניסה חדש', {
       required: true,
       type: 'password',
       autocomplete: 'new-password',
-      minLength: 8,
+      minLength: 4,
+      maxLength: 6,
+      inputMode: 'numeric',
+      pattern: '[0-9]{4,6}',
+      dir: 'ltr',
     });
-    const confirmPassword = field(completeForm, 'אימות סיסמה חדשה', {
+    const confirmPassword = field(completeForm, 'אימות קוד כניסה חדש', {
       required: true,
       type: 'password',
       autocomplete: 'new-password',
-      minLength: 8,
+      minLength: 4,
+      maxLength: 6,
+      inputMode: 'numeric',
+      pattern: '[0-9]{4,6}',
+      dir: 'ltr',
     });
-    submit(completeForm, 'שמירת סיסמה חדשה', async () => {
+    submit(completeForm, 'שמירת קוד כניסה חדש', async () => {
       const passwordValue = String(nextPassword.value || '').trim();
-      if (passwordValue.length < 8) throw new Error('invalid');
+      if (!/^\d{4,6}$/.test(passwordValue)) throw new Error('invalid_entry_code');
       if (passwordValue !== String(confirmPassword.value || '').trim()) throw new Error('invalid');
       await completePasswordRecovery({
         challengeId,
