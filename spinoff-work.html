@@ -23,6 +23,11 @@ body{min-height:100vh}
 .app{max-width:1040px;margin:auto;padding:18px 14px 96px}
 .topbar{width:min(100%,210mm);margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .topbar .title{font-weight:1000;color:var(--navy);font-size:15px}
+.language-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.language-switch{display:flex;gap:5px;align-items:center}
+.language-switch button{border:0;background:transparent;color:var(--navy);font:inherit;font-size:12px;cursor:pointer;padding:6px}
+.language-switch button[aria-pressed="true"]{font-weight:900;text-decoration:underline}
+html[lang="ar"] .sheet-head h1{line-height:1.25}
 .topbar a{color:var(--navy);text-decoration:none;font-size:12px;font-weight:900}
 
 .sheet{
@@ -317,7 +322,14 @@ textarea{resize:none;line-height:1.42}
 <div class="app">
   <div class="topbar no-print">
     <div class="title">פעילות ספינאוף — דף צוות</div>
-    <a href="spinoff.html">חזרה להסבר</a>
+    <div class="language-tools">
+      <nav class="language-switch" aria-label="בחירת שפה">
+        <button type="button" data-language="he" lang="he" aria-pressed="true">עברית</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" data-language="ar" lang="ar" aria-pressed="false">العربية</button>
+      </nav>
+      <a href="spinoff.html">חזרה להסבר</a>
+    </div>
   </div>
 
   <main class="sheet" id="sheet">
@@ -439,28 +451,135 @@ const products={
 let selectedId='';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
-function chooseProduct(id,keepAnswer=false){
-  const p=products[id]; if(!p)return;
-  selectedId=id;
-  $('#selectedImg').src=p.img;
-  $('#selectedImg').alt=p.name;
-  $('#selectedName').textContent=p.name;
-  $('#selectedWrap').classList.add('on');
-  $('#picker').style.display='none';
-  document.querySelector('.pick-title')?.style.setProperty('display','none');
+
+const translations={
+  "פעילות ספינאוף | דף צוות": "نشاط سبين أوف | ورقة الفريق",
+  "פעילות ספינאוף — דף צוות": "نشاط سبين أوف — ورقة الفريق",
+  "חזרה להסבר": "العودة إلى الشرح",
+  "פעילות ספינאוף": "نشاط سبين أوف",
+  "מזהים יכולת טכנולוגית וחושבים איפה עוד היא יכולה לעזור": "نتعرّف على قدرة تكنولوجية ونفكّر أين يمكن أن تفيد أيضًا",
+  "תעשיידע": "تعسيداع",
+  "שמות המשתתפים בקבוצה": "أسماء المشاركين في المجموعة",
+  "כתבו את שמות חברי הקבוצה": "اكتبوا أسماء أعضاء المجموعة",
+  "כיתה": "الصف",
+  "למשל ד2": "مثلًا: الرابع 2",
+  "בחרו מוצר אחד מתוך ששת המוצרים": "اختاروا منتجًا واحدًا من المنتجات الستة",
+  "לחצו על הכרטיס כדי לבחור": "اضغطوا على البطاقة للاختيار",
+  "בחירת מוצר": "اختيار منتج",
+  "קנקן סינון מים": "إبريق تنقية المياه",
+  "טיפול במים": "معالجة المياه",
+  "מדחום אוזן": "ميزان حرارة الأذن",
+  "מדידה מרחוק": "القياس عن بُعد",
+  "משקפי ראייה": "نظّارات طبية",
+  "הגנה על עדשות": "حماية العدسات",
+  "מקדחה אלחוטית": "مثقاب لاسلكي",
+  "עבודה ללא כבל": "العمل دون سلك",
+  "שמיכת חירום תרמית": "بطانية طوارئ حرارية",
+  "שמירה על חום": "الحفاظ على الحرارة",
+  "קסדת אופניים": "خوذة درّاجة هوائية",
+  "זרימת אוויר וקירור": "تدفّق الهواء والتبريد",
+  "המוצר שבחרנו": "المنتج الذي اخترناه",
+  "בחרו מוצר": "اختاروا منتجًا",
+  "עכשיו מפענחים מה הטכנולוגיה יודעת לעשות.": "الآن نكتشف ما الذي تستطيع التكنولوجيا فعله.",
+  "החלפת מוצר": "تغيير المنتج",
+  "מה היכולת הטכנולוגית של המוצר שבחרתם?": "ما القدرة التكنولوجية للمنتج الذي اخترتموه؟",
+  "בחרו קודם מוצר כדי לראות את האפשרויות.": "اختاروا منتجًا أولًا لعرض الخيارات.",
+  "מה הגיע למוצר הזה מעולם החלל?": "ما الذي انتقل إلى هذا المنتج من عالم الفضاء؟",
+  "כתבו בקצרה: ידע, חומר, טכנולוגיה או רעיון": "اكتبوا باختصار: معرفة، مادة، تكنولوجيا أو فكرة",
+  "למה היכולת הזאת שימושית במוצר שבחרתם?": "لماذا تُعدّ هذه القدرة مفيدة في المنتج الذي اخترتموه؟",
+  "הסבירו במשפט או שניים": "اشرحوا بجملة أو جملتين",
+  "איפה עוד היכולת הזאת יכולה לעזור?": "أين يمكن أن تفيد هذه القدرة أيضًا؟",
+  "כתבו לפחות שני מקומות, מצבים או שימושים נוספים": "اكتبوا مكانين أو حالتين أو استخدامين إضافيين على الأقل",
+  "בחרו שימוש אחד. למי היכולת יכולה לעזור ואיך?": "اختاروا استخدامًا واحدًا. من يمكن أن يستفيد من هذه القدرة وكيف؟",
+  "הסבירו בקצרה — עדיין לא מתכננים את המוצר שלנו": "اشرحوا باختصار — لم نبدأ بعد بتصميم منتجنا",
+  "המטרה היא לזהות יכולת ולחשוב איפה עוד היא יכולה לעזור — עדיין לא מתכננים את המוצר שלנו.": "الهدف هو التعرّف على قدرة والتفكير أين يمكن أن تفيد أيضًا — لم نبدأ بعد بتصميم منتجنا.",
+  "הפקת PDF": "إنشاء PDF",
+  "שמירה": "حفظ",
+  "ניקוי": "مسح",
+  "העבודה נשמרת בדפדפן במכשיר הזה": "يُحفظ العمل في المتصفح على هذا الجهاز",
+  "נשמר ✓": "تم الحفظ ✓",
+  "לנקות את כל הדף ולהתחיל מחדש?": "هل تريدون مسح الورقة بالكامل والبدء من جديد؟",
+  "בחרו קודם מוצר אחד מתוך ששת המוצרים.": "اختاروا أولًا منتجًا واحدًا من المنتجات الستة.",
+  "בחלון ההדפסה בחרו שמירה כ-PDF": "في نافذة الطباعة، اختاروا الحفظ بصيغة PDF",
+  "חזרה לראש העמוד": "العودة إلى أعلى الصفحة",
+  "לסנן ולנקות מים": "ترشيح المياه وتنقيتها",
+  "למדוד חום מרחוק": "قياس درجة الحرارة عن بُعد",
+  "לשמור על חום": "الحفاظ على الحرارة",
+  "לעבוד בלי חיבור קבוע לחשמל": "العمل دون اتصال دائم بالكهرباء",
+  "להגן על העדשות מפני שריטות": "حماية العدسات من الخدوش",
+  "להפוך אור לחשמל": "تحويل الضوء إلى كهرباء",
+  "לשמור על חום הגוף": "الحفاظ على حرارة الجسم",
+  "לסנן מים": "ترشيح المياه",
+  "להחזיר חום ולעזור לשמור עליו": "عكس الحرارة والمساعدة في الاحتفاظ بها",
+  "להגן על עדשות מפני שריטות": "حماية العدسات من الخدوش",
+  "לאפשר לאוויר לזרום ולעזור לקרר את הראש": "السماح بتدفّق الهواء والمساعدة في تبريد الرأس",
+  "בחירת שפה": "اختيار اللغة"
+};
+const LANGUAGE_KEY='spin-off-challenges-language';
+let language='he';
+const t=text=>language==='ar'?(translations[text]||text):text;
+const staticText=[];
+const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+while(walker.nextNode()){
+  const node=walker.currentNode;
+  if(node.parentElement.closest('script,style,textarea'))continue;
+  const original=node.textContent.trim();
+  if(translations[original])staticText.push({node,original});
+}
+const staticAttributes=[];
+for(const el of document.querySelectorAll('[placeholder],[aria-label],[title],[alt]')){
+  for(const attr of ['placeholder','aria-label','title','alt']){
+    const original=el.getAttribute(attr);
+    if(translations[original])staticAttributes.push({el,attr,original});
+  }
+}
+const originalTitle=document.title;
+function setLanguage(next,remember=true){
+  language=next==='ar'?'ar':'he';
+  document.documentElement.lang=language;
+  document.title=t(originalTitle);
+  for(const {node,original} of staticText)if(node.isConnected)node.textContent=t(original);
+  for(const {el,attr,original} of staticAttributes)el.setAttribute(attr,t(original));
+  for(const button of document.querySelectorAll('[data-language]'))button.setAttribute('aria-pressed',String(button.dataset.language===language));
+  document.querySelector('.language-switch').setAttribute('aria-label',t('בחירת שפה'));
+  if(selectedId){
+    const p=products[selectedId];
+    $('#selectedName').textContent=t(p.name);
+    $('#selectedImg').alt=t(p.name);
+    renderChoices(p,true);
+  }else $('#q1Choices').innerHTML='<div class="helper">'+t('בחרו קודם מוצר כדי לראות את האפשרויות.')+'</div>';
+  $('#status').textContent=t('העבודה נשמרת בדפדפן במכשיר הזה');
+  const url=new URL(location.href);
+  url.searchParams.set('lang',language);
+  history.replaceState(null,'',url);
+  if(remember)try{localStorage.setItem(LANGUAGE_KEY,language);}catch(e){}
+}
+function renderChoices(p,keepAnswer=false){
   const old=keepAnswer?document.querySelector('input[name="ability"]:checked')?.value:'';
-  $('#q1Choices').innerHTML=p.choices.map(c=>`<label class="choice"><input type="radio" name="ability" value="${c}"><span>${c}</span></label>`).join('');
+  $('#q1Choices').innerHTML=p.choices.map(c=>`<label class="choice"><input type="radio" name="ability" value="${c}"><span>${t(c)}</span></label>`).join('');
   if(old){
     const r=[...document.querySelectorAll('input[name="ability"]')].find(x=>x.value===old);
     if(r)r.checked=true;
   }
-  persist(false);
+}
+
+function chooseProduct(id,keepAnswer=false,save=true){
+  const p=products[id]; if(!p)return;
+  selectedId=id;
+  $('#selectedImg').src=p.img;
+  $('#selectedImg').alt=t(p.name);
+  $('#selectedName').textContent=t(p.name);
+  $('#selectedWrap').classList.add('on');
+  $('#picker').style.display='none';
+  document.querySelector('.pick-title')?.style.setProperty('display','none');
+  renderChoices(p,keepAnswer);
+  if(save)persist(false);
 }
 
 function showPicker(){
   $('#picker').style.display='grid';
-  const t=document.querySelector('.pick-title');
-  if(t)t.style.display='flex';
+  const pickTitle=document.querySelector('.pick-title');
+  if(pickTitle)pickTitle.style.display='flex';
   $('#selectedWrap').classList.remove('on');
 }
 
@@ -479,8 +598,8 @@ function state(){
 function persist(show=true){
   localStorage.setItem(KEY,JSON.stringify(state()));
   if(show){
-    $('#status').textContent='נשמר ✓';
-    setTimeout(()=>$('#status').textContent='העבודה נשמרת בדפדפן במכשיר הזה',1300);
+    $('#status').textContent=t('נשמר ✓');
+    setTimeout(()=>$('#status').textContent=t('העבודה נשמרת בדפדפן במכשיר הזה'),1300);
   }
 }
 function load(){
@@ -494,14 +613,14 @@ function load(){
     $('#q4').value=s.q4||'';
     $('#q5').value=s.q5||'';
     if(s.selectedId&&products[s.selectedId]){
-      chooseProduct(s.selectedId);
+      chooseProduct(s.selectedId,false,false);
       const r=[...document.querySelectorAll('input[name="ability"]')].find(x=>x.value===s.ability);
       if(r)r.checked=true;
     }
   }catch(e){}
 }
 function clearAll(){
-  if(!confirm('לנקות את כל הדף ולהתחיל מחדש?'))return;
+  if(!confirm(t('לנקות את כל הדף ולהתחיל מחדש?')))return;
   localStorage.removeItem(KEY);
   selectedId='';
   $('#members').value='';
@@ -510,19 +629,19 @@ function clearAll(){
   $('#q3').value='';
   $('#q4').value='';
   $('#q5').value='';
-  $('#q1Choices').innerHTML='<div class="helper">בחרו קודם מוצר כדי לראות את האפשרויות.</div>';
+  $('#q1Choices').innerHTML='<div class="helper">'+t('בחרו קודם מוצר כדי לראות את האפשרויות.')+'</div>';
   $('#selectedWrap').classList.remove('on');
   $('#picker').style.display='grid';
-  const t=document.querySelector('.pick-title');
-  if(t)t.style.display='flex';
+  const pickTitle=document.querySelector('.pick-title');
+  if(pickTitle)pickTitle.style.display='flex';
 }
 function producePdf(){
   if(!selectedId){
-    alert('בחרו קודם מוצר אחד מתוך ששת המוצרים.');
+    alert(t('בחרו קודם מוצר אחד מתוך ששת המוצרים.'));
     return;
   }
   persist(false);
-  $('#status').textContent='בחלון ההדפסה בחרו שמירה כ-PDF';
+  $('#status').textContent=t('בחלון ההדפסה בחרו שמירה כ-PDF');
   setTimeout(()=>window.print(),80);
 }
 
@@ -534,6 +653,12 @@ $('#pdfBtn').addEventListener('click',producePdf);
 document.addEventListener('input',()=>persist(false));
 document.addEventListener('change',()=>persist(false));
 load();
+let initialLanguage=new URLSearchParams(location.search).get('lang');
+if(initialLanguage!=='he'&&initialLanguage!=='ar'){
+  try{initialLanguage=localStorage.getItem(LANGUAGE_KEY);}catch(e){}
+}
+setLanguage(initialLanguage,initialLanguage==='he'||initialLanguage==='ar');
+$$('[data-language]').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.language)));
 </script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
@@ -543,6 +668,11 @@ load();
 (() => {
   const btn = document.getElementById('backToTop');
   if (!btn) return;
+  for(const attr of ['aria-label','title']){
+    const original=btn.getAttribute(attr);
+    staticAttributes.push({el:btn,attr,original});
+    btn.setAttribute(attr,t(original));
+  }
 
   const placeAboveBottomBar = () => {
     const bars = [...document.querySelectorAll('.actions, .bar')];
