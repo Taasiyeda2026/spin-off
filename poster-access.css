@@ -386,3 +386,9 @@ body .poster-access:has(.pm-panel){width:min(1180px,calc(100% - 28px));max-width
 .poster-access .pm-menu-body button.pm-danger{color:#ffb3b9}
 @media(max-width:650px){body .poster-access:has(.pm-panel){padding:12px;width:calc(100% - 20px)}.pm-filters,.pm-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.poster-access article.pm-card{margin-inline:0}.pm-card-top{gap:5px}}
 }
+
+/* Desktop management matches the compact 75% reference; mobile and editor stay unchanged. */
+@media screen and (min-width: 901px){
+ body:has(.poster-access:not([hidden]) .pm-panel) #toolbar{zoom:.75}
+ body .poster-access:not([hidden]):has(.pm-panel){zoom:.75;width:min(1573px,calc(100% - 28px));margin-top:calc(var(--editor-toolbar-height,72px) / .75 + 18px)}
+}
