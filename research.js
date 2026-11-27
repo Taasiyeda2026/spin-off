@@ -9,9 +9,9 @@ function node(tag,text,parent){const e=document.createElement(tag);if(text)e.tex
 function changed(){window.posterEditor?.markChanged();}
 function field(parent,key,label,initial=''){
  const wrap=node('label','',parent);wrap.className='research-field';node('span',label,wrap);
- const input=node('textarea','',wrap);input.rows=2;input.value=typeof answers[key]==='string'?answers[key]:initial;input.readOnly=readonly;
+ const input=node('textarea','',wrap);input.rows=1;input.value=typeof answers[key]==='string'?answers[key]:initial;input.readOnly=readonly;
  const printable=node('div',input.value,wrap);printable.className='research-print-value';
- const resize=()=>{input.style.height='auto';input.style.height=Math.min(240,Math.max(62,input.scrollHeight+2))+'px';};
+ const resize=()=>{input.style.height='auto';input.style.height=Math.min(180,Math.max(36,input.scrollHeight+2))+'px';};
  input.addEventListener('input',()=>{if(readonly)return;answers[key]=input.value;printable.textContent=input.value;resize();changed();});
  requestAnimationFrame(resize);
 }
@@ -44,7 +44,7 @@ function render(){
    node('span',first.slice(1),button);const arrow=node('span','⌄',button);arrow.className='research-stage-arrow';arrow.setAttribute('aria-hidden','true');
    section=node('div','',stage);section.className='research-stage-body';section.id='research-stage-body-'+index;
    button.setAttribute('aria-controls',section.id);
-   const sync=()=>{const expanded=openStages.has(index);button.setAttribute('aria-expanded',String(expanded));stage.classList.toggle('is-expanded',expanded);if(expanded)section.querySelectorAll('textarea').forEach(input=>{input.style.height='auto';input.style.height=Math.min(240,Math.max(62,input.scrollHeight+2))+'px';});};
+   const sync=()=>{const expanded=openStages.has(index);button.setAttribute('aria-expanded',String(expanded));stage.classList.toggle('is-expanded',expanded);if(expanded)section.querySelectorAll('textarea').forEach(input=>{input.style.height='auto';input.style.height=Math.min(180,Math.max(36,input.scrollHeight+2))+'px';});};
    button.onclick=()=>{openStages.has(index)?openStages.delete(index):openStages.add(index);sync();};sync();
    if(parts[0])node('p',parts[0],section);continue;
   }
