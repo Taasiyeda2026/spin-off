@@ -30,7 +30,7 @@ function render(){
  const lines=window.researchSource[ar()?'ar':'he'].split('\n');
  const actions=node('div','',content);actions.className='research-actions';
  const back=node('button',tr('חזרה לפוסטר','العودة إلى الملصق'),actions);back.type='button';back.onclick=hide;
- const pdf=node('button',tr('הפקת PDF','إنشاء PDF'),actions);pdf.type='button';pdf.onclick=async()=>{pdf.disabled=true;try{if(!readonly&&!(await window.posterEditor.flush())){alert(tr('השמירה נכשלה – נסו שוב','تعذّر الحفظ، حاولوا مجددًا'));return;}window.print();}finally{pdf.disabled=false;}};
+
  node('h1',lines.shift(),content);
  const info=node('div','',content);info.className='research-identity';
  lines.shift().split('|').forEach((label,i)=>field(info,'identity-'+i,label,i===0?'':document.getElementById(['','poster-students','poster-school','poster-class'][i])?.value??''));
@@ -52,6 +52,8 @@ function render(){
   node('h3',first+'. '+parts.shift(),question);
   parts.forEach((part,i)=>{const key='q'+first+'-'+i;if(part[0]==='!')node('p',part.slice(1),question);else if(part[0]==='#'||part[0]==='%')choices(question,key,part);else field(question,key,part);});
  }
+ const bottom=node('div','',content);bottom.className='research-actions research-actions-bottom';
+ const pdf=node('button',tr('הפקת PDF','إنشاء PDF'),bottom);pdf.type='button';pdf.onclick=async()=>{pdf.disabled=true;try{if(!readonly&&!(await window.posterEditor.flush())){alert(tr('השמירה נכשלה – נסו שוב','تعذّر الحفظ، حاولوا مجددًا'));return;}window.print();}finally{pdf.disabled=false;}};
 }
 function show(){if(!enabled)return;shown=true;openStages.clear();panelWasOpen=document.body.classList.contains('panel-open');document.body.classList.add('research-active');document.body.classList.remove('panel-open');root.hidden=false;render();toggle.textContent=tr('פוסטר חקר','ملصق البحث');window.scrollTo(0,0);}
 function hide(){shown=false;root.hidden=true;document.body.classList.remove('research-active');if(panelWasOpen&&!readonly)document.body.classList.add('panel-open');toggle.textContent=tr('שאלות חקר','أسئلة الاستقصاء');window.dispatchEvent(new Event('resize'));}
