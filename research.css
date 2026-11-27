@@ -32,3 +32,32 @@ body.research-active #sp,body.research-active #wrap,body.research-active #toolba
  body.research-active .research-options label{break-inside:avoid}
  body.research-active .research-stage p{margin:1.5mm 0}
 }
+
+/* Compact worksheet screen layout, independent of print. */
+@media screen {
+ body.research-active #research-sheet{box-sizing:border-box;width:calc(100% - 24px);max-width:760px;margin:calc(var(--editor-toolbar-height,72px) + 12px) auto 24px;padding:0 10px;font-size:13px;line-height:1.4}
+ #research-sheet h1{font-size:20px;margin:10px 0 12px}
+ #research-sheet .research-actions{gap:6px}
+ #research-sheet .research-actions button{font-size:13px;padding:6px 12px;border-radius:6px}
+ #research-sheet .research-actions-bottom{margin:14px 0 6px}
+ #research-sheet .research-stage,#research-sheet .research-identity{margin:8px 0;border-radius:8px}
+ #research-sheet .research-identity{padding:10px 12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+ #research-sheet .research-stage h2{font-size:16px}
+ #research-sheet .research-stage-toggle{padding:9px 12px;gap:8px}
+ #research-sheet .research-stage-arrow{font-size:18px}
+ #research-sheet .research-stage-body{padding:0 12px 10px}
+ #research-sheet .research-question{padding:7px 0;margin-top:7px}
+ #research-sheet .research-question h3{font-size:14px;margin:0 0 5px;line-height:1.4}
+ #research-sheet .research-stage p{margin:4px 0;line-height:1.4;font-size:13px}
+ #research-sheet .research-field{margin:5px 0}
+ #research-sheet .research-field span{font-size:12px;margin-bottom:3px}
+ #research-sheet .research-field textarea{min-height:36px;max-height:180px;padding:5px 8px;border-radius:5px;font:13px/1.4 Heebo,Arial,sans-serif}
+ #research-sheet .research-options{gap:4px 12px;margin:5px 0;font-size:13px}
+ #research-sheet .research-options label{gap:4px}
+ #research-sheet .research-options input{margin:0}
+}
+@media screen and (max-width:520px){
+ body.research-active #research-sheet{width:calc(100% - 12px);padding:0 4px}
+ #research-sheet .research-identity{grid-template-columns:minmax(0,1fr)}
+ #research-sheet .research-field textarea{font-size:16px}
+}
