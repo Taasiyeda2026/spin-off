@@ -9,9 +9,9 @@ function node(tag,text,parent){const e=document.createElement(tag);if(text)e.tex
 function changed(){window.posterEditor?.markChanged();}
 function field(parent,key,label,initial=''){
  const wrap=node('label','',parent);wrap.className='research-field';node('span',label,wrap);
- const input=node('textarea','',wrap);input.rows=2;input.value=typeof answers[key]==='string'?answers[key]:initial;input.readOnly=readonly;
+ const input=node('textarea','',wrap);input.rows=1;input.value=typeof answers[key]==='string'?answers[key]:initial;input.readOnly=readonly;
  const printable=node('div',input.value,wrap);printable.className='research-print-value';
- const resize=()=>{input.style.height='auto';input.style.height=Math.min(240,Math.max(62,input.scrollHeight+2))+'px';};
+ const resize=()=>{input.style.height='auto';input.style.height=Math.min(180,Math.max(36,input.scrollHeight+2))+'px';};
  input.addEventListener('input',()=>{if(readonly)return;answers[key]=input.value;printable.textContent=input.value;resize();changed();});
  requestAnimationFrame(resize);
 }
@@ -30,7 +30,7 @@ function render(){
  const lines=window.researchSource[ar()?'ar':'he'].split('\n');
  const actions=node('div','',content);actions.className='research-actions';
  const back=node('button',tr('חזרה לפוסטר','العودة إلى الملصق'),actions);back.type='button';back.onclick=hide;
- const pdf=node('button',tr('הפקת PDF','إنشاء PDF'),actions);pdf.type='button';pdf.onclick=async()=>{pdf.disabled=true;try{if(!readonly&&!(await window.posterEditor.flush())){alert(tr('השמירה נכשלה – נסו שוב','تعذّر الحفظ، حاولوا مجددًا'));return;}window.print();}finally{pdf.disabled=false;}};
+
  node('h1',lines.shift(),content);
  const info=node('div','',content);info.className='research-identity';
  lines.shift().split('|').forEach((label,i)=>field(info,'identity-'+i,label,i===0?'':document.getElementById(['','poster-students','poster-school','poster-class'][i])?.value??''));
@@ -44,7 +44,7 @@ function render(){
    node('span',first.slice(1),button);const arrow=node('span','⌄',button);arrow.className='research-stage-arrow';arrow.setAttribute('aria-hidden','true');
    section=node('div','',stage);section.className='research-stage-body';section.id='research-stage-body-'+index;
    button.setAttribute('aria-controls',section.id);
-   const sync=()=>{const expanded=openStages.has(index);button.setAttribute('aria-expanded',String(expanded));stage.classList.toggle('is-expanded',expanded);if(expanded)section.querySelectorAll('textarea').forEach(input=>{input.style.height='auto';input.style.height=Math.min(240,Math.max(62,input.scrollHeight+2))+'px';});};
+   const sync=()=>{const expanded=openStages.has(index);button.setAttribute('aria-expanded',String(expanded));stage.classList.toggle('is-expanded',expanded);if(expanded)section.querySelectorAll('textarea').forEach(input=>{input.style.height='auto';input.style.height=Math.min(180,Math.max(36,input.scrollHeight+2))+'px';});};
    button.onclick=()=>{openStages.has(index)?openStages.delete(index):openStages.add(index);sync();};sync();
    if(parts[0])node('p',parts[0],section);continue;
   }
@@ -52,6 +52,8 @@ function render(){
   node('h3',first+'. '+parts.shift(),question);
   parts.forEach((part,i)=>{const key='q'+first+'-'+i;if(part[0]==='!')node('p',part.slice(1),question);else if(part[0]==='#'||part[0]==='%')choices(question,key,part);else field(question,key,part);});
  }
+ const bottom=node('div','',content);bottom.className='research-actions research-actions-bottom';
+ const pdf=node('button',tr('הפקת PDF','إنشاء PDF'),bottom);pdf.type='button';pdf.onclick=async()=>{pdf.disabled=true;try{if(!readonly&&!(await window.posterEditor.flush())){alert(tr('השמירה נכשלה – נסו שוב','تعذّر الحفظ، حاولوا مجددًا'));return;}window.print();}finally{pdf.disabled=false;}};
 }
 function show(){if(!enabled)return;shown=true;openStages.clear();panelWasOpen=document.body.classList.contains('panel-open');document.body.classList.add('research-active');document.body.classList.remove('panel-open');root.hidden=false;render();toggle.textContent=tr('פוסטר חקר','ملصق البحث');window.scrollTo(0,0);}
 function hide(){shown=false;root.hidden=true;document.body.classList.remove('research-active');if(panelWasOpen&&!readonly)document.body.classList.add('panel-open');toggle.textContent=tr('שאלות חקר','أسئلة الاستقصاء');window.dispatchEvent(new Event('resize'));}

@@ -12,3 +12,52 @@ body.research-active #sp,body.research-active #wrap,body.research-active #toolba
 @media print{body.research-active,body.research-active html{height:auto!important;width:auto!important;overflow:visible!important}body.research-active #research-sheet{display:block!important;color:#111!important;margin:0!important;padding:10mm!important;max-width:none!important}body.research-active #toolbar,body.research-active #sp,body.research-active #wrap,body.research-active #poster-access,body.research-active .research-actions,body.research-active .back-to-top{display:none!important}body.research-active .research-stage,body.research-active .research-identity{background:white!important;color:#111!important;border:1px solid #777;box-shadow:none;padding:10px;margin:0 0 12px}body.research-active .research-stage h2,body.research-active .research-question h3,body.research-active .research-field span,body.research-active #research-sheet h1{color:#111!important}body.research-active .research-question{break-inside:avoid}body.research-active .research-field textarea{display:none!important}body.research-active .research-print-value{display:block;white-space:pre-wrap;overflow-wrap:anywhere;min-height:25px;border:1px solid #aaa;padding:5px}html:has(body.research-active){height:auto!important;overflow:visible!important;width:auto!important}}
 /* Independent stage disclosure; print always includes all questions. */
 .research-stage{padding:0;overflow:hidden}.research-stage h2{margin:0}.research-stage-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:start;border:0;background:transparent;color:inherit;font:inherit;font-weight:700;padding:16px;cursor:pointer}.research-stage-toggle:focus-visible{outline:2px solid #8beaff;outline-offset:-3px}.research-stage-arrow{font-size:24px;line-height:1;transition:transform .15s}.research-stage.is-expanded .research-stage-arrow{transform:rotate(180deg)}.research-stage-body{padding:0 16px 16px}@media screen{.research-stage:not(.is-expanded) .research-stage-body{display:none}}@media print{.research-stage-body{display:block!important;padding:0}.research-stage-toggle{padding:0;color:#111}.research-stage-arrow{display:none}}
+
+.research-actions-bottom{margin:24px 0 8px}
+@media print{
+ @page{size:A4 portrait;margin:10mm}
+ body.research-active #research-sheet{padding:0!important;max-width:100%!important;width:auto!important}
+ body.research-active .research-stage{overflow:visible!important;break-inside:auto;margin:0 0 6mm;padding:3mm}
+ body.research-active .research-stage h2{break-after:avoid;page-break-after:avoid;margin:0 0 2mm}
+ body.research-active .research-stage-toggle{display:block;padding:0;break-after:avoid}
+ body.research-active .research-stage-body{display:block!important;break-before:avoid}
+ body.research-active .research-stage-body>p:first-child{break-after:avoid}
+ body.research-active .research-question{break-inside:avoid;page-break-inside:avoid;padding:2.5mm 0;margin-top:2mm}
+ body.research-active .research-question h3{break-after:avoid;page-break-after:avoid}
+ body.research-active .research-identity{break-inside:avoid;padding:3mm;margin-bottom:4mm}
+ body.research-active .research-field{margin:1.5mm 0;break-inside:avoid}
+ body.research-active .research-field span{margin-bottom:1mm}
+ body.research-active .research-print-value{min-height:6mm;padding:1mm 2mm;box-sizing:border-box}
+ body.research-active .research-options{gap:1mm 4mm;margin:1.5mm 0}
+ body.research-active .research-options label{break-inside:avoid}
+ body.research-active .research-stage p{margin:1.5mm 0}
+}
+
+/* Compact worksheet screen layout, independent of print. */
+@media screen {
+ body.research-active #research-sheet{box-sizing:border-box;width:calc(100% - 24px);max-width:760px;margin:calc(var(--editor-toolbar-height,72px) + 12px) auto 24px;padding:0 10px;font-size:13px;line-height:1.4}
+ #research-sheet h1{font-size:20px;margin:10px 0 12px}
+ #research-sheet .research-actions{gap:6px}
+ #research-sheet .research-actions button{font-size:13px;padding:6px 12px;border-radius:6px}
+ #research-sheet .research-actions-bottom{margin:14px 0 6px}
+ #research-sheet .research-stage,#research-sheet .research-identity{margin:8px 0;border-radius:8px}
+ #research-sheet .research-identity{padding:10px 12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+ #research-sheet .research-stage h2{font-size:16px}
+ #research-sheet .research-stage-toggle{padding:9px 12px;gap:8px}
+ #research-sheet .research-stage-arrow{font-size:18px}
+ #research-sheet .research-stage-body{padding:0 12px 10px}
+ #research-sheet .research-question{padding:7px 0;margin-top:7px}
+ #research-sheet .research-question h3{font-size:14px;margin:0 0 5px;line-height:1.4}
+ #research-sheet .research-stage p{margin:4px 0;line-height:1.4;font-size:13px}
+ #research-sheet .research-field{margin:5px 0}
+ #research-sheet .research-field span{font-size:12px;margin-bottom:3px}
+ #research-sheet .research-field textarea{min-height:36px;max-height:180px;padding:5px 8px;border-radius:5px;font:13px/1.4 Heebo,Arial,sans-serif}
+ #research-sheet .research-options{gap:4px 12px;margin:5px 0;font-size:13px}
+ #research-sheet .research-options label{gap:4px}
+ #research-sheet .research-options input{margin:0}
+}
+@media screen and (max-width:520px){
+ body.research-active #research-sheet{width:calc(100% - 12px);padding:0 4px}
+ #research-sheet .research-identity{grid-template-columns:minmax(0,1fr)}
+ #research-sheet .research-field textarea{font-size:16px}
+}
