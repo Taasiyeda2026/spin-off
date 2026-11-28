@@ -662,6 +662,7 @@ function layoutPosterHeader(){
  Object.assign(desc.style,{top:descTop+'px',height:descHeight+'px'});
  Object.assign(G('p-bar').style,{top:barTop+'px',height:barHeight+'px'});
  Object.assign(G('p-names').style,{top:namesTop+'px',height:namesBoxHeight+'px'});
+ measureGlow('title');
 }
 function fitSolutionDescription(){G('solution-description-heading').style.fontSize='13px';layoutPosterHeader();measureGlow('desc')}
 function updateSolutionDescription(){const label=solutionTypeLabel();G('poster-solution-type').textContent=label?label+': ':'';G('poster-solution-description').textContent=G('short-desc').value||'';fitSolutionDescription()}
