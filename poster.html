@@ -188,19 +188,59 @@ body.panel-open #wrap{padding-right:344px}
 #poster.approved-background::before,#poster.approved-background::after,#poster.approved-background #space-overlay{display:none}
 @media print{#poster,#approved-bg-image{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}#approved-bg-image{object-fit:contain!important;object-position:center!important;width:100%!important;height:100%!important}#bg-layer{background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}}
 </style>
-<link rel="stylesheet" href="poster-access.css?v=20261128-design-colors-v1">
+<link rel="stylesheet" href="poster-access.css?v=20261128-logo-header-v1">
 <style>@media screen{#toolbar .poster-cloud-toolbar,#toolbar .poster-cloud-toolbar>strong{color:#e6f6ff}#toolbar .poster-cloud-toolbar>strong{font-weight:700}#toolbar .poster-cloud-toolbar>span{color:#b5efff;font-weight:500}}</style>
 <style id="school-logo-placement">
-/* Larger visible branding, with a compact centered title and identity area. */
+/* Compact title/identity band; logos live in the independent tech header. */
 #p-hdr{top:72px;height:60px}
-#p-hdr .logo-area{top:-78px;right:-8px}
-#p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:150px;height:150px}
-#p-hdr .logo-area #logo-box{width:150px;height:150px}
-#p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}
 #short-desc-box{left:172px;right:172px;top:134px;height:58px}
 #p-bar,#p-names{left:182px;right:182px}
 #p-bar{top:198px;height:34px}
 #p-names{top:238px;height:30px}
+</style>
+<style id="logo-tech-header">
+#poster .logo-area{
+  position:absolute;top:0;right:0;left:auto;
+  height:72px;width:auto;max-width:220px;min-width:76px;
+  display:block;z-index:5;pointer-events:none;
+  --logo-header-fill:#f3f6fa;--logo-header-stroke:var(--border,#58e7ff);--logo-header-opacity:.92;
+}
+#poster .logo-area .logo-header-svg{
+  position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+  filter:drop-shadow(0 4px 8px rgba(8,18,40,.18));
+  opacity:var(--logo-header-opacity);pointer-events:none;
+}
+#poster .logo-area.is-frame-off .logo-header-svg,
+#poster .logo-area.is-ornament-off .logo-header-ornament{display:none}
+#poster .logo-area .logo-header-ornament{
+  position:absolute;top:10px;left:-18px;width:22px;height:52px;overflow:visible;pointer-events:none;
+  opacity:calc(var(--logo-header-opacity) * .9);
+}
+#poster .logo-area .logo-header-inner{
+  position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:flex-end;
+  gap:10px;padding:10px 14px 10px 30px;box-sizing:border-box;pointer-events:auto;
+}
+#poster .logo-area .logo-header-divider{
+  width:1px;align-self:stretch;margin:6px 0;flex:0 0 1px;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--logo-header-stroke) 55%,#8a97a8),transparent);
+}
+#poster .logo-area #logo-box,
+#poster .logo-area #school-logo-box{
+  position:relative;left:auto;right:auto;top:auto;width:52px;height:52px;flex:0 0 auto;
+  cursor:default;overflow:visible;border:none;background:transparent;visibility:visible!important;
+}
+#poster .logo-area #school-logo-box{max-width:96px}
+#poster .logo-area #logo-box img,
+#poster .logo-area #school-logo-img{
+  width:100%;height:100%;object-fit:contain;object-position:center;display:block;
+}
+#poster .logo-area #logo-box::before,
+#poster .logo-area #school-logo-box::before{display:none!important}
+#poster .logo-area.is-frame-on #logo-box::before,
+#poster .logo-area.is-frame-on #school-logo-box::before{content:none!important;opacity:0!important}
+@media print{
+  #poster .logo-area .logo-header-svg{filter:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 <link rel="stylesheet" href="research.css?v=20261128-print-pages-v1">
 <script defer src="research-data.js?v=1"></script>
@@ -280,8 +320,8 @@ body.panel-open #wrap{padding-right:344px}
   <p id="poster-access-status" role="status"></p>
 </main>
 <div id="toolbar" hidden><div class="tb-brand"><img class="tb-mark" src="images/logo-1.png?v=20261110" alt="תעשיידע" width="40" height="44"><div><strong>SpaceTech | פוסטר חקר</strong><small>מהחלל לכדור הארץ</small></div></div><div class="tb-acts"><button class="tbb" onclick="togglePanel()">☰ עריכה</button><button class="tbb" onclick="openTab('design')">עיצוב</button></div><div class="poster-nav"><button id="research-toggle" class="tbb" type="button" hidden>שאלות חקר</button><button id="poster-editor-language" class="tbb poster-language-toggle" type="button">العربية</button><a href="index.html" id="poster-editor-home" class="tbb hm poster-home-icon" title="חזרה לדף הבית" aria-label="חזרה לדף הבית"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h5v-7h4v7h5V9"/></svg></a></div></div>
-<section id="research-sheet" hidden aria-label="שאלות חקר"><div id="research-content"></div></section><aside id="sp" hidden><div class="sph"><div><strong>לוח עריכה</strong><span>פוסטר SpaceTech</span></div><div class="sp-heading-actions"><button class="spc" aria-label="סגירת לוח העריכה" onclick="togglePanel()">✕</button></div></div><div class="sptabs"><button class="sptab active" data-tab="design" onclick="openTab('design')">עיצוב</button><button class="sptab" data-tab="content" onclick="openTab('content')">מילוי</button><button class="sptab" data-tab="students" onclick="openTab('students')">משתתפים</button></div><div class="spb"><section id="tab-design" class="tp active"><div class="st">עיצוב</div><div class="fg"><label id="poster-background-label">בחירת רקע לפוסטר</label><div id="poster-background-gallery" class="poster-background-gallery" role="group" aria-labelledby="poster-background-label"></div><p id="poster-background-status" class="pn" role="status"></p></div><input type="hidden" id="bg-color" value="#071325"><div class="fg-c"><label>צבע מסגרת תיבות</label><input type="color" id="border-color" value="#58e7ff"></div><div class="fg-c"><label for="project-color">צבע כותרת ראשית</label><input type="color" id="project-color" value="#eefbff"></div><div class="fg-c"><label for="description-color">צבע תיאור הפתרון</label><input type="color" id="description-color" value="#d7ebff"></div><div class="fg-c"><label for="q-color">צבע כותרות השאלות</label><input type="color" id="q-color" value="#eefbff"></div><div class="fg-c"><label for="t-color">צבע תוכן התשובות</label><input type="color" id="t-color" value="#e6f6ff"></div><div class="fg-c"><label for="slogan-color">צבע משפט הסיום</label><input type="color" id="slogan-color" value="#ffffff"></div><div class="fg-c"><label for="arrow-color">צבע חצים</label><input type="color" id="arrow-color" value="#58e7ff"></div><div class="fg"><label>שקיפות תיבות</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="box-opacity" min="0" max="100" step="any" value="68.5714285714286" style="cursor:pointer;flex:1"><div id="box-op-v" class="fsz-val">69%</div></div></div><div class="fg"><label>טשטוש מאחורי הכותרת</label><div class="glow-controls"><button class="pb sec" id="title-glow-none" onclick="setGlow('title','none')">ללא</button><button class="pb" id="title-glow-light" onclick="setGlow('title','light')">לבן</button><button class="pb" id="title-glow-dark" onclick="setGlow('title','dark')">שחור</button></div></div><div class="fg"><label>טשטוש מאחורי הלוגו</label><div class="glow-controls"><button class="pb sec" id="logo-glow-none" onclick="setGlow('logo','none')">ללא</button><button class="pb" id="logo-glow-light" onclick="setGlow('logo','light')">לבן</button><button class="pb" id="logo-glow-dark" onclick="setGlow('logo','dark')">שחור</button></div></div><div class="fg"><label>טשטוש מאחורי תיאור הפתרון</label><div class="glow-controls"><button class="pb sec" id="desc-glow-none" onclick="setGlow('desc','none')">ללא</button><button class="pb" id="desc-glow-light" onclick="setGlow('desc','light')">לבן</button><button class="pb" id="desc-glow-dark" onclick="setGlow('desc','dark')">שחור</button></div></div><div style="margin-top:10px"><button class="pb warn" style="width:100%" onclick="clearPoster()">נקה תוכן</button></div></section><section id="tab-content" class="tp"><div class="st">שאלות למילוי</div><div id="fill-list" class="edit-list"></div><p class="pn">כל שינוי כאן מתעדכן מיד בפוסטר.</p></section><section id="tab-students" class="tp"><div class="st">שמות המשתתפים</div><p class="pn">בחרו את מספר חברי הקבוצה והזינו את שמותיכם כאן. השמות יישמרו בפוסטר.</p><div class="fg"><label>מספר משתתפים</label><select id="pc-cnt" onchange="setParts(this.value)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div><div class="fg"><label>שמות</label><div id="pcf" class="pgrid"></div></div></section></div></aside>
-<div id="wrap" hidden><div id="poster"><div id="bg-layer"><img id="approved-bg-image" alt="" aria-hidden="true" decoding="async"></div><div id="space-overlay"></div><div id="p-hdr"><div class="logo-area"><div id="school-logo-box" hidden><img id="school-logo-img" alt=""></div><div class="logo-box" id="logo-box"><img id="logo-img" src="images/logo-1.png?v=20261110" alt="תעשיידע" style="display:block"><span class="ltxt" id="logo-txt" style="display:none">לוגו</span></div></div><textarea rows="1" id="poster-project" autocomplete="off" aria-label="שם הפתרון שלנו?" class="limited" data-label="שם הפתרון שלנו?" data-max="35" maxlength="35" placeholder="שם הפתרון"></textarea><small id="project-counter" class="counter" data-for="poster-project">0/35</small></div><input id="solution-type" type="hidden" value=""><div id="short-desc-box"><div id="solution-description-heading"><div><bdi id="poster-solution-type"></bdi><span id="poster-solution-description"></span></div></div><textarea id="short-desc" hidden aria-label="תיאור הפתרון שלנו?" class="limited" data-label="תיאור הפתרון שלנו?" data-max="105" maxlength="105" placeholder="תיאור קצר של הפתרון"></textarea><small id="desc-counter" class="counter" data-for="short-desc">0/105</small></div><div id="p-bar"><div class="bar-mf"><label>כיתה:</label><input id="poster-class" aria-label="כיתה" data-label="כיתה" type="text" autocomplete="off" value="" oninput="autoWidth(this)"></div><div class="bar-div"></div><div class="bar-mf"><label>בית הספר:</label><input id="poster-school" aria-label="שם בית הספר" data-label="שם בית הספר" type="text" placeholder="שם בית הספר" style="width:132px" oninput="autoWidth(this)"></div></div>
+<section id="research-sheet" hidden aria-label="שאלות חקר"><div id="research-content"></div></section><aside id="sp" hidden><div class="sph"><div><strong>לוח עריכה</strong><span>פוסטר SpaceTech</span></div><div class="sp-heading-actions"><button class="spc" aria-label="סגירת לוח העריכה" onclick="togglePanel()">✕</button></div></div><div class="sptabs"><button class="sptab active" data-tab="design" onclick="openTab('design')">עיצוב</button><button class="sptab" data-tab="content" onclick="openTab('content')">מילוי</button><button class="sptab" data-tab="students" onclick="openTab('students')">משתתפים</button></div><div class="spb"><section id="tab-design" class="tp active"><div class="st">עיצוב</div><div class="fg"><label id="poster-background-label">בחירת רקע לפוסטר</label><div id="poster-background-gallery" class="poster-background-gallery" role="group" aria-labelledby="poster-background-label"></div><p id="poster-background-status" class="pn" role="status"></p></div><input type="hidden" id="bg-color" value="#071325"><div class="fg-c"><label>צבע מסגרת תיבות</label><input type="color" id="border-color" value="#58e7ff"></div><div class="fg-c"><label for="project-color">צבע כותרת ראשית</label><input type="color" id="project-color" value="#eefbff"></div><div class="fg-c"><label for="description-color">צבע תיאור הפתרון</label><input type="color" id="description-color" value="#d7ebff"></div><div class="fg-c"><label for="q-color">צבע כותרות השאלות</label><input type="color" id="q-color" value="#eefbff"></div><div class="fg-c"><label for="t-color">צבע תוכן התשובות</label><input type="color" id="t-color" value="#e6f6ff"></div><div class="fg-c"><label for="slogan-color">צבע משפט הסיום</label><input type="color" id="slogan-color" value="#ffffff"></div><div class="fg-c"><label for="arrow-color">צבע חצים</label><input type="color" id="arrow-color" value="#58e7ff"></div><div class="fg"><label>שקיפות תיבות</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="box-opacity" min="0" max="100" step="any" value="68.5714285714286" style="cursor:pointer;flex:1"><div id="box-op-v" class="fsz-val">69%</div></div></div><div class="fg"><label>טשטוש מאחורי הכותרת</label><div class="glow-controls"><button class="pb sec" id="title-glow-none" onclick="setGlow('title','none')">ללא</button><button class="pb" id="title-glow-light" onclick="setGlow('title','light')">לבן</button><button class="pb" id="title-glow-dark" onclick="setGlow('title','dark')">שחור</button></div></div><div class="fg"><label>טשטוש מאחורי הלוגו</label><div class="glow-controls"><button class="pb sec" id="logo-glow-none" onclick="setGlow('logo','none')">ללא</button><button class="pb" id="logo-glow-light" onclick="setGlow('logo','light')">לבן</button><button class="pb" id="logo-glow-dark" onclick="setGlow('logo','dark')">שחור</button></div></div><div class="st" style="margin-top:10px">עיצוב אזור הלוגואים</div><div class="fg"><label for="logo-frame-show">הצגת המסגרת</label><select id="logo-frame-show"><option value="on" selected>עם</option><option value="off">ללא</option></select></div><div class="fg-c"><label for="logo-frame-color">צבע המסגרת</label><input type="color" id="logo-frame-color" value="#f3f6fa"></div><div class="fg-c"><label for="logo-frame-stroke">צבע קו המתאר</label><input type="color" id="logo-frame-stroke" value="#58e7ff"></div><div class="fg"><label>שקיפות המסגרת</label><div style="display:flex;align-items:center;gap:6px"><input type="range" id="logo-frame-opacity" min="30" max="100" step="1" value="92" style="cursor:pointer;flex:1"><div id="logo-frame-op-v" class="fsz-val">92%</div></div></div><div class="fg"><label for="logo-frame-ornament">העיטור הטכנולוגי</label><select id="logo-frame-ornament"><option value="on" selected>עם</option><option value="off">ללא</option></select></div><p class="pn">כשהמסגרת מוצגת, טשטוש מאחורי הלוגו כבוי אוטומטית כדי למנוע עומס חזותי.</p><div class="fg"><label>טשטוש מאחורי תיאור הפתרון</label><div class="glow-controls"><button class="pb sec" id="desc-glow-none" onclick="setGlow('desc','none')">ללא</button><button class="pb" id="desc-glow-light" onclick="setGlow('desc','light')">לבן</button><button class="pb" id="desc-glow-dark" onclick="setGlow('desc','dark')">שחור</button></div></div><div style="margin-top:10px"><button class="pb warn" style="width:100%" onclick="clearPoster()">נקה תוכן</button></div></section><section id="tab-content" class="tp"><div class="st">שאלות למילוי</div><div id="fill-list" class="edit-list"></div><p class="pn">כל שינוי כאן מתעדכן מיד בפוסטר.</p></section><section id="tab-students" class="tp"><div class="st">שמות המשתתפים</div><p class="pn">בחרו את מספר חברי הקבוצה והזינו את שמותיכם כאן. השמות יישמרו בפוסטר.</p><div class="fg"><label>מספר משתתפים</label><select id="pc-cnt" onchange="setParts(this.value)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div><div class="fg"><label>שמות</label><div id="pcf" class="pgrid"></div></div></section></div></aside>
+<div id="wrap" hidden><div id="poster"><div id="bg-layer"><img id="approved-bg-image" alt="" aria-hidden="true" decoding="async"></div><div id="space-overlay"></div><div class="logo-area is-frame-on" id="logo-header" dir="ltr"><svg class="logo-header-svg" id="logo-header-svg" aria-hidden="true"></svg><svg class="logo-header-ornament" id="logo-header-ornament" viewBox="0 0 22 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M18 6h-7M11 6v8M11 14h-5M6 14v7M6 21h8M14 21v8M14 29h-6M8 29v10M8 39h5"/><circle cx="18" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="6" cy="14" r="1.3" fill="currentColor" stroke="none"/><circle cx="14" cy="21" r="1.3" fill="currentColor" stroke="none"/><circle cx="8" cy="39" r="1.3" fill="currentColor" stroke="none"/></g></svg><div class="logo-header-inner"><div id="school-logo-box" hidden><img id="school-logo-img" alt=""></div><div class="logo-header-divider" id="logo-header-divider" hidden></div><div class="logo-box" id="logo-box"><img id="logo-img" src="images/logo-1.png?v=20261110" alt="תעשיידע" style="display:block"><span class="ltxt" id="logo-txt" style="display:none">לוגו</span></div></div></div><div id="p-hdr"><textarea rows="1" id="poster-project" autocomplete="off" aria-label="שם הפתרון שלנו?" class="limited" data-label="שם הפתרון שלנו?" data-max="35" maxlength="35" placeholder="שם הפתרון"></textarea><small id="project-counter" class="counter" data-for="poster-project">0/35</small></div><input id="solution-type" type="hidden" value=""><div id="short-desc-box"><div id="solution-description-heading"><div><bdi id="poster-solution-type"></bdi><span id="poster-solution-description"></span></div></div><textarea id="short-desc" hidden aria-label="תיאור הפתרון שלנו?" class="limited" data-label="תיאור הפתרון שלנו?" data-max="105" maxlength="105" placeholder="תיאור קצר של הפתרון"></textarea><small id="desc-counter" class="counter" data-for="short-desc">0/105</small></div><div id="p-bar"><div class="bar-mf"><label>כיתה:</label><input id="poster-class" aria-label="כיתה" data-label="כיתה" type="text" autocomplete="off" value="" oninput="autoWidth(this)"></div><div class="bar-div"></div><div class="bar-mf"><label>בית הספר:</label><input id="poster-school" aria-label="שם בית הספר" data-label="שם בית הספר" type="text" placeholder="שם בית הספר" style="width:132px" oninput="autoWidth(this)"></div></div>
 <div class="box" id="c-problem"><div class="bi"><div class="bq"><span>איזו בעיה בחרנו לפתור?</span><small class="counter" data-for="problem">0/85</small></div><textarea id="problem" aria-label="איזו בעיה בחרנו לפתור?" class="limited" data-label="איזו בעיה בחרנו לפתור?" data-max="85" maxlength="85" placeholder="תארו בקצרה את הבעיה..."></textarea></div></div><div class="box" id="c-target"><div class="bi"><div class="bq"><span>מי נתקל בבעיה ומה הוא צריך?</span><small class="counter" data-for="target">0/80</small></div><textarea id="target" aria-label="מי נתקל בבעיה ומה הוא צריך?" class="limited" data-label="מי נתקל בבעיה ומה הוא צריך?" data-max="80" maxlength="80" placeholder="מי קהל היעד ומה הצורך שלו?"></textarea></div></div><div class="box" id="c-question"><div class="bi"><div class="bq"><span>איזה רעיון בחרנו ולמה?</span><small class="counter" data-for="question">0/125</small></div><textarea id="question" aria-label="איזה רעיון בחרנו ולמה?" class="limited" data-label="איזה רעיון בחרנו ולמה?" data-max="125" maxlength="125" placeholder="הסבירו למה הוא מתאים לבעיה ולדרישות שהגדרתם..."></textarea></div></div>
 <div class="image-box" id="main-image-box"><div class="iw" onclick="G('img-main-file').click()"><div class="iph" id="img-main-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span id="img-main-label">הדמיית הפתרון</span><small id="img-main-note">תמונה ראשית</small></div><img id="img-main" alt=""><button class="ichg" onclick="event.stopPropagation();G('img-main-file').click()">שנה</button><input type="file" id="img-main-file" accept="image/*" style="display:none" onchange="loadImg(this,'img-main','img-main-ph')"></div></div>
 <div class="box" id="c-research"><div class="bi"><div class="bq"><span>מה למדנו מטכנולוגיות החלל?</span><small class="counter" data-for="research">0/110</small></div><div id="research" class="numbered-answer empty" data-label="מה למדנו מטכנולוגיות החלל?" data-max="110"><div class="na-line"><svg class="research-answer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15 9 12c2-5 6-8 12-9-1 6-4 10-9 12Z"/><path d="M9 12H5l-3 4 6 1m4-2v4l-4 3-1-6M6 19l-3 3"/><circle cx="16" cy="8" r="1.5"/></svg><span id="research1-out">מה למדנו מטכנולוגיות החלל?</span></div><div class="na-line"><svg class="research-answer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m10 2 4 0 1 3 3-1 3 3-1 3 2 1v3l-3 1 1 3-3 3-3-1-1 2h-3l-1-3-3 1-3-3 1-3-2-1v-3l3-1-1-3 3-3 3 1Z"/><circle cx="12" cy="12" r="3"/></svg><span id="research2-out">איך טכנולוגיות החלל תרמו לפתרון?</span></div></div></div></div><div class="box" id="c-findings"><div class="bi"><div class="bq"><span>אילו רעיונות לפתרון הצענו?</span><small class="counter" data-for="findings">0/165</small></div><div id="findings" class="numbered-answer empty" data-label="אילו רעיונות לפתרון הצענו?" data-max="165"><div class="na-line"><b>1.</b><span id="findings1-out">רעיון 1</span></div><div class="na-line"><b>2.</b><span id="findings2-out">רעיון 2</span></div><div class="na-line"><b>3.</b><span id="findings3-out">רעיון 3</span></div></div></div></div><div class="box" id="c-requirements"><div class="bi"><div class="bq"><span>מה הפתרון חייב לעשות?</span><small class="counter" data-for="requirements">0/180</small></div><div id="requirements" class="numbered-answer empty" data-label="מה הפתרון חייב לעשות?" data-max="180"><div class="na-line"><b>1.</b><span id="requirements1-out">דרישה 1</span></div><div class="na-line"><b>2.</b><span id="requirements2-out">דרישה 2</span></div><div class="na-line"><b>3.</b><span id="requirements3-out">דרישה 3</span></div></div></div></div>
@@ -576,7 +616,7 @@ function queueLocalWrite(operation) {
   localWrite = pending.catch(() => {});
   return pending;
 }
-function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),language:BG_ARABIC()?'ar':'he',values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',projectColor:G('project-color')?.value||'#eefbff',descriptionColor:G('description-color')?.value||'#d7ebff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',sloganColor:G('slogan-color')?.value||'#ffffff',arrowColor:G('arrow-color')?.value||'#58e7ff',opacity:String(boxOpacityActual()),sizes:{...SZ},glow:{...glowState},bgId:selectedBackgroundId,bgVersion:selectedBackgroundVersion},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
+function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';const logoHeader=logoHeaderSettings();return{version:1,savedAt:Date.now(),language:BG_ARABIC()?'ar':'he',values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',projectColor:G('project-color')?.value||'#eefbff',descriptionColor:G('description-color')?.value||'#d7ebff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',sloganColor:G('slogan-color')?.value||'#ffffff',arrowColor:G('arrow-color')?.value||'#58e7ff',opacity:String(boxOpacityActual()),sizes:{...SZ},glow:{...glowState},logoHeader:{show:logoHeader.show,ornament:logoHeader.ornament,fill:logoHeader.fill,stroke:logoHeader.stroke,opacity:logoHeader.opacity,strokeManual:logoHeaderStrokeManual},bgId:selectedBackgroundId,bgVersion:selectedBackgroundVersion},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
 async function saveDraft() {
   clearTimeout(autosaveTimer);
   if (restoringDraft || !draftDirty) return;
@@ -605,7 +645,16 @@ function scheduleAutosave() {
   autosaveTimer = setTimeout(saveDraft, 300);
 }
 function restoreImage(src,imgId,phId){const img=G(imgId),ph=G(phId);if(!img||!ph)return;if(src){img.src=src;img.classList.add('show');ph.style.display='none'}else{img.removeAttribute('src');img.classList.remove('show');ph.style.display='flex'}}
-async function applyDraft(draft){restoringDraft=true;try{Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});const d=draft.design||{};if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;G('q-color').value=/^#[0-9a-f]{6}$/i.test(d.qColor||'')?d.qColor:'#eefbff';G('project-color').value=/^#[0-9a-f]{6}$/i.test(d.projectColor||'')?d.projectColor:G('q-color').value;G('description-color').value=/^#[0-9a-f]{6}$/i.test(d.descriptionColor||'')?d.descriptionColor:'#d7ebff';if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;G('slogan-color').value=/^#[0-9a-f]{6}$/i.test(d.sloganColor||'')?d.sloganColor:'#ffffff';G('arrow-color').value=/^#[0-9a-f]{6}$/i.test(d.arrowColor||'')?d.arrowColor:'#58e7ff';if(d.opacity!=null&&G('box-opacity'))G('box-opacity').value=String(clamp((Number(d.opacity)-30)/.7,0,100));for(const kind of ['title','logo','desc']){const mode=d.glow?.[kind];if(['none','light','dark'].includes(mode))glowState[kind]=mode}await selectPosterBackground(d.bgId,false,d.bgVersion || approvedBackgrounds.find(e=>e.id===d.bgId)?.legacyVersion);renderBackgroundGallery();restoreImage(draft.images?.main,'img-main','img-main-ph');restoreImage(draft.images?.one,'img-1','img-1-ph');restoreImage(draft.images?.two,'img-2','img-2-ph');G('logo-img').src='images/logo-1.png?v=20261110';G('logo-img').style.display='block';G('logo-txt').style.display='none';if(Array.isArray(draft.participants)&&draft.participants.length){setParts(draft.participants.length,draft.participants.map(name=>String(name??'')),true)}else{syncNamesToPanel()}localizeIdentityDefaults();updateSolutionTypeHeading();updateAllCombinedFields();renderFillPanel();qs('.limited').forEach(updateCounterFor);autoWidth(G('poster-class'));autoWidth(G('poster-school'));applyDesign();applyAllGlow();applyLayout();fitPreview()}finally{restoringDraft=false}}
+function applyLogoHeaderDraft(d){
+ const lh=d?.logoHeader||{};
+ if(G('logo-frame-show'))G('logo-frame-show').value=lh.show===false?'off':'on';
+ if(G('logo-frame-ornament'))G('logo-frame-ornament').value=lh.ornament===false?'off':'on';
+ if(G('logo-frame-color'))G('logo-frame-color').value=/^#[0-9a-f]{6}$/i.test(lh.fill||'')?lh.fill:'#f3f6fa';
+ logoHeaderStrokeManual=Boolean(lh.strokeManual);
+ if(G('logo-frame-stroke'))G('logo-frame-stroke').value=/^#[0-9a-f]{6}$/i.test(lh.stroke||'')?lh.stroke:(G('border-color')?.value||'#58e7ff');
+ if(G('logo-frame-opacity'))G('logo-frame-opacity').value=String(clamp(Number(lh.opacity??92),30,100));
+}
+async function applyDraft(draft){restoringDraft=true;try{Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});const d=draft.design||{};if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;G('q-color').value=/^#[0-9a-f]{6}$/i.test(d.qColor||'')?d.qColor:'#eefbff';G('project-color').value=/^#[0-9a-f]{6}$/i.test(d.projectColor||'')?d.projectColor:G('q-color').value;G('description-color').value=/^#[0-9a-f]{6}$/i.test(d.descriptionColor||'')?d.descriptionColor:'#d7ebff';if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;G('slogan-color').value=/^#[0-9a-f]{6}$/i.test(d.sloganColor||'')?d.sloganColor:'#ffffff';G('arrow-color').value=/^#[0-9a-f]{6}$/i.test(d.arrowColor||'')?d.arrowColor:'#58e7ff';if(d.opacity!=null&&G('box-opacity'))G('box-opacity').value=String(clamp((Number(d.opacity)-30)/.7,0,100));for(const kind of ['title','logo','desc']){const mode=d.glow?.[kind];if(['none','light','dark'].includes(mode))glowState[kind]=mode}applyLogoHeaderDraft(d);await selectPosterBackground(d.bgId,false,d.bgVersion || approvedBackgrounds.find(e=>e.id===d.bgId)?.legacyVersion);renderBackgroundGallery();restoreImage(draft.images?.main,'img-main','img-main-ph');restoreImage(draft.images?.one,'img-1','img-1-ph');restoreImage(draft.images?.two,'img-2','img-2-ph');G('logo-img').src='images/logo-1.png?v=20261110';G('logo-img').style.display='block';G('logo-txt').style.display='none';if(Array.isArray(draft.participants)&&draft.participants.length){setParts(draft.participants.length,draft.participants.map(name=>String(name??'')),true)}else{syncNamesToPanel()}localizeIdentityDefaults();updateSolutionTypeHeading();updateAllCombinedFields();renderFillPanel();qs('.limited').forEach(updateCounterFor);autoWidth(G('poster-class'));autoWidth(G('poster-school'));applyDesign();applyAllGlow();applyLayout();fitPreview()}finally{restoringDraft=false}}
 async function offerRestoreDraft() {
   restoringDraft = true;
   const editor = [G('toolbar'), G('sp'), G('wrap')];
@@ -711,8 +760,8 @@ function reflowPosterBody(contentTop,contentBottom){
  const mainBase=LAYOUT['main-image-box'].height,pairBase=LAYOUT['img-pair'].height;
  const mainGrow=Math.min(mainBase*.18,extra*.45),pairGrow=Math.min(pairBase*.18,extra*.4);
  const web=G('solution-type').value==='web';
- const mainSize=web?Math.min(156,Math.max(100,Math.round((contentBottom-contentTop)-85-95-86-266-32))):mainBase+mainGrow;
- const pairH=web?Math.min(180,Math.round(156+extra*.25)):pairBase+pairGrow,processBoxH=66;
+ const mainSize=web?Math.min(156,Math.max(100,Math.round((contentBottom-contentTop)-85-95-86-266-32))):Math.round(mainBase+mainGrow);
+ const pairH=web?Math.min(180,Math.round(156+extra*.25)):Math.round(pairBase+pairGrow),processBoxH=66;
  // Keep a stable process-unit footprint; remaining slack balances the gaps above it.
  const processH=266;
  const right=placeColumn([
@@ -748,7 +797,7 @@ function reflowPosterBody(contentTop,contentBottom){
   }
   Object.assign(G(item.id).style,{left:(web&&item.id==='c-research'?col.left:base.left)+'px',top:item.top+'px',width:base.width+'px',height:item.h+'px'});
  }
- let processTop=left.placed.find(item=>item.id==='_process').top;
+ let processTop=Math.round(left.placed.find(item=>item.id==='_process').top);
  const fb=LAYOUT['c-feedback'];
  // Pin surface to the shared column end; equal 8px outer insets + equal mid gaps.
  let surfaceH=Math.round(contentBottom)-processTop;
@@ -763,10 +812,76 @@ function reflowPosterBody(contentTop,contentBottom){
  updatePosterImageLayout();
  positionFlowArrows();
 }
+const LOGO_HEADER={height:72,taasi:52,schoolMaxH:52,schoolMaxW:96,padRight:14,padLeft:34,padY:10,gap:10,divider:1,maxWidth:220,diag:34,curve:16};
+let logoHeaderStrokeManual=false;
+function logoHeaderSettings(){
+ const show=(G('logo-frame-show')?.value||'on')!=='off';
+ const ornament=(G('logo-frame-ornament')?.value||'on')!=='off';
+ const fill=/^#[0-9a-f]{6}$/i.test(G('logo-frame-color')?.value||'')?G('logo-frame-color').value:'#f3f6fa';
+ const stroke=/^#[0-9a-f]{6}$/i.test(G('logo-frame-stroke')?.value||'')?G('logo-frame-stroke').value:(G('border-color')?.value||'#58e7ff');
+ const opacity=clamp(parseInt(G('logo-frame-opacity')?.value||'92',10),30,100);
+ return {show,ornament,fill,stroke,opacity};
+}
+function updateLogoHeaderSvg(width,height){
+ const svg=G('logo-header-svg');if(!svg)return;
+ const cfg=logoHeaderSettings();
+ const w=Math.max(76,Math.round(width)),h=Math.round(height||LOGO_HEADER.height);
+ const diag=Math.min(LOGO_HEADER.diag,Math.round(w*0.28)),curve=Math.min(LOGO_HEADER.curve,Math.round(h*0.3));
+ const tipY=Math.round(h*0.62);
+ // Geometric path in absolute px so stroke width stays sharp when width changes.
+ const fillPath=`M ${w} 0 L ${diag} 0 L 0 ${tipY} Q 0 ${h} ${curve} ${h} L ${w} ${h} Z`;
+ const strokePath=`M ${diag} 0 L 0 ${tipY} Q 0 ${h} ${curve} ${h} L ${w} ${h}`;
+ const gradId='logoHeaderGrad';
+ svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+ svg.setAttribute('width',String(w));
+ svg.setAttribute('height',String(h));
+ svg.innerHTML=`<defs><linearGradient id="${gradId}" x1="0%" y1="0%" x2="88%" y2="100%"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="${cfg.fill}"/><stop offset="100%" stop-color="#cfd6e0"/></linearGradient></defs><path d="${fillPath}" fill="url(#${gradId})"/><path d="${strokePath}" fill="none" stroke="${cfg.stroke}" stroke-width="1.35" stroke-linejoin="round" stroke-linecap="round"/>`;
+ const ornament=G('logo-header-ornament');
+ if(ornament)ornament.style.color=cfg.stroke;
+}
+function layoutLogoHeader(){
+ const area=G('logo-header')||document.querySelector('#poster .logo-area');
+ const schoolBox=G('school-logo-box'),schoolImg=G('school-logo-img'),logoBox=G('logo-box'),divider=G('logo-header-divider');
+ if(!area||!logoBox)return;
+ const cfg=logoHeaderSettings();
+ const poster=G('poster');
+ const maxWidth=Math.min(LOGO_HEADER.maxWidth,Math.max(96,Math.round((poster?.offsetWidth||794)*0.38)));
+ area.style.maxWidth=maxWidth+'px';
+ area.classList.toggle('is-frame-on',cfg.show);
+ area.classList.toggle('is-frame-off',!cfg.show);
+ area.classList.toggle('is-ornament-off',!cfg.ornament);
+ area.style.setProperty('--logo-header-fill',cfg.fill);
+ area.style.setProperty('--logo-header-stroke',cfg.stroke);
+ area.style.setProperty('--logo-header-opacity',String(cfg.opacity/100));
+ if(G('logo-frame-op-v'))G('logo-frame-op-v').textContent=cfg.opacity+'%';
+ Object.assign(logoBox.style,{width:LOGO_HEADER.taasi+'px',height:LOGO_HEADER.taasi+'px',visibility:'visible'});
+ const hasSchool=Boolean(schoolBox&&!schoolBox.hidden&&schoolImg?.getAttribute('src'));
+ if(divider)divider.hidden=!hasSchool;
+ let schoolW=0,schoolH=0;
+ if(hasSchool){
+  const natW=schoolImg.naturalWidth||LOGO_HEADER.schoolMaxH,natH=schoolImg.naturalHeight||LOGO_HEADER.schoolMaxH;
+  const ratio=natW/Math.max(1,natH);
+  schoolH=LOGO_HEADER.schoolMaxH;
+  schoolW=Math.min(LOGO_HEADER.schoolMaxW,schoolH*ratio);
+  // Reserve room for Taasiyeda + chrome so a wide school logo shrinks instead of overflowing the title.
+  const chrome=LOGO_HEADER.padLeft+LOGO_HEADER.padRight+LOGO_HEADER.taasi+LOGO_HEADER.gap+LOGO_HEADER.divider+LOGO_HEADER.gap;
+  const allowed=Math.max(36,maxWidth-chrome);
+  if(schoolW>allowed){schoolW=allowed;schoolH=Math.min(LOGO_HEADER.schoolMaxH,schoolW/Math.max(ratio,0.01));}
+  Object.assign(schoolBox.style,{width:Math.round(schoolW)+'px',height:Math.round(schoolH)+'px',display:''});
+ }else if(schoolBox){
+  schoolBox.style.width='';schoolBox.style.height='';
+ }
+ const contentW=LOGO_HEADER.padLeft+LOGO_HEADER.padRight+LOGO_HEADER.taasi+(hasSchool?LOGO_HEADER.gap+LOGO_HEADER.divider+LOGO_HEADER.gap+Math.round(schoolW):0);
+ const width=Math.min(maxWidth,Math.max(76,contentW));
+ area.style.width=width+'px';
+ area.style.height=LOGO_HEADER.height+'px';
+ updateLogoHeaderSvg(width,LOGO_HEADER.height);
+}
 // Title at mid-logo; names stay one line above content; body reflows into the freed space.
 function layoutPosterHeader(){
  const poster=G('poster'),title=G('poster-project'),desc=G('short-desc-box'),heading=G('solution-description-heading'),names=G('poster-students'),hdr=G('p-hdr'),logo=G('logo-box');
  if(!poster.offsetWidth)return;
+ layoutLogoHeader();
  const fitField=field=>{field.style.height='0px';const height=field.scrollHeight;field.style.height=height+'px';return height;};
  const titleHeight=fitField(title),namesHeight=fitField(names);
  const scale=poster.getBoundingClientRect().width/poster.offsetWidth||1;
@@ -857,17 +972,25 @@ let glowState={title:'none',logo:'none',desc:'none'};function updateGlowButtons(
 }
 function refreshContentGlows(){['title','logo','desc'].forEach(measureGlow)}
 function applyGlow(kind){
- const mode=glowState[kind]||'none';
+ let mode=glowState[kind]||'none';
+ // Frame already provides contrast; skip logo glow while the tech plate is visible.
+ if(kind==='logo'&&logoHeaderSettings().show)mode='none';
  const hosts=kind==='logo'?[G('logo-box'),G('school-logo-box')]:[G(kind==='title'?'p-hdr':'short-desc-box')];
  for(const el of hosts){if(!el)continue;el.classList.remove('glow-light','glow-dark');if(mode!=='none')el.classList.add('glow-'+mode);}
  measureGlow(kind);updateGlowButtons(kind);
 }
-function setGlow(kind,mode){glowState[kind]=mode;applyGlow(kind);scheduleAutosave()}function applyAllGlow(){['title','logo','desc'].forEach(applyGlow)}
+function setGlow(kind,mode){
+ if(kind==='logo'&&mode!=='none'&&logoHeaderSettings().show&&G('logo-frame-show')){
+  G('logo-frame-show').value='off';layoutLogoHeader();
+ }
+ glowState[kind]=mode;applyGlow(kind);scheduleAutosave()
+}
+function applyAllGlow(){['title','logo','desc'].forEach(applyGlow)}
 function boxOpacityActual(){return Math.round(30+.7*Number(G('box-opacity')?.value??68.5714285714286));}
-function applyDesign(){const bg=G('bg-color').value,border=G('border-color').value,border2='#b366ff',qc=G('q-color').value,tc=G('t-color').value,op=boxOpacityActual();document.documentElement.style.setProperty('--arrow-color',G('arrow-color').value);document.documentElement.style.setProperty('--poster-bg',bg);document.documentElement.style.setProperty('--border',border);document.documentElement.style.setProperty('--border-2',border2);document.documentElement.style.setProperty('--project-color',G('project-color').value);document.documentElement.style.setProperty('--description-color',G('description-color').value);document.documentElement.style.setProperty('--slogan-color',G('slogan-color').value);document.documentElement.style.setProperty('--title',qc);document.documentElement.style.setProperty('--text',tc);document.documentElement.style.setProperty('--accent',border);document.documentElement.style.setProperty('--box-bg',`rgba(8,18,44,${parseInt(op,10)/100})`);qs('#poster .box,#poster .image-box').forEach(e=>e.style.borderColor=border);qs('#p-bar,#p-names').forEach(e=>e.style.border=`1px solid ${border}`);qs('#p-bar .bar-div').forEach(e=>e.style.background=`linear-gradient(180deg,rgba(88,231,255,.15),${border},rgba(179,102,255,.75))`);G('box-op-v').textContent=Math.round(Number(G('box-opacity').value))+'%';G('poster-project').style.fontSize=SZ.h+'px';const compact='#c-feedback,#c-improvement,#c-value';qs('.bq').forEach(e=>e.style.fontSize=(e.closest(compact)?13:SZ.q)+'px');qs('.box textarea,.box input[type=text],.numbered-answer').forEach(e=>e.style.fontSize=(e.closest(compact)?11:SZ.t)+'px');qs('#poster-class,#poster-school').forEach(e=>e.style.fontSize='13px');G('poster-students').style.fontSize='12px';fitSolutionDescription();qs('#p-bar label,#p-bar input').forEach(e=>e.style.color=tc);G('poster-students').style.color=tc;fitSlogan()}
-function wireDesign(){['border-color','project-color','description-color','q-color','t-color','slogan-color','arrow-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));renderBackgroundGallery()}const pendingImageReads=new Set();function loadImg(inp,imgId,phId){if(!inp.files?.[0])return;const pending=new Promise((resolve,reject)=>{const r=new FileReader();r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave();resolve()};r.onerror=()=>reject(r.error);r.readAsDataURL(inp.files[0])});pendingImageReads.add(pending);pending.finally(()=>pendingImageReads.delete(pending)).catch(()=>{})}function autoWidth(inp){const m=document.createElement('span');m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove()}
+function applyDesign(){const bg=G('bg-color').value,border=G('border-color').value,border2='#b366ff',qc=G('q-color').value,tc=G('t-color').value,op=boxOpacityActual();document.documentElement.style.setProperty('--arrow-color',G('arrow-color').value);document.documentElement.style.setProperty('--poster-bg',bg);document.documentElement.style.setProperty('--border',border);document.documentElement.style.setProperty('--border-2',border2);document.documentElement.style.setProperty('--project-color',G('project-color').value);document.documentElement.style.setProperty('--description-color',G('description-color').value);document.documentElement.style.setProperty('--slogan-color',G('slogan-color').value);document.documentElement.style.setProperty('--title',qc);document.documentElement.style.setProperty('--text',tc);document.documentElement.style.setProperty('--accent',border);document.documentElement.style.setProperty('--box-bg',`rgba(8,18,44,${parseInt(op,10)/100})`);qs('#poster .box,#poster .image-box').forEach(e=>e.style.borderColor=border);qs('#p-bar,#p-names').forEach(e=>e.style.border=`1px solid ${border}`);qs('#p-bar .bar-div').forEach(e=>e.style.background=`linear-gradient(180deg,rgba(88,231,255,.15),${border},rgba(179,102,255,.75))`);G('box-op-v').textContent=Math.round(Number(G('box-opacity').value))+'%';G('poster-project').style.fontSize=SZ.h+'px';const compact='#c-feedback,#c-improvement,#c-value';qs('.bq').forEach(e=>e.style.fontSize=(e.closest(compact)?13:SZ.q)+'px');qs('.box textarea,.box input[type=text],.numbered-answer').forEach(e=>e.style.fontSize=(e.closest(compact)?11:SZ.t)+'px');qs('#poster-class,#poster-school').forEach(e=>e.style.fontSize='13px');G('poster-students').style.fontSize='12px';fitSolutionDescription();qs('#p-bar label,#p-bar input').forEach(e=>e.style.color=tc);G('poster-students').style.color=tc;fitSlogan();if(!logoHeaderStrokeManual&&G('logo-frame-stroke'))G('logo-frame-stroke').value=border;layoutLogoHeader();applyGlow('logo')}
+function wireDesign(){['border-color','project-color','description-color','q-color','t-color','slogan-color','arrow-color','box-opacity'].forEach(id=>G(id).addEventListener('input',applyDesign));['logo-frame-show','logo-frame-ornament'].forEach(id=>G(id)?.addEventListener('change',()=>{if(id==='logo-frame-show'&&G('logo-frame-show').value==='on'&&glowState.logo!=='none'){glowState.logo='none'}applyDesign();scheduleAutosave()}));G('logo-frame-color')?.addEventListener('input',()=>{applyDesign();scheduleAutosave()});G('logo-frame-stroke')?.addEventListener('input',()=>{logoHeaderStrokeManual=true;applyDesign();scheduleAutosave()});G('logo-frame-opacity')?.addEventListener('input',()=>{applyDesign();scheduleAutosave()});renderBackgroundGallery()}const pendingImageReads=new Set();function loadImg(inp,imgId,phId){if(!inp.files?.[0])return;const pending=new Promise((resolve,reject)=>{const r=new FileReader();r.onload=e=>{const img=G(imgId);img.src=e.target.result;img.classList.add('show');G(phId).style.display='none';scheduleAutosave();resolve()};r.onerror=()=>reject(r.error);r.readAsDataURL(inp.files[0])});pendingImageReads.add(pending);pending.finally(()=>pendingImageReads.delete(pending)).catch(()=>{})}function autoWidth(inp){const m=document.createElement('span');m.style.cssText='position:fixed;visibility:hidden;white-space:pre;font:'+getComputedStyle(inp).font;m.textContent=inp.value||inp.placeholder||'x';document.body.appendChild(m);inp.style.width=Math.max(38,Math.min(220,m.offsetWidth+8))+'px';m.remove()}
 function setParts(n,names=[],skipSync=false){n=clamp(parseInt(n)||1,1,8);G('pc-cnt').value=String(n);const wrap=G('pcf');const previous=qs('.prow input',wrap).map(input=>input.value);wrap.replaceChildren();const vals=names.length?names:previous;for(let i=1;i<=n;i++){const row=document.createElement('div');row.className='prow';row.innerHTML=`<span>${BG_ARABIC()?'ط':'ת'}${i}</span><input type="text" placeholder="${editorText('שם')}" value="${esc(vals[i-1]||'')}">`;row.querySelector('input').addEventListener('input',syncNames);wrap.appendChild(row)}if(!skipSync){syncNames();scheduleAutosave()}}function syncNames(){const text=qs('.prow input').map(i=>i.value.trim()).filter(Boolean).join(', ');G('poster-students').value=text;layoutPosterHeader()}function syncNamesToPanel(){const names=G('poster-students').value.split(/[,،;\n]+/).map(s=>s.trim()).filter(Boolean);setParts(Math.max(1,names.length||1),names.length?names:[''],true);layoutPosterHeader()}function clearPoster(){if(cloudEditor?.readOnly)return;if(!confirm(editorText('לנקות את כל התוכן?')))return;qs('#wrap input[type=text], #wrap textarea, #sp input[type=text], #sp textarea').forEach(el=>{if(el.id!=='poster-students'&&!el.readOnly)el.value=''});G('solution-type').value='';updateSolutionTypeHeading();G('poster-students').value='';qs('#poster img:not(#approved-bg-image)').forEach(img=>{if(img.id==='logo-img'){img.src='images/logo-1.png?v=20261110';img.style.display='block'}else{img.removeAttribute('src');img.classList.remove('show')}});qs('.iph').forEach(ph=>ph.style.display='flex');G('logo-txt').style.display='none';setParts(1,[]);updateAllCombinedFields();renderFillPanel();if(cloudEditor){scheduleAutosave();return}clearTimeout(autosaveTimer);draftDirty=false;queueLocalWrite(()=>posterDrafts.remove(localPosterId)).catch(error=>console.warn('Poster draft could not be cleared',error))}
-captureEditorLanguage();setParts(1);bindLimits();wireDesign();applyDesign();applyAllGlow();updateAllCombinedFields();renderFillPanel();wireAutosave();window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1';fitSolutionDescription();fitSlogan();refreshContentGlows()});document.fonts?.ready.then(()=>{fitSolutionDescription();fitSlogan();refreshContentGlows()});G('logo-img').addEventListener('load',()=>measureGlow('logo'));G('school-logo-img').addEventListener('load',()=>measureGlow('logo'));window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});applyLayout();autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();
+captureEditorLanguage();setParts(1);bindLimits();wireDesign();applyDesign();applyAllGlow();updateAllCombinedFields();renderFillPanel();wireAutosave();window.addEventListener('resize',()=>{positionFlowArrows();fitPreview()});window.addEventListener('beforeprint',()=>{if(G('poster'))G('poster').style.zoom='1';fitSolutionDescription();fitSlogan();refreshContentGlows()});document.fonts?.ready.then(()=>{fitSolutionDescription();fitSlogan();refreshContentGlows()});G('logo-img').addEventListener('load',()=>{layoutLogoHeader();measureGlow('logo');layoutPosterHeader()});G('school-logo-img').addEventListener('load',()=>{layoutLogoHeader();measureGlow('logo');layoutPosterHeader()});window.addEventListener('afterprint',()=>{if(printTitleBackup){document.title=printTitleBackup;printTitleBackup=''}fitPreview()});if(window.ResizeObserver){const ro=new ResizeObserver(()=>layoutLogoHeader());const area=G('logo-header');if(area)ro.observe(area)}applyLayout();layoutLogoHeader();autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();
 applyEditorLanguage();
 window.addEventListener('poster:language-changed', applyEditorLanguage);
 // Account for a wrapping toolbar on small laptop screens and after switching languages.
@@ -930,13 +1053,14 @@ window.posterEditor = {
   async schoolLogo(source) {
     const image=G('school-logo-img'),box=G('school-logo-box');
     box.hidden=true;image.removeAttribute('src');
-    if(source){image.src=source;await image.decode();box.hidden=false;}applyGlow('logo');
+    if(source){image.src=source;await image.decode();box.hidden=false;}
+    layoutLogoHeader();applyGlow('logo');layoutPosterHeader();
   },
   markChanged: scheduleAutosave,
   hasUnsavedChanges: () => draftDirty,
 };
 </script>
-<script type="module" src="poster-access.js?v=20261128-poster-complete-v1"></script>
+<script type="module" src="poster-access.js?v=20261128-logo-header-v1"></script>
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="חזרה לראש העמוד" title="חזרה לראש העמוד">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l5-5 5 5M12 7v10"/></svg>

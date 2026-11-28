@@ -1,7 +1,7 @@
-import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261128-poster-complete-v1';
-import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, verifyPosterStaff, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261128-poster-complete-v1';
+import { arabic, setArabic, translate as t, schoolNameArabic, classNameArabic, translateInterfaceText } from './poster-language.js?v=20261128-logo-header-v1';
+import { createPosterMedia, decodePosterState, encodePosterState, newToken, posterRequest, verifyPosterStaff, schoolLogoRequest, schoolLogoMedia } from './poster-cloud.js?v=20261128-logo-header-v1';
 
-import { dashboardLogin } from './poster-dashboard-login.js?v=20261128-poster-complete-v1';
+import { dashboardLogin } from './poster-dashboard-login.js?v=20261128-logo-header-v1';
 
 const root = document.getElementById('poster-access-content');
 const status = document.getElementById('poster-access-status');

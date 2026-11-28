@@ -134,7 +134,7 @@ with sync_playwright() as pw:
             assert page.evaluate("['poster-project','solution-description-heading','slogan-output'].map(id=>getComputedStyle(G(id)).color)")==['rgb(238, 238, 255)','rgb(221, 255, 238)','rgb(255, 204, 0)']
             assert page.locator('#arrow-feedback-improvement .shaft').evaluate('(e)=>getComputedStyle(e).backgroundColor')=='rgb(0, 229, 255)'
             assert page.locator('#c-feedback').evaluate('(e)=>getComputedStyle(e).borderTopColor')=='rgb(88, 231, 255)'
-            assert page.evaluate("G('tab-design').querySelectorAll('input[type=color]').length")==7
+            assert page.evaluate("G('tab-design').querySelectorAll('input[type=color]').length")==9
             assert page.evaluate("G('tab-design').querySelectorAll('[data-design-hex],input[id$=\"-hex\"]').length")==0
             assert page.evaluate("collectDraft().design.sloganColor")=='#ffcc00'
             page.evaluate("async()=>await Promise.all(['img-main','img-1','img-2','logo-img'].map(id=>G(id).decode()))")
