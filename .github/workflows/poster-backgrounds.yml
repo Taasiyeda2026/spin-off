@@ -28,7 +28,6 @@ jobs:
           mkdir _site
           git archive HEAD | tar -x -C _site
           python scripts/build-poster-backgrounds.py --output _site
-          rm -rf _site/.github _site/tests _site/supabase _site/docs
       - uses: actions/configure-pages@v5
         with:
           enablement: true
