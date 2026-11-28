@@ -242,6 +242,7 @@ body.panel-open #wrap{padding-right:344px}
 #poster #c-feedback .bq,#poster #c-improvement .bq,#poster #c-value .bq{font-size:13px!important;font-weight:700!important}
 #poster #c-feedback textarea,#poster #c-improvement textarea,#poster #c-value textarea{font-size:11px!important;font-weight:400!important;text-align:center;line-height:1.2;padding:0}
 #process-surface{position:absolute;left:30px;top:770px;width:357px;height:266px;border:0;border-radius:12px;background:var(--box-bg);z-index:1;pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+/* top/height for process-surface and content boxes are assigned by reflowPosterBody() */
 #poster :is(#c-feedback,#c-improvement,#c-value) .bi{padding:3px 8px;gap:2px;justify-content:center;align-items:stretch}
 #poster :is(#c-feedback,#c-improvement,#c-value) .bq{justify-content:center;text-align:center;flex:0 0 auto}
 #poster :is(#c-feedback,#c-improvement,#c-value) .bq span:first-child{white-space:normal;overflow:visible;text-overflow:clip}
@@ -626,26 +627,78 @@ function fitPreview(){if(window.matchMedia?.('print')?.matches)return;const post
 async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC()?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}try{await window.refreshSchoolLogo?.()}catch{alert(BG_ARABIC()?'تعذّر تحميل شعار المدرسة. حاولوا مجددًا.':'לא ניתן לטעון את לוגו בית הספר. נסו שוב.');return}await window.posterEditor.flush();if(cloudEditor&&!cloudEditor.readOnly&&draftDirty){alert(BG_ARABIC()?'تعذّر حفظ التغييرات.':'השינויים טרם נשמרו. נסו שוב.');return}if(document.fonts){await document.fonts.ready;fitSolutionDescription();fitSlogan();}refreshContentGlows();printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר חקר';window.print()}
 const LAYOUT={'c-problem':{left:407,top:277,width:357,height:65},'c-target':{left:407,top:370,width:357,height:65},'c-question':{left:407,top:463,width:357,height:80},'img-pair':{left:407,top:561,width:357,height:170},'c-research':{left:407,top:755,width:357,height:86},'c-findings':{left:407,top:849,width:357,height:88},'c-requirements':{left:407,top:944,width:357,height:92},'c-solution':{left:30,top:277,width:357,height:85},'main-image-box':{left:84,top:384,width:250,height:250},'c-use':{left:30,top:656,width:357,height:95},'c-feedback':{left:74.625,top:778,width:267.75,height:66},'c-improvement':{left:74.625,top:868,width:267.75,height:66},'c-value':{left:74.625,top:958,width:267.75,height:66},'c-slogan':{left:30,top:1054,width:734,height:56}};
 function positionFlowArrows(){[['c-feedback','c-improvement','arrow-feedback-improvement'],['c-improvement','c-value','arrow-improvement-value']].forEach(([fromId,toId,arrowId])=>{const from=G(fromId),to=G(toId),arrow=G(arrowId);if(!from||!to||!arrow)return;const arrowWidth=28,left=from.offsetLeft+(from.offsetWidth/2)-(arrowWidth/2),gap=2,top=from.offsetTop+from.offsetHeight+gap,end=to.offsetTop-gap,height=Math.max(14,end-top);Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'})})}
-function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});updatePosterImageLayout();positionFlowArrows()}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
+function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});Object.assign(G('process-surface').style,{left:'30px',top:'770px',width:'357px',height:'266px'});imageSlots['main-image-box']={...LAYOUT['main-image-box']};imageSlots['img-pair']={...LAYOUT['img-pair']};if(G('poster')?.offsetWidth)layoutPosterHeader();else{updatePosterImageLayout();positionFlowArrows()}}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
 const FILL_FIELDS=[{"id":"poster-project","label":"1. שם הפתרון שלנו?","kind":"input"},{"id":"solution-type","label":"2א. סוג הפתרון שלנו","kind":"select"},{"id":"short-desc","label":"2ב. תיאור הפתרון שלנו?","rows":2},{"id":"poster-class","label":"3. כיתה","kind":"input"},{"id":"poster-school","label":"4. שם בית הספר","kind":"input"},{"id":"problem","label":"5. איזו בעיה בחרנו לפתור?","rows":2},{"id":"target","label":"6. מי נתקל בבעיה ומה הוא צריך?","rows":2},{"id":"research1","label":"7. מה למדנו מטכנולוגיות החלל?","rows":2,"combine":"research"},{"id":"research2","label":"8. איך טכנולוגיות החלל תרמו לפתרון?","rows":2,"combine":"research"},{"id":"findings1","label":"9א. רעיון ראשון","rows":2,"combine":"findings"},{"id":"findings2","label":"9ב. רעיון שני","rows":2,"combine":"findings"},{"id":"findings3","label":"9ג. רעיון שלישי","rows":2,"combine":"findings"},{"id":"question","label":"10. איזה רעיון בחרנו ולמה?","rows":3},{"id":"requirements1","label":"11א. דרישה ראשונה","rows":2,"combine":"requirements"},{"id":"requirements2","label":"11ב. דרישה שנייה","rows":2,"combine":"requirements"},{"id":"requirements3","label":"11ג. דרישה שלישית","rows":2,"combine":"requirements"},{"id":"solution","label":"12. מה כולל הפתרון שלנו?","rows":3},{"id":"use1","label":"13א. שלב ראשון","rows":2,"combine":"use"},{"id":"use2","label":"13ב. שלב שני","rows":2,"combine":"use"},{"id":"use3","label":"13ג. שלב שלישי","rows":2,"combine":"use"},{"id":"feedback","label":"14. מה בדקנו בתכנון הפתרון שלנו?","rows":2},{"id":"improvement","label":"15. איזה משוב קיבלנו על הפתרון?","rows":2},{"id":"value","label":"16. מה שיפרנו בעקבות המשוב?","rows":2},{"id":"slogan","label":"17. איך נציג את הפתרון שלנו במשפט אחד?","rows":2}];
 function panelCounterText(src){const max=parseInt(src?.dataset?.max||src?.getAttribute?.('maxlength')||0,10);if(!max)return editorText('חופשי');return `${(src.value||'').length}/${max}`}function updatePanelCounter(id){const src=G(id),c=G('panel-counter-'+id);if(!src||!c)return;const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);c.textContent=panelCounterText(src);c.classList.toggle('full',!!max&&(src.value||'').length>=max);c.classList.toggle('good',!!max&&(src.value||'').length>0&&(src.value||'').length<max)}
 const COMBINED_FIELDS={research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['מה למדנו מטכנולוגיות החלל?','איך טכנולוגיות החלל תרמו לפתרון?'],max:110},findings:{ids:['findings1','findings2','findings3'],outs:['findings1-out','findings2-out','findings3-out'],placeholders:['רעיון 1','רעיון 2','רעיון 3'],max:165},requirements:{ids:['requirements1','requirements2','requirements3'],outs:['requirements1-out','requirements2-out','requirements3-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3'],max:180},use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['שלב 1','שלב 2','שלב 3'],max:180}};
 function updateCombinedField(key){const cfg=COMBINED_FIELDS[key];if(!cfg)return;let total=0,hasText=false;cfg.ids.forEach((id,i)=>{const src=G(id),out=G(cfg.outs[i]),val=(src?.value||'').trim();total+=(src?.value||'').length;if(val)hasText=true;if(out)out.textContent=val||editorText(cfg.placeholders[i]);updatePanelCounter(id)});const display=G(key);if(display)display.classList.toggle('empty',!hasText);qs(`.counter[data-for="${key}"]`).forEach(c=>{c.textContent=`${total}/${cfg.max}`;c.classList.toggle('full',total>=cfg.max);c.classList.toggle('good',total>0&&total<cfg.max)})}function updateAllCombinedFields(){Object.keys(COMBINED_FIELDS).forEach(updateCombinedField);updateSlogan()}function syncPanelField(id){const src=G(id),dst=G('panel-'+id);if(!src||!dst||document.activeElement===dst)return;dst.value=src.value||'';updatePanelCounter(id)}
 const SOLUTION_TYPES=[['physical','מוצר פיזי'],['smart','מוצר חכם'],['app','אפליקציה'],['web','אתר אינטרנט'],['digital','מערכת דיגיטלית']];
 function solutionTypeLabel(){const choice=SOLUTION_TYPES.find(([id])=>id===G('solution-type').value);return choice?editorText(choice[1]):''}
+const imageSlots={'main-image-box':{...LAYOUT['main-image-box']},'img-pair':{...LAYOUT['img-pair']}};
 function updatePosterImageLayout(){
  const kind=G('solution-type').value;
  const ratio=kind==='app'?9/16:['web','digital'].includes(kind)?16/9:['physical','smart'].includes(kind)?1:null;
  const fit=(width,height)=>ratio?{width:Math.min(width,height*ratio),height:Math.min(height,width/ratio)}:{width,height};
  for(const [id,pair] of [['main-image-box',false],['img-pair',true]]){
-  const original=LAYOUT[id],size=fit(pair?(original.width-10)/2:original.width,original.height);
+  const original=imageSlots[id],size=fit(pair?(original.width-10)/2:original.width,original.height);
   const width=pair?size.width*2+10:size.width,height=size.height;
   Object.assign(G(id).style,{left:(original.left+(original.width-width)/2)+'px',top:(original.top+(original.height-height)/2)+'px',width:width+'px',height:height+'px'});
  }
 }
 function fitSlogan(){G('slogan-output').style.fontSize='15px'}
 function updateSlogan(){G('slogan-output').firstElementChild.textContent=(G('slogan').value||'').replace(/\s+/g,' ').trim();fitSlogan()}
-// Measure rendered text at its fixed font size. Keep content and image coordinates intact.
+function placeColumn(boxes,top,bottom){
+ const sum=boxes.reduce((s,b)=>s+b.h,0),gaps=Math.max(1,boxes.length-1),gap=(bottom-top-sum)/gaps;
+ let y=top;const placed=[];
+ for(let i=0;i<boxes.length;i++){placed.push({...boxes[i],top:y});y+=boxes[i].h+(i<gaps?gap:0)}
+ return {placed,gap};
+}
+function reflowPosterBody(contentTop,contentBottom){
+ const col=LAYOUT['c-solution'],extra=Math.max(0,(contentBottom-contentTop)-(contentBottom-Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top)));
+ const mainBase=LAYOUT['main-image-box'].height,pairBase=LAYOUT['img-pair'].height;
+ const mainGrow=Math.min(mainBase*.18,extra*.45),pairGrow=Math.min(pairBase*.18,extra*.4);
+ const mainSize=mainBase+mainGrow,pairH=pairBase+pairGrow,processBoxH=66;
+ // Keep a stable process-unit footprint; remaining slack balances the gaps above it.
+ const processH=266;
+ const right=placeColumn([
+  {id:'c-problem',h:LAYOUT['c-problem'].height},
+  {id:'c-target',h:LAYOUT['c-target'].height},
+  {id:'c-question',h:LAYOUT['c-question'].height},
+  {id:'img-pair',h:pairH,slot:true},
+  {id:'c-research',h:LAYOUT['c-research'].height},
+  {id:'c-findings',h:LAYOUT['c-findings'].height},
+  {id:'c-requirements',h:LAYOUT['c-requirements'].height},
+ ],contentTop,contentBottom);
+ const left=placeColumn([
+  {id:'c-solution',h:LAYOUT['c-solution'].height},
+  {id:'main-image-box',h:mainSize,slot:true},
+  {id:'c-use',h:LAYOUT['c-use'].height},
+  {id:'_process',h:processH},
+ ],contentTop,contentBottom);
+ for(const item of [...right.placed,...left.placed]){
+  if(item.id==='_process')continue;
+  const base=LAYOUT[item.id];
+  if(item.slot){
+   if(item.id==='main-image-box'){
+    const width=Math.min(col.width,mainSize);
+    imageSlots[item.id]={left:col.left+(col.width-width)/2,top:item.top,width,height:mainSize};
+   }else imageSlots[item.id]={left:base.left,top:item.top,width:base.width,height:item.h};
+   continue;
+  }
+  Object.assign(G(item.id).style,{left:base.left+'px',top:item.top+'px',width:base.width+'px',height:item.h+'px'});
+ }
+ const processTop=left.placed.find(item=>item.id==='_process').top;
+ const inner=processH-3*processBoxH,topInset=Math.min(8,inner*.2),between=(inner-topInset)/2;
+ Object.assign(G('process-surface').style,{left:col.left+'px',top:processTop+'px',width:col.width+'px',height:processH+'px'});
+ ['c-feedback','c-improvement','c-value'].forEach((id,i)=>{
+  const base=LAYOUT[id];
+  Object.assign(G(id).style,{left:base.left+'px',top:(processTop+topInset+i*(processBoxH+between))+'px',width:base.width+'px',height:processBoxH+'px'});
+ });
+ Object.assign(G('c-slogan').style,{left:LAYOUT['c-slogan'].left+'px',top:LAYOUT['c-slogan'].top+'px',width:LAYOUT['c-slogan'].width+'px',height:LAYOUT['c-slogan'].height+'px'});
+ updatePosterImageLayout();
+ positionFlowArrows();
+}
+// Title at mid-logo; names stay one line above content; body reflows into the freed space.
 function layoutPosterHeader(){
  const poster=G('poster'),title=G('poster-project'),desc=G('short-desc-box'),heading=G('solution-description-heading'),names=G('poster-students'),hdr=G('p-hdr'),logo=G('logo-box');
  if(!poster.offsetWidth)return;
@@ -654,24 +707,28 @@ function layoutPosterHeader(){
  const scale=poster.getBoundingClientRect().width/poster.offsetWidth||1;
  const descHeight=Math.ceil(heading.firstElementChild.getBoundingClientRect().height/scale)+4;
  const lineGap=18,tightGap=4,barHeight=34,namesBoxHeight=namesHeight+8;
- const contentTop=Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top);
- // Pack from the content boxes upward so long titles/descriptions never collide.
- let namesTop=contentTop-lineGap-namesBoxHeight;
- let barTop=namesTop-tightGap-barHeight;
- let descTop=barTop-lineGap-descHeight;
- let titleTop=descTop-tightGap-titleHeight;
- // When there is slack, raise the whole header block so the title starts at mid-logo.
+ const sloganTop=LAYOUT['c-slogan'].top,contentBottom=sloganTop-lineGap;
+ const baseContentTop=Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top),minSpan=contentBottom-baseContentTop;
  const posterRect=poster.getBoundingClientRect(),logoRect=logo.getBoundingClientRect();
  const logoMidY=(logoRect.top+logoRect.height/2-posterRect.top)/scale;
- if(titleTop>logoMidY){
-  const lift=titleTop-logoMidY;
-  titleTop-=lift;descTop-=lift;barTop-=lift;namesTop-=lift;
+ let titleTop=logoMidY;
+ let descTop=titleTop+titleHeight+tightGap;
+ let barTop=descTop+descHeight+lineGap;
+ let namesTop=barTop+barHeight+tightGap;
+ let contentTop=namesTop+namesBoxHeight+lineGap;
+ if(contentBottom-contentTop<minSpan){
+  contentTop=contentBottom-minSpan;
+  namesTop=contentTop-lineGap-namesBoxHeight;
+  barTop=namesTop-tightGap-barHeight;
+  descTop=barTop-lineGap-descHeight;
+  titleTop=Math.max(0,descTop-tightGap-titleHeight);
  }
  // The header host stays in place so the approved logo coordinates do too.
  Object.assign(title.style,{position:'absolute',top:(titleTop-hdr.offsetTop)+'px'});
  Object.assign(desc.style,{top:descTop+'px',height:descHeight+'px'});
  Object.assign(G('p-bar').style,{top:barTop+'px',height:barHeight+'px'});
  Object.assign(G('p-names').style,{top:namesTop+'px',height:namesBoxHeight+'px'});
+ reflowPosterBody(contentTop,contentBottom);
  measureGlow('title');
 }
 function fitSolutionDescription(){G('solution-description-heading').style.fontSize='13px';layoutPosterHeader();measureGlow('desc')}
