@@ -41,7 +41,7 @@ with sync_playwright() as pw:
                 return {gaps:[d.top-t.bottom,b.top-d.bottom,n.top-b.bottom,G('c-problem').offsetTop-n.bottom],top:t.top,logoMid,
                   contentTop:G('c-problem').offsetTop,leftTop:G('c-solution').offsetTop,
                   rightEnd:G('c-requirements').offsetTop+G('c-requirements').offsetHeight,
-                  leftEnd:G('c-value').offsetTop+G('c-value').offsetHeight,
+                  leftEnd:G('process-surface').offsetTop+G('process-surface').offsetHeight,
                   slogan:G('c-slogan').offsetTop,main:G('main-image-box').offsetHeight,pair:G('img-pair').offsetHeight,
                   clipped:['poster-project','poster-students'].filter(id=>G(id).scrollHeight>G(id).clientHeight+1),
                   weights:[...document.querySelectorAll('#poster .bq,#poster-project,#slogan-output,#slogan-output *')].map(e=>getComputedStyle(e).fontWeight),
@@ -62,14 +62,20 @@ with sync_playwright() as pw:
             assert metrics['main']>=250 and metrics['pair']>=170,metrics
             meta=page.evaluate("""() => {
               const poster=G('poster').offsetWidth;
+              const tops=id=>G(id).offsetTop,h=id=>G(id).offsetHeight;
+              const gap=(a,b)=>tops(b)-(tops(a)+h(a));
               return {
                 bar:G('p-bar').offsetWidth, names:G('p-names').offsetWidth,
                 heights:['c-problem','c-target','c-question'].map(id=>G(id).offsetHeight),
+                firstGaps:[gap('c-problem','c-target'),gap('c-target','c-question')],
+                processGaps:[gap('c-feedback','c-improvement'),gap('c-improvement','c-value')],
                 expected:Math.round(poster-364)
               };
             }""")
             assert abs(meta['bar']-meta['expected'])<=2 and abs(meta['names']-meta['expected'])<=2,meta
             assert meta['heights']==[80,80,80],meta
+            assert meta['firstGaps'][0]==meta['firstGaps'][1],meta
+            assert meta['processGaps'][0]==meta['processGaps'][1],meta
             for i,a in enumerate(metrics['boxes']):
                 assert a['x']>=0 and a['y']>=0 and a['x']+a['w']<=794 and a['y']+a['h']<=1123,a
                 for b in metrics['boxes'][i+1:]:
@@ -99,14 +105,15 @@ with sync_playwright() as pw:
               const surface=G('process-surface');
               return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[surface.offsetLeft,surface.offsetTop,surface.offsetWidth,surface.offsetHeight],valueBottom:G('c-value').offsetTop+G('c-value').offsetHeight,firstTop:G('c-feedback').offsetTop,gaps:ids.slice(1).map((id,i)=>G(id).offsetTop-G(ids[i]).offsetTop-G(ids[i]).offsetHeight),firstGaps:['c-target','c-question'].map((id,i)=>G(id).offsetTop-G(['c-problem','c-target'][i]).offsetTop-G(['c-problem','c-target'][i]).offsetHeight)};
             }""")
-            assert process['surface'][0]==process['rows'][0]['x'] and process['surface'][2]==process['rows'][0]['w'] and process['surface'][3]==266,process
-            assert abs(process['valueBottom']-(process['surface'][1]+process['surface'][3]-8))<=1,process
+            assert abs(process['surface'][0]-75)<=1 and abs(process['surface'][2]-268)<=1 and abs(process['surface'][3]-266)<=1,process
+            assert process['surface'][0]==process['rows'][0]['x'] and process['surface'][2]==process['rows'][0]['w'],process
             assert abs(process['firstTop']-process['surface'][1]-8)<=1,process
+            assert abs((process['surface'][1]+process['surface'][3]-process['valueBottom'])-8)<=1,process
             assert abs(process['gaps'][0]-process['gaps'][1])<=1,process
             assert abs(process['firstGaps'][0]-process['firstGaps'][1])<=1,process
             assert all(not row['clipped'] and row['weight']=='400' and row['align']=='center' and row['counter']=='none' and row['vCenter']<4 for row in process['rows']),process
-            assert all(abs(row['w']/357-.75)<.005 and row['h']==66 for row in process['rows']),process
-            assert all(abs(a['center']-208.5)<1 and a['w']==28 for a in process['arrows']),process
+            assert all(abs(row['w']-process['surface'][2])<=1 and abs(row['x']-process['surface'][0])<=1 and row['h']==66 for row in process['rows']),process
+            assert all(abs(a['center']-(process['surface'][0]+process['surface'][2]/2))<1 and a['w']==28 for a in process['arrows']),process
             if long:
                 page.locator('#poster').screenshot(path=str(out/f'poster-long-{lang}.png'))
                 continue

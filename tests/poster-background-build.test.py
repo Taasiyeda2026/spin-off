@@ -29,9 +29,18 @@ with tempfile.TemporaryDirectory() as directory:
     assert two['retired'] and len(two['versions'])==2
     assert [e['id'] for e in third if not e['retired']]==['bg10','bg100']
     assert (root/'third'/f'poster-backgrounds/versions/{digest}.webp').read_bytes()==old
+    a4=210/297
     for e in third:
         for version in e['versions']:
-            with Image.open(root/'third'/version['thumb']) as image:assert image.width<=240 and image.height<=340
+            full_path=root/'third'/version['image'];thumb_path=root/'third'/version['thumb']
+            with Image.open(full_path) as full, Image.open(thumb_path) as image:
+                assert image.width<=420 and image.height<=594
+                # Thumbnails keep source aspect (integer rounding only); never stretch to the box.
+                assert abs((image.width/image.height)-(full.width/full.height))<0.01
+                if abs((full.width/full.height)-a4)<1e-6:
+                    assert abs((image.width/image.height)-a4)<0.01
+            # Full version bytes stay identical to the recorded digest payload.
+            assert hashlib.sha256(full_path.read_bytes()).hexdigest()==version['version']
     (root/'third'/f'poster-backgrounds/versions/{digest}.webp').write_bytes(b'corrupt')
     try:module.build(root,root/'third')
     except ValueError:pass

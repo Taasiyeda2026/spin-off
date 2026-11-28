@@ -39,10 +39,25 @@ with sync_playwright() as pw:
             assert page.locator('#c-slogan').evaluate('(e)=>e.offsetTop>=1036 && e.offsetWidth===734')
         ids=page.locator('#poster-background-gallery button[data-background-id]').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
         assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:[(1,int(p)) if p.isdigit() else (0,p.lower()) for p in re.split(r'(\d+)',id)])
+        fit=page.evaluate("""() => ({
+          poster:getComputedStyle(G('approved-bg-image')).objectFit,
+          gallery:getComputedStyle(document.querySelector('#poster-background-gallery img')).objectFit,
+          printRule:[...document.styleSheets].flatMap(s=>{try{return[...s.cssRules]}catch{return[]}}).some(r=>r.cssText?.includes('#approved-bg-image')&&r.cssText.includes('object-fit: contain'))
+        })""")
+        assert fit['poster']=='contain' and fit['gallery']=='contain' and fit['printRule'],fit
         for id in ids:
             page.locator(f'[data-background-id={id}]').click()
             assert page.evaluate('async()=>await backgroundReady')
             assert page.evaluate("id=>{const e=approvedBackgrounds.find(e=>e.id===id);return G('approved-bg-image').getAttribute('src')===e.image && document.querySelector('[data-background-id='+id+'] img').getAttribute('src')===e.thumb}",id)
+            metrics=page.evaluate("""() => {
+              const img=G('approved-bg-image'),poster=G('poster');
+              const nw=img.naturalWidth,nh=img.naturalHeight,pw=poster.clientWidth,ph=poster.clientHeight;
+              const scale=Math.min(pw/nw,ph/nh),dw=nw*scale,dh=nh*scale;
+              return {ratio:nw/nh,a4:210/297,coverage:(dw*dh)/(pw*ph),objectFit:getComputedStyle(img).objectFit};
+            }""")
+            assert metrics['objectFit']=='contain',metrics
+            assert abs(metrics['ratio']-metrics['a4'])<0.002,metrics
+            assert metrics['coverage']>0.995,metrics
             page.evaluate('posterEditor.flush()')
             state=page.evaluate('collectDraft()')
             page.evaluate('draft=>posterEditor.open({draft})',state)

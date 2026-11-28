@@ -24,8 +24,10 @@ def build(root, output):
         full=target/'versions'/f'{digest}.webp';thumb=target/'thumbs'/f'{digest}.webp'
         full.parent.mkdir(parents=True,exist_ok=True);thumb.parent.mkdir(parents=True,exist_ok=True)
         if full.exists() and hashlib.sha256(full.read_bytes()).hexdigest()!=digest:raise ValueError('Corrupted immutable background: '+digest)
+        # Keep the immutable full image byte-identical to the WebP source (no re-encode/crop).
         full.write_bytes(data)
-        image.thumbnail((240,340),Image.Resampling.LANCZOS);image.save(thumb,'WEBP',quality=80,method=6)
+        # Thumbnail inside an exact A4 box (2× 210×297) so aspect ratio is preserved without stretch.
+        image.thumbnail((420,594),Image.Resampling.LANCZOS);image.save(thumb,'WEBP',quality=80,method=6)
         versions.setdefault(id,{})[digest]={'version':digest,'image':str(full.relative_to(output)),'thumb':str(thumb.relative_to(output))}
         latest.setdefault(id,digest)
         return digest
