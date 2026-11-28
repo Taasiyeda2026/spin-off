@@ -54,13 +54,16 @@ with sync_playwright() as pw:
                 assert doc.page_count==1,(id,language,doc.page_count)
                 # Chrome can emit invisible black extraction text over painted glyphs.
                 # Check the rasterized PDF pixels in each actual component instead.
-                pix=doc[0].get_pixmap(matrix=fitz.Matrix(2,2))
-                painted=Image.frombytes('RGB',(pix.width,pix.height),pix.samples)
                 for region,color in zip(regions,colors):
                     x,y,w,h=region
-                    pixels=painted.crop((int(x*pix.width),int(y*pix.height),int((x+w)*pix.width),int((y+h)*pix.height)))
+                    clip=fitz.Rect(x*doc[0].rect.width,y*doc[0].rect.height,(x+w)*doc[0].rect.width,(y+h)*doc[0].rect.height)
+                    # Resolve thin Arabic glyphs at print resolution before matching colors.
+                    pix=doc[0].get_pixmap(matrix=fitz.Matrix(6,6),clip=clip)
+                    pixels=Image.frombytes('RGB',(pix.width,pix.height),pix.samples)
                     target=tuple(int(color[i:i+2],16) for i in (1,3,5))
-                    matches=sum(all(abs(a-b)<=6 for a,b in zip(pixel,target)) for pixel in pixels.getdata())
+                    masks=[channel.point([255 if abs(value-target[i])<=6 else 0 for value in range(256)]) for i,channel in enumerate(pixels.split())]
+                    mask=ImageChops.multiply(ImageChops.multiply(masks[0],masks[1]),masks[2])
+                    matches=mask.histogram()[255]
                     assert matches>5,(id,language,color,matches)
                 assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
                 source=ImageOps.exif_transpose(Image.open('poster-backgrounds/webp/'+id+'.webp')).convert('RGB')
@@ -85,5 +88,8 @@ with sync_playwright() as pw:
     for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
         expect(page.locator('#'+id)).to_have_value(color)
     expect(page.locator('[data-background-id=bg2]')).to_have_attribute('aria-pressed','true')
+    page.evaluate('clearPoster()')
+    for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
+        expect(page.locator('#'+id+'-hex')).to_have_value(color)
     print(f'{len(ids)} backgrounds × 2 languages: identity, PDF pixels, A4 page; color isolation, legacy/local persistence, five image ratios, bounds and mobile passed.')
     browser.close()

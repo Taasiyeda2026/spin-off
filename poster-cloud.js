@@ -42,7 +42,7 @@ export async function verifyPosterStaff(token) {
   const result = await jsonRequest('/rest/v1/rpc/get_current_app_user', {}, token);
   const row = Array.isArray(result) ? result.length === 1 ? result[0] : null : result;
   if (!identity?.id || row?.is_active !== true || String(row.auth_user_id || '') !== String(identity.id) ||
-      (!['instructor', 'activities_manager', 'admin'].includes(row.role) && ![true, 1, 'yes', 'true', '1'].includes(row.permissions?.manage_all_posters))) throw new Error('denied');
+      (!['instructor', 'activities_manager', 'admin'].includes(row.role) && !['yes', 'true', '1'].includes(String(row.permissions?.manage_all_posters ?? '').trim().toLowerCase()))) throw new Error('denied');
   return true;
 }
 
