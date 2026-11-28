@@ -24,9 +24,9 @@ def build(root, output):
             image.verify() if hasattr(image,'verify') else None
         full=target/'versions'/f'{digest}.webp';thumb=target/'thumbs'/f'{digest}.webp'
         full.parent.mkdir(parents=True,exist_ok=True);thumb.parent.mkdir(parents=True,exist_ok=True)
-        if not full.exists():full.write_bytes(data)
-        if not thumb.exists():
-            image.thumbnail((240,340),Image.Resampling.LANCZOS);image.save(thumb,'WEBP',quality=80,method=6)
+        if full.exists() and hashlib.sha256(full.read_bytes()).hexdigest()!=digest:raise ValueError('Corrupted immutable background: '+digest)
+        full.write_bytes(data)
+        image.thumbnail((240,340),Image.Resampling.LANCZOS);image.save(thumb,'WEBP',quality=80,method=6)
         versions.setdefault(id,{})[digest]={'version':digest,'image':str(full.relative_to(output)),'thumb':str(thumb.relative_to(output))}
         latest.setdefault(id,digest)
         return digest

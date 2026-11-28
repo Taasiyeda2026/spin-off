@@ -14,11 +14,14 @@ with tempfile.TemporaryDirectory() as directory:
     (source/'webp/bg2.webp').write_bytes(old);(source/'webp/bg10.webp').write_bytes(webp('blue'))
     (source/'legacy-versions.json').write_text(json.dumps({'bg2':digest}))
     git('add','.');git('commit','-m','baseline')
+    (root/'first').mkdir();(root/'first/poster.html').write_text('<script src="poster-backgrounds/catalog.js?v=old"></script>')
     first=module.build(root,root/'first')
     assert [e['id'] for e in first]==['bg2','bg10']
     (source/'webp/bg2.webp').write_bytes(webp('green'));(source/'webp/bg100.webp').write_bytes(webp('white'))
     git('add','poster-backgrounds');git('commit','-m','replace and add')
+    (root/'second').mkdir();(root/'second/poster.html').write_text('<script src="poster-backgrounds/catalog.js?v=old"></script>')
     second=module.build(root,root/'second');two=next(e for e in second if e['id']=='bg2')
+    assert (root/'first/poster.html').read_text()!=(root/'second/poster.html').read_text()
     assert len(two['versions'])==2 and two['version']!=digest and two['legacyVersion']==digest
     assert (root/'second'/f'poster-backgrounds/versions/{digest}.webp').read_bytes()==old
     (source/'webp/bg2.webp').unlink();git('add','-u');git('commit','-m','remove source')
@@ -29,6 +32,10 @@ with tempfile.TemporaryDirectory() as directory:
     for e in third:
         for version in e['versions']:
             with Image.open(root/'third'/version['thumb']) as image:assert image.width<=240 and image.height<=340
+    (root/'third'/f'poster-backgrounds/versions/{digest}.webp').write_bytes(b'corrupt')
+    try:module.build(root,root/'third')
+    except ValueError:pass
+    else:raise AssertionError('Immutable version corruption must block deployment')
     (source/'webp/bg999.webp').write_bytes(b'not an image')
     try:module.build(root,root/'invalid')
     except Exception:pass
