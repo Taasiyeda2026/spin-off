@@ -254,7 +254,7 @@ with sync_playwright() as pw:
         again.locator('#panel-slogan').fill(sentence)
         expect(again.locator('#slogan')).to_have_value(sentence)
         expect(again.locator('#slogan-output')).to_have_text(re.sub(r'\s+', ' ', sentence).strip())
-        metrics=again.locator('#slogan-output').evaluate('''(el)=>{const text=el.firstElementChild,a=el.getBoundingClientRect(),b=text.getBoundingClientRect(),style=getComputedStyle(el);return {fit:text.scrollHeight<=el.clientHeight&&text.scrollWidth<=el.clientWidth,dx:Math.abs((a.left+a.width/2)-(b.left+b.width/2)),dy:Math.abs((a.top+a.height/2)-(b.top+b.height/2)),bold:Number(style.fontWeight)===500,color:style.color,size:parseFloat(style.fontSize)}}''')
+        metrics=again.locator('#slogan-output').evaluate('''(el)=>{const text=el.firstElementChild,a=el.getBoundingClientRect(),b=text.getBoundingClientRect(),style=getComputedStyle(el);return {fit:text.scrollHeight<=el.clientHeight&&text.scrollWidth<=el.clientWidth,dx:Math.abs((a.left+a.width/2)-(b.left+b.width/2)),dy:Math.abs((a.top+a.height/2)-(b.top+b.height/2)),bold:Number(style.fontWeight)===700,color:style.color,size:parseFloat(style.fontSize)}}''')
         assert metrics['fit'] and metrics['dx']<1 and metrics['dy']<1 and metrics['bold'],metrics
         assert metrics['color']=='rgb(255, 255, 255)'
     again.locator('#panel-slogan').fill('פתרון קטן שעושה שינוי גדול')
@@ -283,7 +283,7 @@ with sync_playwright() as pw:
     assert len(pdf)==1
     assert 'كيف نعرض' not in pdf[0].get_text()
     expect(again.locator('#slogan-output')).to_be_visible()
-    assert again.locator('#slogan-output').evaluate('(el)=>getComputedStyle(el).fontWeight')=='500'
+    assert again.locator('#slogan-output').evaluate('(el)=>getComputedStyle(el).fontWeight')=='700'
     assert again.locator('#slogan-output').evaluate('(el)=>el.firstElementChild.scrollHeight<=el.clientHeight')
     again.emulate_media(media='null')
     with again.expect_popup() as popup:
