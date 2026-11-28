@@ -35,11 +35,11 @@ with sync_playwright() as pw:
             assert page.locator('#img-pair').evaluate('(e)=>e.offsetLeft>=407')
             assert page.locator('#c-slogan').evaluate('(e)=>e.offsetTop>=1036 && e.offsetWidth===734')
         ids=page.locator('#poster-background-gallery button').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
-        assert ids==['bg'+str(i) for i in range(1,15)]
+        assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:int(id[2:]))
         for id in ids:
             page.locator(f'[data-background-id={id}]').click()
             assert page.evaluate('async()=>await backgroundReady')
-            assert page.locator(f'[data-background-id={id}] img').get_attribute('src')==page.locator('#approved-bg-image').get_attribute('src')
+            assert page.evaluate("id=>{const e=approvedBackgrounds.find(e=>e.id===id);return G('approved-bg-image').getAttribute('src')===e.image && document.querySelector('[data-background-id='+id+'] img').getAttribute('src')===e.thumb}",id)
             page.evaluate('posterEditor.flush()')
             state=page.evaluate('collectDraft()')
             page.evaluate('draft=>posterEditor.open({draft})',state)
@@ -55,6 +55,13 @@ with sync_playwright() as pw:
                 assert max(ImageStat.Stat(ImageChops.difference(actual,source)).mean)<3,(id,'wrong PDF background')
         page.locator('[data-background-id=bg2]').click();page.evaluate('posterEditor.flush()')
         page.locator('#poster').screenshot(path=str(out/f'poster-{language}.png'))
+    # Restoring a removed or replaced background must retain its exact version.
+    pinned=page.evaluate("collectDraft()")
+    page.evaluate("""draft=>{const e=approvedBackgrounds.find(e=>e.id===draft.design.bgId);e.retired=true;window.__entry=e;}""",pinned)
+    page.evaluate('draft=>posterEditor.open({draft})',pinned)
+    assert page.evaluate('selectedBackgroundVersion')==pinned['design']['bgVersion']
+    expect(page.locator('[data-background-id=bg2]')).to_have_attribute('aria-pressed','true')
+    page.evaluate('window.__entry.retired=false')
     page.set_viewport_size({'width':390,'height':844});page.evaluate('fitPreview()')
     assert page.locator('#poster').bounding_box()['width']<=390
     page.screenshot(path=str(out/'poster-mobile.png'),full_page=True)

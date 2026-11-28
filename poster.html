@@ -197,7 +197,7 @@ body.panel-open #wrap{padding-right:344px}
 #p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:150px;height:150px}
 #p-hdr .logo-area #logo-box{width:150px;height:150px}
 #p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}
-#short-desc-box{top:134px;height:38px}
+#short-desc-box{top:134px;height:42px}
 #p-bar{top:180px;height:34px}
 #p-names{top:220px;height:30px}
 </style>
@@ -491,18 +491,24 @@ function applyEditorLanguage() {
   document.fonts?.ready.then(()=>{autoWidth(G('poster-class'));autoWidth(G('poster-school'));fitPreview();});
 }
 
+const safeBackgroundAsset = value => /^poster-backgrounds\/(?:versions|thumbs)\/[a-f0-9]{64}\.webp$/.test(value || '');
 const approvedBackgrounds = Array.isArray(window.posterBackgroundCatalog) ? window.posterBackgroundCatalog.filter(entry =>
-  /^[A-Za-z0-9_-]+$/.test(entry.id) &&
-  entry.image === 'poster-backgrounds/webp/' + entry.id + '.webp' &&
-  entry.thumb === 'poster-backgrounds/thumbs/' + entry.id + '.webp').sort((a, b) => a.id.localeCompare(b.id, undefined, {numeric: true})) : [];
-let selectedBackgroundId = approvedBackgrounds[0]?.id || '';
+ /^[A-Za-z0-9_-]+$/.test(entry.id) && safeBackgroundAsset(entry.image) && safeBackgroundAsset(entry.thumb) &&
+ /^[a-f0-9]{64}$/.test(entry.version) && Array.isArray(entry.versions) && entry.versions.every(v => safeBackgroundAsset(v.image) && safeBackgroundAsset(v.thumb) && /^[a-f0-9]{64}$/.test(v.version))
+).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true})) : [];
+let selectedBackgroundId = approvedBackgrounds.find(e=>!e.retired)?.id || '';
+let selectedBackgroundVersion = null;
+function backgroundVersion(entry, version){return version ? entry?.versions.find(v=>v.version===version) : entry;}
 let backgroundReady = Promise.resolve(false);
-function selectPosterBackground(id, persist = false) {
-  const entry = approvedBackgrounds.find(item => item.id === id) || approvedBackgrounds[0];
+function selectPosterBackground(id, persist = false, version = null) {
+  const source = id ? approvedBackgrounds.find(item => item.id === id) : approvedBackgrounds.find(item=>!item.retired);
+  const entry = backgroundVersion(source, version);
+  selectedBackgroundId = id || source?.id || '';
+  selectedBackgroundVersion = version || entry?.version || null;
   const img = G('approved-bg-image');
-  selectedBackgroundId = entry?.id || '';
+
   G('poster').classList.toggle('approved-background', Boolean(entry));
-  qs('#poster-background-gallery button').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.backgroundId === selectedBackgroundId)));
+  qs('#poster-background-gallery button').forEach(btn => {const item=approvedBackgrounds.find(e=>e.id===btn.dataset.backgroundId);const current=item?.id===selectedBackgroundId;btn.setAttribute('aria-pressed',String(current));const preview=backgroundVersion(item,current?selectedBackgroundVersion:null);if(preview)btn.querySelector('img').src=preview.thumb;});
   G('poster-background-status').textContent = '';
   if (!entry) {
     img.removeAttribute('src');
@@ -510,8 +516,8 @@ function selectPosterBackground(id, persist = false) {
     backgroundReady = Promise.resolve(false);
     return backgroundReady;
   }
-  const requestedId = entry.id;
-  const src = entry.image + '?v=20261128-bg14-v1';
+  const requestedId = selectedBackgroundId;
+  const src = entry.image;
   if (img.getAttribute('src') !== src) img.src = src;
   backgroundReady = img.decode().then(() => true, () => {
     if (selectedBackgroundId === requestedId) G('poster-background-status').textContent =
@@ -526,7 +532,7 @@ function renderBackgroundGallery() {
   const gallery = G('poster-background-gallery');
   gallery.replaceChildren();
   G('poster-background-label').textContent = BG_ARABIC() ? 'اختيار خلفية الملصق' : 'בחירת רקע לפוסטר';
-  approvedBackgrounds.forEach((entry, i) => {
+  approvedBackgrounds.filter(entry=>!entry.retired||entry.id===selectedBackgroundId).forEach((entry, i) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.backgroundId = entry.id;
@@ -534,7 +540,7 @@ function renderBackgroundGallery() {
     btn.title = label;
     btn.setAttribute('aria-label', label);
     const thumb = document.createElement('img');
-    thumb.src = entry.image + '?v=20261128-bg14-v1';
+    thumb.src = backgroundVersion(entry,entry.id===selectedBackgroundId?selectedBackgroundVersion:null)?.thumb || entry.thumb;
     thumb.alt = '';
     thumb.loading = 'lazy';
     thumb.decoding = 'async';
@@ -544,7 +550,7 @@ function renderBackgroundGallery() {
     btn.addEventListener('click', () => selectPosterBackground(entry.id, true));
     gallery.append(btn);
   });
-  selectPosterBackground(selectedBackgroundId);
+  selectPosterBackground(selectedBackgroundId,false,selectedBackgroundVersion);
 }
 
 
@@ -553,7 +559,7 @@ function queueLocalWrite(operation) {
   localWrite = pending.catch(() => {});
   return pending;
 }
-function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),language:BG_ARABIC()?'ar':'he',values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',projectColor:G('project-color')?.value||'#eefbff',descriptionColor:G('description-color')?.value||'#d7ebff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',arrowColor:G('arrow-color')?.value||'#58e7ff',opacity:String(boxOpacityActual()),sizes:{...SZ},glow:{...glowState},bgId:selectedBackgroundId},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
+function collectDraft(){const values={};if(typeof FILL_FIELDS!=='undefined')FILL_FIELDS.forEach(f=>{const el=G(f.id);if(el)values[f.id]=el.value||''});if(G('poster-students'))values['poster-students']=G('poster-students').value||'';return{version:1,savedAt:Date.now(),language:BG_ARABIC()?'ar':'he',values,research:window.researchWorksheet?.snapshot()??{},participants:qs('.prow input').map(input=>input.value),design:{bgColor:G('bg-color')?.value||'#071325',borderColor:G('border-color')?.value||'#58e7ff',projectColor:G('project-color')?.value||'#eefbff',descriptionColor:G('description-color')?.value||'#d7ebff',qColor:G('q-color')?.value||'#eefbff',tColor:G('t-color')?.value||'#e6f6ff',arrowColor:G('arrow-color')?.value||'#58e7ff',opacity:String(boxOpacityActual()),sizes:{...SZ},glow:{...glowState},bgId:selectedBackgroundId,bgVersion:selectedBackgroundVersion},images:{main:G('img-main')?.getAttribute('src')||'',one:G('img-1')?.getAttribute('src')||'',two:G('img-2')?.getAttribute('src')||'',}}}
 async function saveDraft() {
   clearTimeout(autosaveTimer);
   if (restoringDraft || !draftDirty) return;
@@ -582,7 +588,7 @@ function scheduleAutosave() {
   autosaveTimer = setTimeout(saveDraft, 300);
 }
 function restoreImage(src,imgId,phId){const img=G(imgId),ph=G(phId);if(!img||!ph)return;if(src){img.src=src;img.classList.add('show');ph.style.display='none'}else{img.removeAttribute('src');img.classList.remove('show');ph.style.display='flex'}}
-async function applyDraft(draft){restoringDraft=true;try{Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});const d=draft.design||{};if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;G('q-color').value=/^#[0-9a-f]{6}$/i.test(d.qColor||'')?d.qColor:'#eefbff';G('project-color').value=/^#[0-9a-f]{6}$/i.test(d.projectColor||'')?d.projectColor:G('q-color').value;G('description-color').value=/^#[0-9a-f]{6}$/i.test(d.descriptionColor||'')?d.descriptionColor:'#d7ebff';if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;G('arrow-color').value=/^#[0-9a-f]{6}$/i.test(d.arrowColor||'')?d.arrowColor:'#58e7ff';if(d.opacity!=null&&G('box-opacity'))G('box-opacity').value=String(clamp((Number(d.opacity)-30)/.7,0,100));for(const kind of ['title','logo','desc']){const mode=d.glow?.[kind];if(['none','light','dark'].includes(mode))glowState[kind]=mode}await selectPosterBackground(d.bgId);restoreImage(draft.images?.main,'img-main','img-main-ph');restoreImage(draft.images?.one,'img-1','img-1-ph');restoreImage(draft.images?.two,'img-2','img-2-ph');G('logo-img').src='images/logo-1.png?v=20261110';G('logo-img').style.display='block';G('logo-txt').style.display='none';if(Array.isArray(draft.participants)&&draft.participants.length){setParts(draft.participants.length,draft.participants.map(name=>String(name??'')),true)}else{syncNamesToPanel()}localizeIdentityDefaults();updateSolutionTypeHeading();updateAllCombinedFields();renderFillPanel();qs('.limited').forEach(updateCounterFor);autoWidth(G('poster-class'));autoWidth(G('poster-school'));applyDesign();applyAllGlow();applyLayout();fitPreview()}finally{restoringDraft=false}}
+async function applyDraft(draft){restoringDraft=true;try{Object.entries(draft.values||{}).forEach(([id,value])=>{const el=G(id);if(el)el.value=String(value??'')});const d=draft.design||{};if(d.bgColor&&G('bg-color'))G('bg-color').value=d.bgColor;if(d.borderColor&&G('border-color'))G('border-color').value=d.borderColor;G('q-color').value=/^#[0-9a-f]{6}$/i.test(d.qColor||'')?d.qColor:'#eefbff';G('project-color').value=/^#[0-9a-f]{6}$/i.test(d.projectColor||'')?d.projectColor:G('q-color').value;G('description-color').value=/^#[0-9a-f]{6}$/i.test(d.descriptionColor||'')?d.descriptionColor:'#d7ebff';if(d.tColor&&G('t-color'))G('t-color').value=d.tColor;G('arrow-color').value=/^#[0-9a-f]{6}$/i.test(d.arrowColor||'')?d.arrowColor:'#58e7ff';if(d.opacity!=null&&G('box-opacity'))G('box-opacity').value=String(clamp((Number(d.opacity)-30)/.7,0,100));for(const kind of ['title','logo','desc']){const mode=d.glow?.[kind];if(['none','light','dark'].includes(mode))glowState[kind]=mode}await selectPosterBackground(d.bgId,false,d.bgVersion || approvedBackgrounds.find(e=>e.id===d.bgId)?.legacyVersion);renderBackgroundGallery();restoreImage(draft.images?.main,'img-main','img-main-ph');restoreImage(draft.images?.one,'img-1','img-1-ph');restoreImage(draft.images?.two,'img-2','img-2-ph');G('logo-img').src='images/logo-1.png?v=20261110';G('logo-img').style.display='block';G('logo-txt').style.display='none';if(Array.isArray(draft.participants)&&draft.participants.length){setParts(draft.participants.length,draft.participants.map(name=>String(name??'')),true)}else{syncNamesToPanel()}localizeIdentityDefaults();updateSolutionTypeHeading();updateAllCombinedFields();renderFillPanel();qs('.limited').forEach(updateCounterFor);autoWidth(G('poster-class'));autoWidth(G('poster-school'));applyDesign();applyAllGlow();applyLayout();fitPreview()}finally{restoringDraft=false}}
 async function offerRestoreDraft() {
   restoringDraft = true;
   const editor = [G('toolbar'), G('sp'), G('wrap')];
