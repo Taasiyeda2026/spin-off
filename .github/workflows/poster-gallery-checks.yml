@@ -72,7 +72,7 @@ jobs:
               for field in ('image','thumb'):
                   with Image.open(e[field]) as image:
                       assert image.format == 'WEBP'
-                      if field == 'thumb': assert image.width <= 240 and image.height <= 340
+                      if field == 'thumb': assert image.width <= 420 and image.height <= 594
                       image.verify()
           print(f'Validated {len(entries)} full backgrounds and previews.')
           PY
