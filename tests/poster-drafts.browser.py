@@ -120,7 +120,7 @@ with sync_playwright() as playwright:
     expect(page.locator("#border-color")).to_have_value("#ff0000")
     expect(page.locator("#img-main")).to_have_attribute("src", re.compile("^data:image/png"))
     assert page.locator("#pcf input").evaluate_all("(inputs) => inputs.map(input => input.value)") == ["שם א", "", "שם ב"]
-    expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg2.webp")
+    expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg2.webp?v=20261128-bg14-v1")
     assert page.evaluate("async () => await backgroundReady")
     expect(page.locator('[data-background-id="bg2"]')).to_have_attribute("aria-pressed", "true")
     assert page.evaluate("SZ.h === 30 && glowState.title === 'light' && boxOpacityActual() === 30 && G('arrow-color').value === '#ff0000'")

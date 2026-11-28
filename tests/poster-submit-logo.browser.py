@@ -201,6 +201,9 @@ with sync_playwright() as pw:
     reopened=resume(context(browser),'222224');reopened.locator('[data-tab=content]').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
+    assert reopened.locator('#poster').get_attribute('lang') == 'ar'
+    reopened.locator('#poster-editor-language').click()
+    assert reopened.locator('#poster').get_attribute('lang') == 'he'
     reopened.locator('#poster-editor-language').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')

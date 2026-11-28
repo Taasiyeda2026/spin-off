@@ -31,7 +31,7 @@ jobs:
           (root / 'webp').mkdir(exist_ok=True)
           (root / 'thumbs').mkdir(exist_ok=True)
           entries = []
-          for src in sorted(root.iterdir()):
+          for src in sorted(root.iterdir(), key=lambda p: [int(x) if x.isdigit() else x for x in re.split(r'(\d+)', p.name)]):
               if not src.is_file() or src.suffix.lower() not in {'.png','.jpg','.jpeg'}:
                   continue
               key = src.stem

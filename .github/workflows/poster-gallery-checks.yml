@@ -76,9 +76,15 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 20); do if curl -fsS http://127.0.0.1:8000/poster.html >/dev/null; then break; fi; sleep 1; done
           failures=0
-          for suite in tests/poster-drafts.browser.py tests/poster-cloud.browser.py tests/poster-submit-logo.browser.py; do
+          for suite in tests/poster-drafts.browser.py tests/poster-cloud.browser.py tests/poster-submit-logo.browser.py tests/poster-layout-design.browser.py; do
             echo "::group::$suite"
             python "$suite" || failures=1
             echo '::endgroup::'
           done
           exit "$failures"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: poster-acceptance
+          path: test-results/poster-acceptance
