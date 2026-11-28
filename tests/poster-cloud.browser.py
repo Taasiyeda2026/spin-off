@@ -152,8 +152,8 @@ with sync_playwright() as playwright:
     expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
     assert poster["state"]["participants"] == ["Student A", "Student B"]
     student.locator('[data-tab="design"]').click()
-    text_colors={'project-color':'#112233','description-color':'#223344','q-color':'#334455','t-color':'#445566'}
-    for id,color in text_colors.items(): student.locator('#'+id+'-hex').fill(color)
+    text_colors={'project-color':'#112233','description-color':'#223344','q-color':'#334455','t-color':'#445566','slogan-color':'#556677'}
+    student.evaluate("""colors=>{for(const [id,color] of Object.entries(colors))G(id).value=color;applyDesign();}""",text_colors)
     student.locator('[data-tab="content"]').click()
     student.locator("#panel-poster-project").fill("Language switch fixture")
     student.evaluate("window.__editorLanguageMarker = true")
@@ -224,6 +224,7 @@ with sync_playwright() as playwright:
     assert poster['state']['design']['descriptionColor']=='#223344'
     assert poster['state']['design']['qColor']=='#334455'
     assert poster['state']['design']['tColor']=='#445566'
+    assert poster['state']['design']['sloganColor']=='#556677'
 
     conflict = True
     second.locator("#poster-project").fill("Local update")

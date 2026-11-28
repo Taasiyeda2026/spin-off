@@ -1,10 +1,10 @@
 name: Poster typography and header
 on:
   pull_request:
-    paths: ['poster.html', 'tests/poster-header.browser.py', '.github/workflows/poster-header.yml']
+    paths: ['poster.html', 'poster-access.css', 'tests/poster-header.browser.py', '.github/workflows/poster-header.yml']
   push:
     branches: [main]
-    paths: ['poster.html', 'tests/poster-header.browser.py', '.github/workflows/poster-header.yml']
+    paths: ['poster.html', 'poster-access.css', 'tests/poster-header.browser.py', '.github/workflows/poster-header.yml']
 permissions:
   contents: read
 jobs:
