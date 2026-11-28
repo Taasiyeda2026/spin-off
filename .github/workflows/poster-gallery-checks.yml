@@ -33,7 +33,7 @@ jobs:
         run: |
           sudo systemctl start postgresql
           sudo -u postgres createdb poster_test
-          sudo -u postgres psql -v ON_ERROR_STOP=1 -d poster_test -f tests/poster-cloud-fixture.sql -f supabase/migrations/20261125130000_cloud_posters.sql -f supabase/migrations/20261125142634_poster_allow_empty_participants_on_creation.sql -f tests/poster-cloud.acceptance.sql -f tests/poster-manager.acceptance.sql -f tests/poster-submit-logo.acceptance.sql
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -d poster_test -f tests/poster-cloud-fixture.sql -f supabase/migrations/20261125130000_cloud_posters.sql -f supabase/migrations/20261125142634_poster_allow_empty_participants_on_creation.sql -f tests/poster-cloud.acceptance.sql -f tests/poster-manager.acceptance.sql -f tests/poster-submit-logo.acceptance.sql -f tests/poster-global-manager.acceptance.sql
       - uses: actions/setup-node@v4
         with:
           node-version: '24'

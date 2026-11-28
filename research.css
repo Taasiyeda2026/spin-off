@@ -15,7 +15,8 @@ body.research-active #sp,body.research-active #wrap,body.research-active #toolba
 
 .research-actions-bottom{margin:24px 0 8px}
 @media print{
- @page{size:A4 portrait;margin:10mm}
+ @page research{size:A4 portrait;margin:10mm}
+ body.research-active{page:research}
  body.research-active #research-sheet{padding:0!important;max-width:100%!important;width:auto!important}
  body.research-active .research-stage{overflow:visible!important;break-inside:auto;margin:0 0 6mm;padding:3mm}
  body.research-active .research-stage h2{break-after:avoid;page-break-after:avoid;margin:0 0 2mm}

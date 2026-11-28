@@ -212,7 +212,7 @@ with sync_playwright() as playwright:
     expect(second.locator("#poster-project")).to_have_value("Fixture Project")
     expect(second.locator("#poster-students")).to_have_value("Student A, Student B")
     expect(second.locator("#img-main")).to_be_visible()
-    expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
+    expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp?v=20261128-bg14-v1")
     assert second.evaluate("async () => await backgroundReady")
 
     conflict = True
@@ -286,7 +286,7 @@ with sync_playwright() as playwright:
         expect(viewer.locator("#solution-type")).to_have_value("smart")
         expect(viewer.locator("#poster-students")).to_have_value("Student A, Student B")
         expect(viewer.locator("#img-main")).to_be_visible()
-        expect(viewer.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
+        expect(viewer.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp?v=20261128-bg14-v1")
     arabic = open_page(new_context(browser))
     arabic.locator("#poster-editor-language").click()
     expect(arabic.locator("#poster-access")).to_have_attribute("lang", "ar")

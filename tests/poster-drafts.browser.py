@@ -81,7 +81,7 @@ with sync_playwright() as playwright:
     assert page.evaluate("boxOpacityActual()") == 30
     assert page.evaluate("Object.isFrozen(SZ)")
     assert page.locator('#research svg.research-answer-icon').count() == 2
-    assert page.evaluate("(()=>{const ids=['c-problem','c-target','c-research','c-findings','c-question','c-requirements'];return ids.every((id,i)=>!i||LAYOUT[id].top>LAYOUT[ids[i-1]].top)})()")
+    assert page.evaluate("(()=>{const ids=['c-problem','c-target','c-question','img-pair','c-research','c-findings','c-requirements'];return ids.every((id,i)=>!i||LAYOUT[id].top>LAYOUT[ids[i-1]].top)})()")
     short_width=page.evaluate("G('poster-project').value='א';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
     long_width=page.evaluate("G('poster-project').value='מערכת ניסיונית';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
     assert long_width > short_width > 0
