@@ -97,10 +97,13 @@ with sync_playwright() as pw:
                 for(const id of ids){const text=G(id).querySelector('textarea');text.value=sample;updateCounterFor(text);rows.push(measure(text));}
               }
               const surface=G('process-surface');
-              return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[surface.offsetLeft,surface.offsetTop,surface.offsetWidth,surface.offsetHeight],valueBottom:G('c-value').offsetTop+G('c-value').offsetHeight};
+              return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[surface.offsetLeft,surface.offsetTop,surface.offsetWidth,surface.offsetHeight],valueBottom:G('c-value').offsetTop+G('c-value').offsetHeight,firstTop:G('c-feedback').offsetTop,gaps:ids.slice(1).map((id,i)=>G(id).offsetTop-G(ids[i]).offsetTop-G(ids[i]).offsetHeight),firstGaps:['c-target','c-question'].map((id,i)=>G(id).offsetTop-G(['c-problem','c-target'][i]).offsetTop-G(['c-problem','c-target'][i]).offsetHeight)};
             }""")
-            assert process['surface'][0]==30 and process['surface'][2]==357 and process['surface'][3]==266,process
-            assert abs(process['valueBottom']-(process['surface'][1]+process['surface'][3]))<1,process
+            assert process['surface'][0]==process['rows'][0]['x'] and process['surface'][2]==process['rows'][0]['w'] and process['surface'][3]==266,process
+            assert abs(process['valueBottom']-(process['surface'][1]+process['surface'][3]-8))<=1,process
+            assert abs(process['firstTop']-process['surface'][1]-8)<=1,process
+            assert abs(process['gaps'][0]-process['gaps'][1])<=1,process
+            assert abs(process['firstGaps'][0]-process['firstGaps'][1])<=1,process
             assert all(not row['clipped'] and row['weight']=='400' and row['align']=='center' and row['counter']=='none' and row['vCenter']<4 for row in process['rows']),process
             assert all(abs(row['w']/357-.75)<.005 and row['h']==66 for row in process['rows']),process
             assert all(abs(a['center']-208.5)<1 and a['w']==28 for a in process['arrows']),process
