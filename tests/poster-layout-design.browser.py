@@ -23,8 +23,7 @@ with sync_playwright() as pw:
         page.evaluate("""() => {G('poster-project').value='SpaceTech';G('short-desc').value='SpaceTech';G('problem').value='SpaceTech';updateSolutionTypeHeading();} """)
         selectors=['#poster-project','#solution-description-heading','#c-problem .bq','#problem']
         colors=['#a10000','#00a100','#0000a1','#a100a1']
-        for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
-            page.locator('#'+id+'-hex').fill(color)
+        page.evaluate("""colors=>{for(const [id,color] of Object.entries(colors)){G(id).value=color;}applyDesign();}""",dict(zip(['project-color','description-color','q-color','t-color'],colors)))
         assert [page.locator(s).evaluate('(el)=>getComputedStyle(el).color') for s in selectors]==['rgb(161, 0, 0)','rgb(0, 161, 0)','rgb(0, 0, 161)','rgb(161, 0, 161)']
         assert page.locator('#poster-project').evaluate('(el)=>getComputedStyle(el).webkitTextFillColor')=='rgb(161, 0, 0)'
         page.screenshot(path=str(out/f'colors-{language}.png'),full_page=True)
@@ -88,8 +87,18 @@ with sync_playwright() as pw:
     for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
         expect(page.locator('#'+id)).to_have_value(color)
     expect(page.locator('[data-background-id=bg2]')).to_have_attribute('aria-pressed','true')
+    page.evaluate("G('slogan-color').value='#abcdef';applyDesign()")
+    expect(page.locator('#slogan-output')).to_have_css('color','rgb(171, 205, 239)')
+    assert page.evaluate("collectDraft().design.sloganColor")=='#abcdef'
+    # Older posters without sloganColor keep the previous white closing-sentence color.
+    assert page.evaluate("async()=>{await applyDraft({design:{qColor:'#123456',tColor:'#654321'}});return G('slogan-color').value;}")=='#ffffff'
+    assert page.evaluate("""async colors=>{
+      await applyDraft({design:{projectColor:colors[0],descriptionColor:colors[1],qColor:colors[2],tColor:colors[3],sloganColor:'#abcdef',bgId:'bg2'}});
+      return [G('project-color').value,G('description-color').value,G('q-color').value,G('t-color').value,G('slogan-color').value];
+    }""",colors)==colors+['#abcdef']
     page.evaluate('clearPoster()')
     for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
-        expect(page.locator('#'+id+'-hex')).to_have_value(color)
+        expect(page.locator('#'+id)).to_have_value(color)
+    assert page.locator('input[id$="-hex"]').count()==0
     print(f'{len(ids)} backgrounds × 2 languages: identity, PDF pixels, A4 page; color isolation, legacy/local persistence, five image ratios, bounds and mobile passed.')
     browser.close()
