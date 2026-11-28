@@ -315,7 +315,7 @@ body:has(.poster-access.is-home:not([hidden])) {
 #sp #fill-list .edit-card > textarea{overflow-y:hidden;resize:none}
 
 #short-desc-box{align-items:stretch}
-#solution-description-heading{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;height:100%;font-size:13px;font-weight:600;line-height:1.35;color:#d7ebff;padding:2px 65px;text-align:center;overflow:hidden}
+#solution-description-heading{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;height:100%;font-size:13px;font-weight:600;line-height:1.35;color:#d7ebff;padding:2px 0;text-align:center;overflow:hidden}
 #solution-description-heading > div{min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:pre-wrap}
 #poster-solution-type{font-weight:800}#poster-solution-type:empty{display:none}
 #short-desc[hidden]{display:none}

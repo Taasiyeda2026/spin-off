@@ -67,7 +67,7 @@ body.panel-open #wrap{padding-right:344px}
 .logo-area{position:absolute;right:0;top:0;display:flex;align-items:flex-start;gap:8px}
 .logo-box{width:62px;height:62px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;color:#8796aa;overflow:visible;border:none;background:transparent}
 .logo-box img{width:100%;height:100%;object-fit:contain;display:none}.logo-box .ltxt{font-size:8px;font-weight:900;color:#cfeeff;text-align:center}.logo-box:hover::after{content:'לוגו';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);background:rgba(45,74,138,.9);color:#fff;font-size:8px;padding:1px 5px;border-radius:4px;white-space:nowrap}
-#poster-project{font-weight:900;font-size:36px;color:var(--project-color,var(--title));background:transparent;border:none;outline:none;width:620px;padding:0;resize:none;overflow:hidden;box-sizing:content-box;text-align:center;text-decoration:underline;text-underline-offset:4px;line-height:1.1}
+#poster-project{font-weight:900;font-size:36px;color:var(--project-color,var(--title));background:transparent;border:none;outline:none;width:450px;padding:0;resize:none;overflow:hidden;box-sizing:content-box;text-align:center;text-decoration:underline;text-underline-offset:4px;line-height:1.1}
 #poster-project::placeholder{font-weight:400;font-size:20px;color:#99c8e3;text-decoration:none}
 #project-counter{position:absolute;left:10px;top:7px}
 #short-desc-box{position:absolute;left:30px;right:30px;top:73px;height:42px;z-index:2;display:flex;align-items:center;justify-content:center;isolation:isolate}
@@ -188,7 +188,7 @@ body.panel-open #wrap{padding-right:344px}
 #poster.approved-background::before,#poster.approved-background::after,#poster.approved-background #space-overlay{display:none}
 @media print{#poster,#approved-bg-image{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style>
-<link rel="stylesheet" href="poster-access.css?v=20261128-project-color-v2">
+<link rel="stylesheet" href="poster-access.css?v=20261128-header-spacing-v1">
 <style>@media screen{#toolbar .poster-cloud-toolbar,#toolbar .poster-cloud-toolbar>strong{color:#e6f6ff}#toolbar .poster-cloud-toolbar>strong{font-weight:700}#toolbar .poster-cloud-toolbar>span{color:#b5efff;font-weight:500}}</style>
 <style id="school-logo-placement">
 /* Larger visible branding, with a compact centered title and identity area. */
@@ -197,9 +197,9 @@ body.panel-open #wrap{padding-right:344px}
 #p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:150px;height:150px}
 #p-hdr .logo-area #logo-box{width:150px;height:150px}
 #p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}
-#short-desc-box{top:134px;height:58px}
-#p-bar{top:198px;height:34px}
-#p-names{top:238px;height:30px}
+#short-desc-box{left:172px;right:172px;top:134px;height:58px}
+#p-bar{left:110px;right:110px;top:198px;height:34px}
+#p-names{left:110px;right:110px;top:238px;height:30px}
 </style>
 <link rel="stylesheet" href="research.css?v=20261128-print-pages-v1">
 <script defer src="research-data.js?v=1"></script>
