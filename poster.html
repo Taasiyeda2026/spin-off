@@ -641,8 +641,10 @@ function updatePosterImageLayout(){
  const ratio=kind==='app'?9/16:['web','digital'].includes(kind)?16/9:['physical','smart'].includes(kind)?1:null;
  const fit=(width,height)=>ratio?{width:Math.min(width,height*ratio),height:Math.min(height,width/ratio)}:{width,height};
  for(const [id,pair] of [['main-image-box',false],['img-pair',true]]){
-  const original=imageSlots[id],size=fit(pair?(original.width-10)/2:original.width,original.height);
-  const width=pair?size.width*2+10:size.width,height=size.height;
+  const single=pair&&kind==='web';
+  const original=imageSlots[id],size=fit(pair&&!single?(original.width-10)/2:original.width,original.height);
+  const width=pair&&!single?size.width*2+10:size.width,height=size.height;
+  if(pair){G('image-box-2').style.display=single?'none':'';G(id).style.gridTemplateColumns=single?'1fr':'1fr 1fr';}
   Object.assign(G(id).style,{left:(original.left+(original.width-width)/2)+'px',top:(original.top+(original.height-height)/2)+'px',width:width+'px',height:height+'px'});
  }
 }
@@ -675,7 +677,9 @@ function reflowPosterBody(contentTop,contentBottom){
  const col=LAYOUT['c-solution'],extra=Math.max(0,(contentBottom-contentTop)-(contentBottom-Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top)));
  const mainBase=LAYOUT['main-image-box'].height,pairBase=LAYOUT['img-pair'].height;
  const mainGrow=Math.min(mainBase*.18,extra*.45),pairGrow=Math.min(pairBase*.18,extra*.4);
- const mainSize=mainBase+mainGrow,pairH=pairBase+pairGrow,processBoxH=66;
+ const web=G('solution-type').value==='web';
+ const mainSize=web?Math.min(156,Math.max(100,Math.round((contentBottom-contentTop)-85-95-86-266-32))):mainBase+mainGrow;
+ const pairH=web?Math.min(180,Math.round(156+extra*.25)):pairBase+pairGrow,processBoxH=66;
  // Keep a stable process-unit footprint; remaining slack balances the gaps above it.
  const processH=266;
  const right=placeColumn([
@@ -683,14 +687,20 @@ function reflowPosterBody(contentTop,contentBottom){
   {id:'c-target',h:LAYOUT['c-target'].height},
   {id:'c-question',h:LAYOUT['c-question'].height},
   {id:'img-pair',h:pairH,slot:true},
-  {id:'c-research',h:LAYOUT['c-research'].height},
+  ...(!web?[{id:'c-research',h:LAYOUT['c-research'].height}]:[]),
   {id:'c-findings',h:LAYOUT['c-findings'].height},
   {id:'c-requirements',h:LAYOUT['c-requirements'].height},
  ],contentTop,contentBottom);
  const left=placeColumn([
   {id:'c-solution',h:LAYOUT['c-solution'].height},
-  {id:'main-image-box',h:mainSize,slot:true},
-  {id:'c-use',h:LAYOUT['c-use'].height},
+  ...(web?[
+   {id:'c-use',h:LAYOUT['c-use'].height},
+   {id:'main-image-box',h:mainSize,slot:true},
+   {id:'c-research',h:LAYOUT['c-research'].height}
+  ]:[
+   {id:'main-image-box',h:mainSize,slot:true},
+   {id:'c-use',h:LAYOUT['c-use'].height}
+  ]),
   {id:'_process',h:processH},
  ],contentTop,contentBottom);
  for(const item of [...right.placed,...left.placed]){
@@ -698,12 +708,12 @@ function reflowPosterBody(contentTop,contentBottom){
   const base=LAYOUT[item.id];
   if(item.slot){
    if(item.id==='main-image-box'){
-    const width=Math.min(col.width,mainSize);
+    const width=Math.min(col.width,web?mainSize*16/9:mainSize);
     imageSlots[item.id]={left:col.left+(col.width-width)/2,top:item.top,width,height:mainSize};
    }else imageSlots[item.id]={left:base.left,top:item.top,width:base.width,height:item.h};
    continue;
   }
-  Object.assign(G(item.id).style,{left:base.left+'px',top:item.top+'px',width:base.width+'px',height:item.h+'px'});
+  Object.assign(G(item.id).style,{left:(web&&item.id==='c-research'?col.left:base.left)+'px',top:item.top+'px',width:base.width+'px',height:item.h+'px'});
  }
  let processTop=left.placed.find(item=>item.id==='_process').top;
  const fb=LAYOUT['c-feedback'];

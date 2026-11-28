@@ -139,6 +139,24 @@ with sync_playwright() as pw:
             assert page.evaluate("collectDraft().design.sloganColor")=='#ffcc00'
             page.evaluate("async()=>await Promise.all(['img-main','img-1','img-2','logo-img'].map(id=>G(id).decode()))")
             page.locator('#poster').screenshot(path=str(out/f'poster-{lang}.png'))
+            # Switch layouts without touching saved images, answers or identity.
+            for kind,ratio,count in [('web',16/9,2),('app',9/16,3),('physical',1,3)]:
+                state=page.evaluate("""kind=>{
+                  const before=collectDraft();
+                  G('solution-type').value=kind;updateSolutionTypeHeading();
+                  const after=collectDraft(),rect=id=>G(id).getBoundingClientRect();
+                  const m=rect('main-image-box'),a=rect('image-box-1'),b=rect('image-box-2'),r=rect('c-research'),u=rect('c-use');
+                  const header=['poster-school','poster-class','poster-students'].every(id=>before.values[id]===after.values[id]);
+                  return {header,images:JSON.stringify(before.images)===JSON.stringify(after.images),main:m.width/m.height,secondary:a.width/a.height,count:b.width?3:2,researchLeft:r.left<rect('c-problem').left,useAbove:u.top<m.top,processBelow:rect('c-feedback').top>r.bottom||kind!=='web'};
+                }""",kind)
+                assert state['header'] and state['images'] and state['count']==count,state
+                assert abs(state['main']-ratio)<.04 and abs(state['secondary']-ratio)<.04,state
+                assert state['researchLeft']==(kind=='web') and state['useAbove']==(kind=='web') and state['processBelow'],state
+                page.locator('#poster').screenshot(path=str(out/f'poster-{kind}-{lang}.png'))
+                page.pdf(path=str(out/f'poster-{kind}-{lang}.pdf'),prefer_css_page_size=True,print_background=True)
+                with fitz.open(out/f'poster-{kind}-{lang}.pdf') as doc:
+                    assert len(doc)==1
+                    assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
             screen=page.evaluate("['p-bar','p-names','short-desc-box'].map(id=>[G(id).style.top,G(id).style.height])")
             page.pdf(path=str(out/f'poster-{lang}.pdf'),prefer_css_page_size=True,print_background=True)
             assert page.evaluate("['p-bar','p-names','short-desc-box'].map(id=>[G(id).style.top,G(id).style.height])")==screen

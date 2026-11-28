@@ -225,9 +225,16 @@ with sync_playwright() as pw:
     for kind in ['physical','smart','app','web','digital']:
         reopened.locator('#panel-solution-type').select_option(kind)
         expected_ratio=9/16 if kind=='app' else 16/9 if kind in ['web','digital'] else 1
-        for selector in ['#main-image-box','#img-pair .image-box']:
-            for box in reopened.locator(selector).all():
-                bounds=box.bounding_box();assert abs(bounds['width']/bounds['height']-expected_ratio)<0.02
+        expected_count=2 if kind=='web' else 3
+        visible_boxes=reopened.locator('#main-image-box:visible, #img-pair .image-box:visible')
+        expect(visible_boxes).to_have_count(expected_count)
+        if kind=='web':
+            expect(reopened.locator('#image-box-2')).to_be_hidden()
+        else:
+            expect(reopened.locator('#image-box-2')).to_be_visible()
+        for box in visible_boxes.all():
+            bounds=box.bounding_box()
+            assert bounds is not None and abs(bounds['width']/bounds['height']-expected_ratio)<0.02, (kind,bounds,expected_ratio)
         expect(reopened.locator('#short-desc')).to_have_value(description)
         expect(reopened.locator('#panel-counter-short-desc')).to_have_text('85/85')
     assert reopened.locator('#panel-solution-type option[value=other]').count()==0
