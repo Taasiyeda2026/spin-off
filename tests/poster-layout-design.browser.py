@@ -1,8 +1,8 @@
 """Visual, persistence and A4 contracts. Synthetic local drafts only."""
-import io, json, os
+import io, json, os, re
 from pathlib import Path
 import fitz
-from PIL import Image, ImageChops, ImageStat
+from PIL import Image, ImageChops, ImageStat, ImageOps
 from playwright.sync_api import sync_playwright, expect
 
 url=os.getenv('POSTER_TEST_URL','http://127.0.0.1:8000/poster.html')
@@ -39,7 +39,7 @@ with sync_playwright() as pw:
             assert page.locator('#img-pair').evaluate('(e)=>e.offsetLeft>=407')
             assert page.locator('#c-slogan').evaluate('(e)=>e.offsetTop>=1036 && e.offsetWidth===734')
         ids=page.locator('#poster-background-gallery button[data-background-id]').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
-        assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:int(id[2:]))
+        assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:[(1,int(p)) if p.isdigit() else (0,p.lower()) for p in re.split(r'(\d+)',id)])
         for id in ids:
             page.locator(f'[data-background-id={id}]').click()
             assert page.evaluate('async()=>await backgroundReady')
@@ -54,10 +54,10 @@ with sync_playwright() as pw:
                 text_colors=[span['color'] for block in doc[0].get_text('dict')['blocks'] if 'lines' in block for line in block['lines'] for span in line['spans'] if 'SpaceTech' in span['text']]
                 assert 0xa10000 in text_colors and 0x00a100 in text_colors,(id,language,text_colors)
                 assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
-                embedded=[doc.extract_image(img[0]) for img in doc[0].get_images() if img[2]==1414 and img[3]==2000]
+                source=ImageOps.exif_transpose(Image.open('poster-backgrounds/webp/'+id+'.webp')).convert('RGB')
+                embedded=[doc.extract_image(img[0]) for img in doc[0].get_images() if (img[2],img[3])==source.size]
                 assert embedded,(id,'background absent from PDF')
                 actual=Image.open(io.BytesIO(embedded[0]['image'])).convert('RGB')
-                source=Image.open('poster-backgrounds/webp/'+id+'.webp').convert('RGB')
                 assert max(ImageStat.Stat(ImageChops.difference(actual,source)).mean)<3,(id,'wrong PDF background')
         page.locator('[data-background-id=bg2]').click();page.evaluate('posterEditor.flush()')
         page.locator('#poster').screenshot(path=str(out/f'poster-{language}.png'))
@@ -76,5 +76,5 @@ with sync_playwright() as pw:
     for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
         expect(page.locator('#'+id)).to_have_value(color)
     expect(page.locator('[data-background-id=bg2]')).to_have_attribute('aria-pressed','true')
-    print('14 backgrounds × 2 languages: identity, PDF pixels, A4 page; color isolation, legacy/local persistence, five image ratios, bounds and mobile passed.')
+    print(f'{len(ids)} backgrounds × 2 languages: identity, PDF pixels, A4 page; color isolation, legacy/local persistence, five image ratios, bounds and mobile passed.')
     browser.close()

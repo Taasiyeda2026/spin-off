@@ -20,7 +20,6 @@ def build(root, output):
         with Image.open(io.BytesIO(data)) as original:
             if original.format!='WEBP':raise ValueError('Source must be WebP: '+id)
             image=ImageOps.exif_transpose(original).convert('RGB')
-            if image.width>=image.height:raise ValueError('Background must be portrait: '+id)
             image.verify() if hasattr(image,'verify') else None
         full=target/'versions'/f'{digest}.webp';thumb=target/'thumbs'/f'{digest}.webp'
         full.parent.mkdir(parents=True,exist_ok=True);thumb.parent.mkdir(parents=True,exist_ok=True)
@@ -40,7 +39,9 @@ def build(root, output):
         for line in tree.splitlines():
             info,path=line.split('\t',1);blob=info.split()[2]
             if (path,blob) in seen or not path.endswith('.webp'):continue
-            seen.add((path,blob));record(Path(path).stem,subprocess.check_output(['git','cat-file','blob',blob],cwd=root))
+            seen.add((path,blob))
+            try:record(Path(path).stem,subprocess.check_output(['git','cat-file','blob',blob],cwd=root))
+            except (ValueError,OSError):print('Skipped invalid historical WebP:',path)
     for id,digest in legacy.items():
         if digest not in versions.get(id,{}):raise ValueError('Missing immutable legacy background: '+id)
     catalog=[]

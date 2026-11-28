@@ -4,8 +4,8 @@ from pathlib import Path
 from PIL import Image
 spec=importlib.util.spec_from_file_location('background_build',Path(__file__).parents[1]/'scripts/build-poster-backgrounds.py')
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-def webp(color):
-    data=io.BytesIO();Image.new('RGB',(210,297),color).save(data,'WEBP');return data.getvalue()
+def webp(color,size=(210,297)):
+    data=io.BytesIO();Image.new('RGB',size,color).save(data,'WEBP');return data.getvalue()
 with tempfile.TemporaryDirectory() as directory:
     root=Path(directory);source=root/'poster-backgrounds';(source/'webp').mkdir(parents=True)
     def git(*args):return subprocess.check_output(['git',*args],cwd=root,stderr=subprocess.DEVNULL)
@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory() as directory:
     (root/'first').mkdir();(root/'first/poster.html').write_text('<script src="poster-backgrounds/catalog.js?v=old"></script>')
     first=module.build(root,root/'first')
     assert [e['id'] for e in first]==['bg2','bg10']
-    (source/'webp/bg2.webp').write_bytes(webp('green'));(source/'webp/bg100.webp').write_bytes(webp('white'))
+    (source/'webp/bg2.webp').write_bytes(webp('green'));(source/'webp/bg100.webp').write_bytes(webp('white',(400,200)))
     git('add','poster-backgrounds');git('commit','-m','replace and add')
     (root/'second').mkdir();(root/'second/poster.html').write_text('<script src="poster-backgrounds/catalog.js?v=old"></script>')
     second=module.build(root,root/'second');two=next(e for e in second if e['id']=='bg2')
