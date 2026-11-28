@@ -45,12 +45,22 @@ with sync_playwright() as pw:
             assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")==fixed
             assert page.locator('#poster-project').input_value()==title
             assert page.locator('#short-desc').input_value()==desc[:105]
+            process=page.evaluate("""() => {
+              const ids=['c-feedback','c-improvement','c-value'];
+              const rows=ids.map(id=>{const box=G(id),text=box.querySelector('textarea');text.value='W'.repeat(60);updateCounterFor(text);return {x:box.offsetLeft,w:box.offsetWidth,h:box.offsetHeight,center:box.offsetLeft+box.offsetWidth/2,clipped:text.scrollHeight>text.clientHeight+1,weight:getComputedStyle(text).fontWeight,align:getComputedStyle(text).textAlign,counter:getComputedStyle(box.querySelector('.counter')).display};});
+              return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[G('process-surface').offsetLeft,G('process-surface').offsetTop,G('process-surface').offsetWidth,G('process-surface').offsetHeight]};
+            }""")
+            assert process['surface']==[30,770,357,266],process
+            assert all(not row['clipped'] and row['weight']=='400' and row['align']=='center' and row['counter']=='none' for row in process['rows']),process
+            assert all(abs(row['w']/357-.75)<.005 and row['h']==66 for row in process['rows']),process
+            assert all(abs(a['center']-208.5)<1 and a['h']==20 and a['w']==28 for a in process['arrows']),process
             if long:
                 page.locator('#poster').screenshot(path=str(out/f'poster-long-{lang}.png'))
                 continue
             # Populate the remaining answers and images only for visual review.
             page.evaluate("""lang=>{
               qs('#poster .box textarea:not([hidden])').forEach(e=>{e.value=lang==='he'?'תשובה לדוגמה לצורך בדיקת הפוסטר':'إجابة تجريبية لفحص الملصق';});
+              for(const id of ['feedback','improvement','value'])G(id).value=(lang==='he'?'בדקנו ושיפרנו את הפתרון בעקבות המשוב שקיבלנו מהמשתמשים. '.repeat(2):'اختبرنا الحل وحسّناه بناء على ملاحظات المشاركين في التجربة. '.repeat(2)).slice(0,60);
               for(const id of ['research1','research2','findings1','findings2','findings3','requirements1','requirements2','requirements3','use1','use2','use3'])G(id).value=lang==='he'?'תשובה לדוגמה':'إجابة تجريبية';
               updateAllCombinedFields();
               const svg='<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="#12354d"/><circle cx="150" cy="150" r="80" fill="#52c0ce"/><path d="M40 220L260 80M50 70L250 240" stroke="white" stroke-width="12"/></svg>';
@@ -59,6 +69,9 @@ with sync_playwright() as pw:
             for id,color in zip(['project-color','description-color','q-color','t-color'],['#eeeeff','#ddffee','#ffeecc','#ffffff']):
                 page.locator('#'+id+'-hex').fill(color)
             assert page.evaluate("['poster-project','solution-description-heading'].map(id=>getComputedStyle(G(id)).color)")==['rgb(238, 238, 255)','rgb(221, 255, 238)']
+            page.evaluate("G('border-color').value='#58e7ff';G('arrow-color').value='#00e5ff';applyDesign()")
+            assert page.locator('#arrow-feedback-improvement .shaft').evaluate('(e)=>getComputedStyle(e).backgroundColor')=='rgb(0, 229, 255)'
+            assert page.locator('#c-feedback').evaluate('(e)=>getComputedStyle(e).borderTopColor')=='rgb(88, 231, 255)'
             page.locator('#poster').screenshot(path=str(out/f'poster-{lang}.png'))
             screen=page.evaluate("['p-bar','p-names','short-desc-box'].map(id=>[G(id).style.top,G(id).style.height])")
             page.pdf(path=str(out/f'poster-{lang}.pdf'),prefer_css_page_size=True,print_background=True)
