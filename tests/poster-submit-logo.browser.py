@@ -277,7 +277,8 @@ with sync_playwright() as pw:
     expect(again.locator('#solution-description-heading')).to_have_text(before)
     expect(again.locator('#solution-description-heading')).to_be_visible()
     expect(again.locator('#c-slogan .bq')).to_be_hidden()
-    assert again.locator('#solution-description-heading').evaluate('(el)=>el.scrollHeight<=el.clientHeight')
+    description_metrics=again.locator('#solution-description-heading').evaluate('(el)=>({scroll:el.scrollHeight,client:el.clientHeight,width:el.clientWidth,text:el.textContent})')
+    assert description_metrics['scroll']<=description_metrics['client'],description_metrics
     pdf=fitz.open(stream=again.pdf(prefer_css_page_size=True),filetype='pdf')
     assert len(pdf)==1
     assert 'كيف نعرض' not in pdf[0].get_text()

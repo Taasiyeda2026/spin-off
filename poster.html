@@ -197,9 +197,9 @@ body.panel-open #wrap{padding-right:344px}
 #p-hdr .logo-area #school-logo-box{position:absolute;left:auto;right:0;top:0;width:150px;height:150px}
 #p-hdr .logo-area #logo-box{width:150px;height:150px}
 #p-hdr .logo-area:has(#school-logo-box:not([hidden])) #logo-box{visibility:hidden}
-#short-desc-box{top:134px;height:42px}
-#p-bar{top:180px;height:34px}
-#p-names{top:220px;height:30px}
+#short-desc-box{top:134px;height:58px}
+#p-bar{top:198px;height:34px}
+#p-names{top:238px;height:30px}
 </style>
 <link rel="stylesheet" href="research.css?v=4">
 <script defer src="research-data.js?v=1"></script>
@@ -715,7 +715,7 @@ window.posterEditor = {
       ...draft,
       values: Object.fromEntries(Object.keys(blankPoster.values)
         .map(key => [key, draft?.values?.[key] ?? blankPoster.values[key]])),
-      design: { ...blankPoster.design, ...draft?.design, projectColor: draft?.design?.projectColor ?? draft?.design?.qColor ?? blankPoster.design.projectColor },
+      design: { ...blankPoster.design, ...draft?.design, projectColor: draft?.design?.projectColor ?? draft?.design?.qColor ?? blankPoster.design.projectColor, bgVersion: draft?.design?.bgVersion ?? (draft?.design?.bgId ? approvedBackgrounds.find(e=>e.id===draft.design.bgId)?.legacyVersion : blankPoster.design.bgVersion) },
       images: draft?.images ?? blankPoster.images,
       participants: draft?.participants ?? blankPoster.participants,
     });

@@ -30,7 +30,7 @@ const messages = {
 
 let staff = null;
 let waitForPosterSave = () => Promise.resolve();
-window.addEventListener('poster:dirty',()=>{const el=toolbar.querySelector('[role=status]');if(el){el.dataset.statusKey='שומר...';el.textContent=t('שומר...');}});
+window.addEventListener('poster:dirty',()=>{const el=toolbar.querySelector('[role=status]');if(el&&el.dataset.conflicted!=='true'){el.dataset.statusKey='שומר...';el.textContent=t('שומר...');}});
 const editorHome = document.getElementById('poster-editor-home');
 let managementLanguageRefresh = null;
 let accessChoicesRefresh = null;
@@ -413,7 +413,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
   toolbar.replaceChildren();
   element('strong', t('קוד הפוסטר') + ': ' + poster.code, toolbar).dataset.posterCode=poster.code;
   const indicator = element('span', '', toolbar);
-  function setIndicator(key){indicator.dataset.statusKey=key;indicator.textContent=t(key)}
+  function setIndicator(key){indicator.dataset.conflicted=String(conflicted);indicator.dataset.statusKey=key;indicator.textContent=t(key)}
   indicator.setAttribute('role', 'status');
   const retry = button('ניסיון שמירה מחדש', () => editor.save(), toolbar);
   retry.hidden = true;
@@ -479,7 +479,7 @@ async function openPoster(poster, access, back, readOnly = false, useCloud = fal
     // Keep the offline snapshot current while an older request is still in flight.
     const backup = writeLocal(local).then(() => true, () => false);
     const operation = saveQueue.then(async () => {
-      setIndicator('שומר...');
+      if(!conflicted)setIndicator('שומר...');
       retry.hidden = true;
       const backedUp = await backup;
       if (sequence === latest && local.revision !== revision) {

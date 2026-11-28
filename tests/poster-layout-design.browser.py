@@ -15,6 +15,9 @@ with sync_playwright() as pw:
     # An old qColor must seed its title while newer colors remain independent.
     page.evaluate("posterEditor.open({draft:{design:{qColor:'#123456',tColor:'#654321'}}})")
     expect(page.locator('#project-color')).to_have_value('#123456')
+    page.evaluate("posterEditor.open({draft:{design:{bgId:'bg2',qColor:'#123456',tColor:'#654321'}}})")
+    assert page.evaluate("selectedBackgroundVersion===approvedBackgrounds.find(e=>e.id==='bg2').legacyVersion")
+    assert page.evaluate('async()=>await backgroundReady')
     for language in ['he','ar']:
         if language=='ar':page.locator('#poster-editor-language').click()
         page.evaluate("""() => {G('poster-project').value='SpaceTech';G('short-desc').value='SpaceTech';updateSolutionTypeHeading();} """)
