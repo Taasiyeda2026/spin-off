@@ -92,7 +92,7 @@ body.panel-open #wrap{padding-right:344px}
 .two-line-answer{line-height:1.38!important;white-space:pre-wrap}.numbered-answer{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:1px;color:var(--text);font-size:12px;line-height:1.28;overflow:hidden;padding-top:1px;margin-top:0}.numbered-answer .na-line{display:flex;align-items:flex-start;gap:5px;min-height:1.25em;margin:0}.numbered-answer b{font-weight:900;color:var(--title);flex:0 0 auto;line-height:1.28}.numbered-answer span{flex:1;white-space:pre-wrap;word-break:break-word;line-height:1.28}.numbered-answer.empty span{color:#b8c2cf}.split-sources{display:none!important}
 #c-research .bi,#c-requirements .bi,#c-use .bi{padding-top:5px;padding-bottom:4px;gap:2px}#c-research .numbered-answer,#c-requirements .numbered-answer,#c-use .numbered-answer{flex:0 0 auto;gap:0;padding-top:0}#c-research .na-line,#c-requirements .na-line,#c-use .na-line{min-height:0;line-height:1.22}#c-research .na-line b,#c-requirements .na-line b,#c-use .na-line b,#c-research .na-line span,#c-requirements .na-line span,#c-use .na-line span{line-height:1.22}
 #c-slogan .bi{padding:6px 10px;gap:4px}.space-footer-text{font-size:15px;font-weight:800;text-align:center;line-height:1.35;color:var(--text)}
-.flow-arrow{position:absolute;width:28px;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:4;filter:drop-shadow(0 0 8px rgba(88,231,255,.7)) drop-shadow(0 0 14px rgba(179,102,255,.35))}.flow-arrow .shaft{width:7px;flex:1;background:linear-gradient(180deg,#58e7ff 0%,#8ef7ff 42%,#b366ff 100%);border-radius:999px;box-shadow:0 0 8px rgba(88,231,255,.45)}.flow-arrow .head{width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:14px solid #58e7ff;margin-top:-1px}
+.flow-arrow{position:absolute;width:28px;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:4;filter:drop-shadow(0 0 3px rgba(88,231,255,.4)) drop-shadow(0 0 7px rgba(179,102,255,.18))}.flow-arrow .shaft{width:7px;flex:1;background:linear-gradient(180deg,#58e7ff 0%,#8ef7ff 42%,#b366ff 100%);border-radius:999px;box-shadow:0 0 3px rgba(88,231,255,.28)}.flow-arrow .head{width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:14px solid #58e7ff;margin-top:-1px}
 #p-names{position:absolute;left:190px;right:190px;top:178px;height:34px;z-index:2;display:flex;align-items:center;justify-content:center;border:1px solid rgba(88,231,255,.6);border-radius:10px;background:rgba(9,21,48,.52);box-shadow:0 0 12px rgba(88,231,255,.16),0 0 20px rgba(179,102,255,.08);padding:3px 8px;box-sizing:border-box;backdrop-filter:blur(8px)}
 #poster-students{border:none;outline:none;text-align:center;align-content:center;font-size:11px;color:#eefbff;background:transparent;width:100%;height:100%;resize:none;overflow:hidden;line-height:1.3;padding:0;font-family:Heebo,Arial,sans-serif}
 
@@ -242,7 +242,7 @@ body.panel-open #wrap{padding-right:344px}
 #poster .numbered-answer b{font-weight:500!important}
 #poster #c-feedback .bq,#poster #c-improvement .bq,#poster #c-value .bq{font-size:13px!important;font-weight:700!important}
 #poster #c-feedback textarea,#poster #c-improvement textarea,#poster #c-value textarea{font-size:11px!important;font-weight:400!important;text-align:center;line-height:1.2;padding:0}
-#process-surface{position:absolute;left:30px;top:770px;width:357px;height:266px;border:0;border-radius:12px;background:var(--box-bg);z-index:1;pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#process-surface{position:absolute;left:74.625px;top:770px;width:267.75px;height:266px;border:0;border-radius:12px;background:var(--box-bg);z-index:1;pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 /* top/height for process-surface and content boxes are assigned by reflowPosterBody() */
 #poster :is(#c-feedback,#c-improvement,#c-value) .bi{padding:3px 8px;gap:2px;justify-content:center;align-items:stretch}
 #poster :is(#c-feedback,#c-improvement,#c-value) .bq{justify-content:center;text-align:center;flex:0 0 auto}
@@ -258,8 +258,8 @@ body.panel-open #wrap{padding-right:344px}
 #poster #slogan-output{font-size:15px!important}
 </style>
 <style id="poster-arrow-color-style">
-#poster .flow-arrow{filter:drop-shadow(0 0 4px var(--arrow-color,#58e7ff))}
-#poster .flow-arrow .shaft{background:var(--arrow-color,#58e7ff);box-shadow:0 0 8px var(--arrow-color,#58e7ff)}
+#poster .flow-arrow{filter:drop-shadow(0 0 2px var(--arrow-color,#58e7ff))}
+#poster .flow-arrow .shaft{background:var(--arrow-color,#58e7ff);box-shadow:0 0 3px var(--arrow-color,#58e7ff)}
 #poster .flow-arrow .head{border-top-color:var(--arrow-color,#58e7ff)}
 </style>
 <style id="poster-content-glow">
@@ -628,7 +628,7 @@ function fitPreview(){if(window.matchMedia?.('print')?.matches)return;const post
 async function producePdf(){if(!(await backgroundReady)){alert(BG_ARABIC()?'تعذّر تحميل الخلفية للطباعة.':'הרקע לא נטען. נסו שוב לפני ההדפסה.');return}try{await window.refreshSchoolLogo?.()}catch{alert(BG_ARABIC()?'تعذّر تحميل شعار المدرسة. حاولوا مجددًا.':'לא ניתן לטעון את לוגו בית הספר. נסו שוב.');return}await window.posterEditor.flush();if(cloudEditor&&!cloudEditor.readOnly&&draftDirty){alert(BG_ARABIC()?'تعذّر حفظ التغييرات.':'השינויים טרם נשמרו. נסו שוב.');return}if(document.fonts){await document.fonts.ready;fitSolutionDescription();fitSlogan();}refreshContentGlows();printTitleBackup=document.title;const project=(G('poster-project')?.value||'').trim();document.title=project?`${project} - SpaceTech`:'SpaceTech | פוסטר חקר';window.print()}
 const LAYOUT={'c-problem':{left:407,top:277,width:357,height:80},'c-target':{left:407,top:370,width:357,height:80},'c-question':{left:407,top:463,width:357,height:80},'img-pair':{left:407,top:561,width:357,height:170},'c-research':{left:407,top:755,width:357,height:86},'c-findings':{left:407,top:849,width:357,height:88},'c-requirements':{left:407,top:944,width:357,height:92},'c-solution':{left:30,top:277,width:357,height:85},'main-image-box':{left:84,top:384,width:250,height:250},'c-use':{left:30,top:656,width:357,height:95},'c-feedback':{left:74.625,top:778,width:267.75,height:66},'c-improvement':{left:74.625,top:868,width:267.75,height:66},'c-value':{left:74.625,top:958,width:267.75,height:66},'c-slogan':{left:30,top:1054,width:734,height:56}};
 function positionFlowArrows(){[['c-feedback','c-improvement','arrow-feedback-improvement'],['c-improvement','c-value','arrow-improvement-value']].forEach(([fromId,toId,arrowId])=>{const from=G(fromId),to=G(toId),arrow=G(arrowId);if(!from||!to||!arrow)return;const arrowWidth=28,left=from.offsetLeft+(from.offsetWidth/2)-(arrowWidth/2),gap=2,top=from.offsetTop+from.offsetHeight+gap,end=to.offsetTop-gap,height=Math.max(14,end-top);Object.assign(arrow.style,{left:left+'px',top:top+'px',height:height+'px'})})}
-function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});Object.assign(G('process-surface').style,{left:'30px',top:'770px',width:'357px',height:'266px'});imageSlots['main-image-box']={...LAYOUT['main-image-box']};imageSlots['img-pair']={...LAYOUT['img-pair']};if(G('poster')?.offsetWidth)layoutPosterHeader();else{updatePosterImageLayout();positionFlowArrows()}}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
+function applyLayout(){Object.entries(LAYOUT).forEach(([id,p])=>{const el=G(id);if(!el)return;Object.assign(el.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',height:p.height+'px'})});const fb=LAYOUT['c-feedback'];Object.assign(G('process-surface').style,{left:fb.left+'px',top:'770px',width:fb.width+'px',height:'266px'});imageSlots['main-image-box']={...LAYOUT['main-image-box']};imageSlots['img-pair']={...LAYOUT['img-pair']};if(G('poster')?.offsetWidth)layoutPosterHeader();else{updatePosterImageLayout();positionFlowArrows()}}function togglePanel(){document.body.classList.toggle('panel-open');setTimeout(fitPreview,230)}function openTab(name){document.body.classList.add('panel-open');setTimeout(fitPreview,230);qs('.sptab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));qs('.tp').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));if(name==='content')renderFillPanel()}
 const FILL_FIELDS=[{"id":"poster-project","label":"1. שם הפתרון שלנו?","kind":"input"},{"id":"solution-type","label":"2א. סוג הפתרון שלנו","kind":"select"},{"id":"short-desc","label":"2ב. תיאור הפתרון שלנו?","rows":2},{"id":"poster-class","label":"3. כיתה","kind":"input"},{"id":"poster-school","label":"4. שם בית הספר","kind":"input"},{"id":"problem","label":"5. איזו בעיה בחרנו לפתור?","rows":2},{"id":"target","label":"6. מי נתקל בבעיה ומה הוא צריך?","rows":2},{"id":"research1","label":"7. מה למדנו מטכנולוגיות החלל?","rows":2,"combine":"research"},{"id":"research2","label":"8. איך טכנולוגיות החלל תרמו לפתרון?","rows":2,"combine":"research"},{"id":"findings1","label":"9א. רעיון ראשון","rows":2,"combine":"findings"},{"id":"findings2","label":"9ב. רעיון שני","rows":2,"combine":"findings"},{"id":"findings3","label":"9ג. רעיון שלישי","rows":2,"combine":"findings"},{"id":"question","label":"10. איזה רעיון בחרנו ולמה?","rows":3},{"id":"requirements1","label":"11א. דרישה ראשונה","rows":2,"combine":"requirements"},{"id":"requirements2","label":"11ב. דרישה שנייה","rows":2,"combine":"requirements"},{"id":"requirements3","label":"11ג. דרישה שלישית","rows":2,"combine":"requirements"},{"id":"solution","label":"12. מה כולל הפתרון שלנו?","rows":3},{"id":"use1","label":"13א. שלב ראשון","rows":2,"combine":"use"},{"id":"use2","label":"13ב. שלב שני","rows":2,"combine":"use"},{"id":"use3","label":"13ג. שלב שלישי","rows":2,"combine":"use"},{"id":"feedback","label":"14. מה בדקנו בתכנון הפתרון שלנו?","rows":2},{"id":"improvement","label":"15. איזה משוב קיבלנו על הפתרון?","rows":2},{"id":"value","label":"16. מה שיפרנו בעקבות המשוב?","rows":2},{"id":"slogan","label":"17. איך נציג את הפתרון שלנו במשפט אחד?","rows":2}];
 function panelCounterText(src){const max=parseInt(src?.dataset?.max||src?.getAttribute?.('maxlength')||0,10);if(!max)return editorText('חופשי');return `${(src.value||'').length}/${max}`}function updatePanelCounter(id){const src=G(id),c=G('panel-counter-'+id);if(!src||!c)return;const max=parseInt(src.dataset.max||src.getAttribute('maxlength')||0,10);c.textContent=panelCounterText(src);c.classList.toggle('full',!!max&&(src.value||'').length>=max);c.classList.toggle('good',!!max&&(src.value||'').length>0&&(src.value||'').length<max)}
 const COMBINED_FIELDS={research:{ids:['research1','research2'],outs:['research1-out','research2-out'],placeholders:['מה למדנו מטכנולוגיות החלל?','איך טכנולוגיות החלל תרמו לפתרון?'],max:110},findings:{ids:['findings1','findings2','findings3'],outs:['findings1-out','findings2-out','findings3-out'],placeholders:['רעיון 1','רעיון 2','רעיון 3'],max:165},requirements:{ids:['requirements1','requirements2','requirements3'],outs:['requirements1-out','requirements2-out','requirements3-out'],placeholders:['דרישה 1','דרישה 2','דרישה 3'],max:180},use:{ids:['use1','use2','use3'],outs:['use1-out','use2-out','use3-out'],placeholders:['שלב 1','שלב 2','שלב 3'],max:180}};
@@ -649,10 +649,27 @@ function updatePosterImageLayout(){
 function fitSlogan(){G('slogan-output').style.fontSize='15px'}
 function updateSlogan(){G('slogan-output').firstElementChild.textContent=(G('slogan').value||'').replace(/\s+/g,' ').trim();fitSlogan()}
 function placeColumn(boxes,top,bottom){
- const sum=boxes.reduce((s,b)=>s+b.h,0),gaps=Math.max(1,boxes.length-1),gap=(bottom-top-sum)/gaps;
- let y=top;const placed=[];
- for(let i=0;i<boxes.length;i++){placed.push({...boxes[i],top:y});y+=boxes[i].h+(i<gaps?gap:0)}
- return {placed,gap};
+ const n=boxes.length,nGaps=Math.max(1,n-1);
+ const start=Math.round(top),end=Math.round(bottom);
+ const sum=boxes.reduce((s,b)=>s+b.h,0);
+ const free=Math.max(0,end-start-sum),base=Math.floor(free/nGaps);
+ let rem=free-base*nGaps;
+ const gaps=Array(nGaps).fill(base);
+ // Keep the first two gaps identical (first three boxes), dump leftover into later gaps.
+ for(let i=2;i<nGaps&&rem>0;i++,rem--) gaps[i]++;
+ if(rem>0){
+  const bump=Math.floor(rem/nGaps);
+  for(let i=0;i<nGaps;i++) gaps[i]+=bump;
+  rem-=bump*nGaps;
+  for(let i=nGaps-1;i>=2&&rem>0;i--,rem--) gaps[i]++;
+  if(rem>0&&nGaps){gaps[nGaps-1]+=rem;rem=0}
+ }
+ let y=start;const placed=[];
+ for(let i=0;i<n;i++){
+  placed.push({...boxes[i],top:y});
+  y+=boxes[i].h+(i<nGaps?gaps[i]:0);
+ }
+ return {placed,gap:gaps[0]||0};
 }
 function reflowPosterBody(contentTop,contentBottom){
  const col=LAYOUT['c-solution'],extra=Math.max(0,(contentBottom-contentTop)-(contentBottom-Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top)));
@@ -689,11 +706,12 @@ function reflowPosterBody(contentTop,contentBottom){
   Object.assign(G(item.id).style,{left:base.left+'px',top:item.top+'px',width:base.width+'px',height:item.h+'px'});
  }
  const processTop=left.placed.find(item=>item.id==='_process').top;
- const inner=processH-3*processBoxH,topInset=Math.min(8,inner*.2),between=(inner-topInset)/2;
- Object.assign(G('process-surface').style,{left:col.left+'px',top:processTop+'px',width:col.width+'px',height:processH+'px'});
- ['c-feedback','c-improvement','c-value'].forEach((id,i)=>{
-  const base=LAYOUT[id];
-  Object.assign(G(id).style,{left:base.left+'px',top:(processTop+topInset+i*(processBoxH+between))+'px',width:base.width+'px',height:processBoxH+'px'});
+ const fb=LAYOUT['c-feedback'];
+ const processBoxes=[{id:'c-feedback',h:processBoxH},{id:'c-improvement',h:processBoxH},{id:'c-value',h:processBoxH}];
+ const processPlace=placeColumn(processBoxes,processTop,processTop+processH);
+ Object.assign(G('process-surface').style,{left:fb.left+'px',top:processTop+'px',width:fb.width+'px',height:processH+'px'});
+ processPlace.placed.forEach(item=>{
+  Object.assign(G(item.id).style,{left:fb.left+'px',top:item.top+'px',width:fb.width+'px',height:item.h+'px'});
  });
  Object.assign(G('c-slogan').style,{left:LAYOUT['c-slogan'].left+'px',top:LAYOUT['c-slogan'].top+'px',width:LAYOUT['c-slogan'].width+'px',height:LAYOUT['c-slogan'].height+'px'});
  updatePosterImageLayout();
