@@ -8,24 +8,26 @@ out=Path('test-results/poster-header');out.mkdir(parents=True,exist_ok=True)
 url=os.getenv('POSTER_TEST_URL','http://127.0.0.1:8000/poster.html')
 with sync_playwright() as pw:
     browser=pw.chromium.launch(executable_path=os.getenv('CHROMIUM_PATH','/usr/bin/chromium'))
-    page=browser.new_page(viewport={'width':1400,'height':1300})
     errors=[]
-    page.on('pageerror',lambda error:errors.append(str(error)))
-    # No real users or backend requests in this suite.
-    page.route('**/*.supabase.co/**',lambda route:route.abort())
-    page.goto(url)
-    page.evaluate('posterEditor.open()')
-    page.evaluate('document.fonts.ready')
-    page.evaluate("G('solution-type').value='physical';updateSolutionTypeHeading()")
-    fixed=page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")
+    def setup():
+        page=browser.new_page(viewport={'width':1400,'height':1300})
+        page.on('pageerror',lambda error:errors.append(str(error)))
+        page.route('**/*.supabase.co/**',lambda route:route.abort())
+        page.goto(url)
+        page.evaluate('posterEditor.open()')
+        page.evaluate('document.fonts.ready')
+        page.evaluate("G('solution-type').value='physical';updateSolutionTypeHeading()")
+        fixed=page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")
+        return page,fixed
     for lang in ['he','ar']:
+        page,fixed=setup()
         if lang=='ar':page.locator('#poster-editor-language').click()
         for long in [False,True]:
             title=('מערכת חכמה להגנה על הסביבה' if lang=='he' else 'نظام ذكي لحماية البيئة')
-            if long:title='W'*35
+            if long:title='W'*(35 if lang=='he' else 40)
             desc=('מערכת שמסייעת לזהות בעיות בסביבה ולפעול בזמן באמצעות חיישנים וטכנולוגיות מהחלל.' if lang=='he' else 'نظام يساعد على اكتشاف المشكلات البيئية والعمل في الوقت المناسب باستخدام المستشعرات وتقنيات الفضاء.')
             names=(['משתתף לדוגמה עם שם משפחה ארוך']*8 if lang=='he' else ['مشارك تجريبي مع اسم عائلة طويل']*8) if long else (['נועה לדוגמה','יובל לדוגמה'] if lang=='he' else ['نور للتجربة','رامي للتجربة'])
-            values={'poster-project':title,'short-desc':desc[:105],'solution-type':'physical','poster-class':'ו׳ 2' if lang=='he' else 'السادس 2','poster-school':'בית הספר לדוגמה' if lang=='he' else 'مدرسة تجريبية','poster-students':', '.join(names),'slogan':'טכנולוגיות החלל עוזרות לשמור על הסביבה שלנו' if lang=='he' else 'تقنيات الفضاء تساعدنا في حماية بيئتنا','problem':'בעיה לדוגמה' if lang=='he' else 'مشكلة تجريبية'}
+            values={'poster-project':title,'short-desc':desc[:105 if lang=='he' else 85],'solution-type':'physical','poster-class':'ו׳ 2' if lang=='he' else 'السادس 2','poster-school':'בית הספר לדוגמה' if lang=='he' else 'مدرسة تجريبية','poster-students':', '.join(names),'slogan':'טכנולוגיות החלל עוזרות לשמור על הסביבה שלנו' if lang=='he' else 'تقنيات الفضاء تساعدنا في حماية بيئتنا','problem':'בעיה לדוגמה' if lang=='he' else 'مشكلة تجريبية'}
             # Loading synthetic saved state exercises the same path as existing posters.
             page.evaluate('data=>posterEditor.open({draft:{values:data.values,participants:data.names}})',{'values':values,'names':names})
             page.evaluate('document.fonts.ready')
@@ -44,7 +46,7 @@ with sync_playwright() as pw:
             assert all(abs(a-b)<1 for a,b in zip(metrics['gaps'],[4,18,4,18])),metrics
             assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")==fixed
             assert page.locator('#poster-project').input_value()==title
-            assert page.locator('#short-desc').input_value()==desc[:105]
+            assert page.locator('#short-desc').input_value()==desc[:105 if lang=='he' else 85]
             process=page.evaluate("""() => {
               const ids=['c-feedback','c-improvement','c-value'];
               const rows=ids.map(id=>{const box=G(id),text=box.querySelector('textarea');text.value='W'.repeat(60);updateCounterFor(text);return {x:box.offsetLeft,w:box.offsetWidth,h:box.offsetHeight,center:box.offsetLeft+box.offsetWidth/2,clipped:text.scrollHeight>text.clientHeight+1,weight:getComputedStyle(text).fontWeight,align:getComputedStyle(text).textAlign,counter:getComputedStyle(box.querySelector('.counter')).display};});
@@ -72,6 +74,7 @@ with sync_playwright() as pw:
             page.evaluate("G('border-color').value='#58e7ff';G('arrow-color').value='#00e5ff';applyDesign()")
             assert page.locator('#arrow-feedback-improvement .shaft').evaluate('(e)=>getComputedStyle(e).backgroundColor')=='rgb(0, 229, 255)'
             assert page.locator('#c-feedback').evaluate('(e)=>getComputedStyle(e).borderTopColor')=='rgb(88, 231, 255)'
+            page.evaluate("async()=>await Promise.all(['img-main','img-1','img-2','logo-img'].map(id=>G(id).decode()))")
             page.locator('#poster').screenshot(path=str(out/f'poster-{lang}.png'))
             screen=page.evaluate("['p-bar','p-names','short-desc-box'].map(id=>[G(id).style.top,G(id).style.height])")
             page.pdf(path=str(out/f'poster-{lang}.pdf'),prefer_css_page_size=True,print_background=True)
@@ -80,6 +83,7 @@ with sync_playwright() as pw:
                 assert len(doc)==1
                 assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
                 doc[0].get_pixmap(matrix=fitz.Matrix(1,1)).save(out/f'pdf-{lang}.png')
+        page.close()
         print(lang,': headings/slogan 700; short/long saved/new header; exact gaps; fixed image/content coordinates; colors; single A4 passed')
     assert not errors,errors
     browser.close()
