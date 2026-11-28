@@ -16,7 +16,8 @@ with sync_playwright() as pw:
     page.goto(url)
     page.evaluate('posterEditor.open()')
     page.evaluate('document.fonts.ready')
-    fixed=page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,G(id).style.cssText]))")
+    page.evaluate("G('solution-type').value='physical';updateSolutionTypeHeading()")
+    fixed=page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")
     for lang in ['he','ar']:
         if lang=='ar':page.locator('#poster-editor-language').click()
         for long in [False,True]:
@@ -41,10 +42,12 @@ with sync_playwright() as pw:
             assert all(w=='700' for w in metrics['weights']),metrics
             assert not metrics['clipped'] and metrics['top']>=0,metrics
             assert all(abs(a-b)<1 for a,b in zip(metrics['gaps'],[4,18,4,18])),metrics
-            assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,G(id).style.cssText]))")==fixed
+            assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")==fixed
             assert page.locator('#poster-project').input_value()==title
             assert page.locator('#short-desc').input_value()==desc[:105]
-            if long:continue
+            if long:
+                page.locator('#poster').screenshot(path=str(out/f'poster-long-{lang}.png'))
+                continue
             # Populate the remaining answers and images only for visual review.
             page.evaluate("""lang=>{
               qs('#poster .box textarea:not([hidden])').forEach(e=>{e.value=lang==='he'?'תשובה לדוגמה לצורך בדיקת הפוסטר':'إجابة تجريبية لفحص الملصق';});
