@@ -341,8 +341,8 @@ body:has(.poster-access.is-home:not([hidden])) {
 #slogan-output > span:empty{display:none}
 
 /* Keep the poster title transparent even when Chrome supplies an autofill highlight. */
-#poster-project{appearance:none;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:var(--title);caret-color:var(--title)}
-#poster-project:is(:autofill,:-webkit-autofill){-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:var(--title)!important;caret-color:var(--title)!important;box-shadow:none!important}
+#poster-project{appearance:none;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:var(--project-color,var(--title));caret-color:var(--project-color,var(--title))}
+#poster-project:is(:autofill,:-webkit-autofill){-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:var(--project-color,var(--title))!important;caret-color:var(--project-color,var(--title))!important;box-shadow:none!important}
 
 /* Compact management only; never affects editor or print. */
 @media screen {

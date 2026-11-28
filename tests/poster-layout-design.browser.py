@@ -26,6 +26,7 @@ with sync_playwright() as pw:
         for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
             page.locator('#'+id+'-hex').fill(color)
         assert [page.locator(s).evaluate('(el)=>getComputedStyle(el).color') for s in selectors]==['rgb(161, 0, 0)','rgb(0, 161, 0)','rgb(0, 0, 161)','rgb(161, 0, 161)']
+        assert page.locator('#poster-project').evaluate('(el)=>getComputedStyle(el).webkitTextFillColor')=='rgb(161, 0, 0)'
         page.screenshot(path=str(out/f'colors-{language}.png'),full_page=True)
         for kind in ['physical','smart','app','web','digital']:
             page.evaluate("kind=>{G('solution-type').value=kind;updateSolutionTypeHeading();}",kind)
@@ -50,6 +51,8 @@ with sync_playwright() as pw:
             pdf=out/f'{id}-{language}.pdf';page.pdf(path=str(pdf),prefer_css_page_size=True,print_background=False)
             with fitz.open(pdf) as doc:
                 assert doc.page_count==1,(id,language,doc.page_count)
+                text_colors=[span['color'] for block in doc[0].get_text('dict')['blocks'] if 'lines' in block for line in block['lines'] for span in line['spans'] if 'SpaceTech' in span['text']]
+                assert 0xa10000 in text_colors and 0x00a100 in text_colors,(id,language,text_colors)
                 assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
                 embedded=[doc.extract_image(img[0]) for img in doc[0].get_images() if img[2]==1414 and img[3]==2000]
                 assert embedded,(id,'background absent from PDF')

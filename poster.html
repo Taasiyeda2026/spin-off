@@ -188,7 +188,7 @@ body.panel-open #wrap{padding-right:344px}
 #poster.approved-background::before,#poster.approved-background::after,#poster.approved-background #space-overlay{display:none}
 @media print{#poster,#approved-bg-image{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style>
-<link rel="stylesheet" href="poster-access.css?v=20261126-scale-header-v1">
+<link rel="stylesheet" href="poster-access.css?v=20261128-project-color-v2">
 <style>@media screen{#toolbar .poster-cloud-toolbar,#toolbar .poster-cloud-toolbar>strong{color:#e6f6ff}#toolbar .poster-cloud-toolbar>strong{font-weight:700}#toolbar .poster-cloud-toolbar>span{color:#b5efff;font-weight:500}}</style>
 <style id="school-logo-placement">
 /* Larger visible branding, with a compact centered title and identity area. */
@@ -536,7 +536,7 @@ function renderBackgroundGallery() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.backgroundId = entry.id;
-    const label = (BG_ARABIC() ? 'خلفية ' : 'רקע ') + (i + 1);
+    const label = (BG_ARABIC() ? 'خلفية ' : 'רקע ') + entry.id.replace(/^bg(?=\d+$)/,'');
     btn.title = label;
     btn.setAttribute('aria-label', label);
     const thumb = document.createElement('img');
