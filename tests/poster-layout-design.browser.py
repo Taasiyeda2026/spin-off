@@ -20,7 +20,7 @@ with sync_playwright() as pw:
     assert page.evaluate('async()=>await backgroundReady')
     for language in ['he','ar']:
         if language=='ar':page.locator('#poster-editor-language').click()
-        page.evaluate("""() => {G('poster-project').value='SpaceTech';G('short-desc').value='SpaceTech';updateSolutionTypeHeading();} """)
+        page.evaluate("""() => {G('poster-project').value='SpaceTech';G('short-desc').value='SpaceTech';G('problem').value='SpaceTech';updateSolutionTypeHeading();} """)
         selectors=['#poster-project','#solution-description-heading','#c-problem .bq','#problem']
         colors=['#a10000','#00a100','#0000a1','#a100a1']
         for id,color in zip(['project-color','description-color','q-color','t-color'],colors):
@@ -48,11 +48,20 @@ with sync_playwright() as pw:
             state=page.evaluate('collectDraft()')
             page.evaluate('draft=>posterEditor.open({draft})',state)
             expect(page.locator(f'[data-background-id={id}]')).to_have_attribute('aria-pressed','true')
+            regions=page.evaluate("selectors=>{const p=G('poster').getBoundingClientRect();return selectors.map(s=>{const r=document.querySelector(s).getBoundingClientRect();return [(r.left-p.left)/p.width,(r.top-p.top)/p.height,r.width/p.width,r.height/p.height]})}",selectors)
             pdf=out/f'{id}-{language}.pdf';page.pdf(path=str(pdf),prefer_css_page_size=True,print_background=False)
             with fitz.open(pdf) as doc:
                 assert doc.page_count==1,(id,language,doc.page_count)
-                text_colors=[span['color'] for block in doc[0].get_text('dict')['blocks'] if 'lines' in block for line in block['lines'] for span in line['spans'] if 'SpaceTech' in span['text']]
-                assert 0xa10000 in text_colors and 0x00a100 in text_colors,(id,language,text_colors)
+                # Chrome can emit invisible black extraction text over painted glyphs.
+                # Check the rasterized PDF pixels in each actual component instead.
+                pix=doc[0].get_pixmap(matrix=fitz.Matrix(2,2))
+                painted=Image.frombytes('RGB',(pix.width,pix.height),pix.samples)
+                for region,color in zip(regions,colors):
+                    x,y,w,h=region
+                    pixels=painted.crop((int(x*pix.width),int(y*pix.height),int((x+w)*pix.width),int((y+h)*pix.height)))
+                    target=tuple(int(color[i:i+2],16) for i in (1,3,5))
+                    matches=sum(all(abs(a-b)<=6 for a,b in zip(pixel,target)) for pixel in pixels.getdata())
+                    assert matches>5,(id,language,color,matches)
                 assert abs(doc[0].rect.width-595.28)<1 and abs(doc[0].rect.height-841.89)<1
                 source=ImageOps.exif_transpose(Image.open('poster-backgrounds/webp/'+id+'.webp')).convert('RGB')
                 embedded=[doc.extract_image(img[0]) for img in doc[0].get_images() if (img[2],img[3])==source.size]
