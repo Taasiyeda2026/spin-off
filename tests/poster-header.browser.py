@@ -17,10 +17,9 @@ with sync_playwright() as pw:
         page.evaluate('posterEditor.open()')
         page.evaluate('document.fonts.ready')
         page.evaluate("G('solution-type').value='physical';updateSolutionTypeHeading()")
-        fixed=page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")
-        return page,fixed
+        return page
     for lang in ['he','ar']:
-        page,fixed=setup()
+        page=setup()
         if lang=='ar':page.locator('#poster-editor-language').click()
         for long in [False,True]:
             title=('מערכת חכמה להגנה על הסביבה' if lang=='he' else 'نظام ذكي لحماية البيئة')
@@ -38,19 +37,45 @@ with sync_playwright() as pw:
                 const t=rect('poster-project'),d=rect('short-desc-box'),b=rect('p-bar'),n=rect('p-names');
                 const logo=G('logo-box').getBoundingClientRect(),pr=p.getBoundingClientRect();
                 const logoMid=(logo.top+logo.height/2-pr.top)/scale;
+                const boxes=Object.keys(LAYOUT).map(id=>{const e=G(id);return {id,x:e.offsetLeft,y:e.offsetTop,w:e.offsetWidth,h:e.offsetHeight};});
                 return {gaps:[d.top-t.bottom,b.top-d.bottom,n.top-b.bottom,G('c-problem').offsetTop-n.bottom],top:t.top,logoMid,
+                  contentTop:G('c-problem').offsetTop,leftTop:G('c-solution').offsetTop,
+                  rightEnd:G('c-requirements').offsetTop+G('c-requirements').offsetHeight,
+                  leftEnd:G('c-value').offsetTop+G('c-value').offsetHeight,
+                  slogan:G('c-slogan').offsetTop,main:G('main-image-box').offsetHeight,pair:G('img-pair').offsetHeight,
                   clipped:['poster-project','poster-students'].filter(id=>G(id).scrollHeight>G(id).clientHeight+1),
                   weights:[...document.querySelectorAll('#poster .bq,#poster-project,#slogan-output,#slogan-output *')].map(e=>getComputedStyle(e).fontWeight),
-                  sizes:['poster-project','solution-description-heading','c-problem','poster-students'].map(id=>getComputedStyle(G(id)).fontSize)};
+                  sizes:['poster-project','solution-description-heading','c-problem','poster-students'].map(id=>getComputedStyle(G(id)).fontSize),
+                  boxes};
             }""")
             assert all(w=='700' for w in metrics['weights']),metrics
             assert not metrics['clipped'] and metrics['top']>=0,metrics
             assert abs(metrics['gaps'][0]-4)<1 and abs(metrics['gaps'][1]-18)<1 and abs(metrics['gaps'][2]-4)<1,metrics
             assert metrics['gaps'][3]>=17,metrics
             assert metrics['top']<=metrics['logoMid']+1,metrics
-            if metrics['gaps'][3]>19:
+            if not long:
+                assert abs(metrics['gaps'][3]-36)<1,metrics
                 assert abs(metrics['top']-metrics['logoMid'])<2,metrics
-            assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")==fixed
+            assert metrics['contentTop']==metrics['leftTop'],metrics
+            assert abs(metrics['rightEnd']-metrics['leftEnd'])<1,metrics
+            assert metrics['slogan']-metrics['rightEnd']==18,metrics
+            assert metrics['main']>=250 and metrics['pair']>=170,metrics
+            meta=page.evaluate("""() => {
+              const poster=G('poster').offsetWidth;
+              return {
+                bar:G('p-bar').offsetWidth, names:G('p-names').offsetWidth,
+                heights:['c-problem','c-target','c-question'].map(id=>G(id).offsetHeight),
+                expected:Math.round(poster-364)
+              };
+            }""")
+            assert abs(meta['bar']-meta['expected'])<=2 and abs(meta['names']-meta['expected'])<=2,meta
+            assert meta['heights']==[80,80,80],meta
+            for i,a in enumerate(metrics['boxes']):
+                assert a['x']>=0 and a['y']>=0 and a['x']+a['w']<=794 and a['y']+a['h']<=1123,a
+                for b in metrics['boxes'][i+1:]:
+                    if {a['id'],b['id']} & {'c-feedback','c-improvement','c-value','process-surface'}:
+                        continue
+                    assert not (a['x']<b['x']+b['w'] and b['x']<a['x']+a['w'] and a['y']<b['y']+b['h'] and b['y']<a['y']+a['h']),(a,b)
             assert page.locator('#poster-project').input_value()==title
             assert page.locator('#short-desc').input_value()==desc[:105 if lang=='he' else 85]
             assert page.evaluate("""() => {
@@ -71,12 +96,14 @@ with sync_playwright() as pw:
               for(const sample of ['','קצר','W'.repeat(60)]){
                 for(const id of ids){const text=G(id).querySelector('textarea');text.value=sample;updateCounterFor(text);rows.push(measure(text));}
               }
-              return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[G('process-surface').offsetLeft,G('process-surface').offsetTop,G('process-surface').offsetWidth,G('process-surface').offsetHeight]};
+              const surface=G('process-surface');
+              return {rows,arrows:['arrow-feedback-improvement','arrow-improvement-value'].map(id=>{const a=G(id);return {center:a.offsetLeft+a.offsetWidth/2,h:a.offsetHeight,w:a.offsetWidth};}),surface:[surface.offsetLeft,surface.offsetTop,surface.offsetWidth,surface.offsetHeight],valueBottom:G('c-value').offsetTop+G('c-value').offsetHeight};
             }""")
-            assert process['surface']==[30,770,357,266],process
+            assert process['surface'][0]==30 and process['surface'][2]==357 and process['surface'][3]==266,process
+            assert abs(process['valueBottom']-(process['surface'][1]+process['surface'][3]))<1,process
             assert all(not row['clipped'] and row['weight']=='400' and row['align']=='center' and row['counter']=='none' and row['vCenter']<4 for row in process['rows']),process
             assert all(abs(row['w']/357-.75)<.005 and row['h']==66 for row in process['rows']),process
-            assert all(abs(a['center']-208.5)<1 and a['h']==20 and a['w']==28 for a in process['arrows']),process
+            assert all(abs(a['center']-208.5)<1 and a['w']==28 for a in process['arrows']),process
             if long:
                 page.locator('#poster').screenshot(path=str(out/f'poster-long-{lang}.png'))
                 continue
