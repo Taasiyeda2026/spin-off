@@ -51,14 +51,25 @@ with sync_playwright() as pw:
             assert all(w=='700' for w in metrics['weights']),metrics
             assert not metrics['clipped'] and metrics['top']>=0,metrics
             assert abs(metrics['gaps'][0]-4)<1 and abs(metrics['gaps'][1]-18)<1 and abs(metrics['gaps'][2]-4)<1,metrics
-            assert abs(metrics['gaps'][3]-18)<1,metrics
+            assert metrics['gaps'][3]>=17,metrics
             assert metrics['top']<=metrics['logoMid']+1,metrics
             if not long:
+                assert abs(metrics['gaps'][3]-36)<1,metrics
                 assert abs(metrics['top']-metrics['logoMid'])<2,metrics
             assert metrics['contentTop']==metrics['leftTop'],metrics
             assert abs(metrics['rightEnd']-metrics['leftEnd'])<1,metrics
             assert metrics['slogan']-metrics['rightEnd']==18,metrics
             assert metrics['main']>=250 and metrics['pair']>=170,metrics
+            meta=page.evaluate("""() => {
+              const poster=G('poster').offsetWidth;
+              return {
+                bar:G('p-bar').offsetWidth, names:G('p-names').offsetWidth,
+                heights:['c-problem','c-target','c-question'].map(id=>G(id).offsetHeight),
+                expected:Math.round(poster-364)
+              };
+            }""")
+            assert abs(meta['bar']-meta['expected'])<=2 and abs(meta['names']-meta['expected'])<=2,meta
+            assert meta['heights']==[80,80,80],meta
             for i,a in enumerate(metrics['boxes']):
                 assert a['x']>=0 and a['y']>=0 and a['x']+a['w']<=794 and a['y']+a['h']<=1123,a
                 for b in metrics['boxes'][i+1:]:
