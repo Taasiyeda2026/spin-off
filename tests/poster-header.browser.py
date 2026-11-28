@@ -147,11 +147,11 @@ with sync_playwright() as pw:
                   const after=collectDraft(),rect=id=>G(id).getBoundingClientRect();
                   const m=rect('main-image-box'),a=rect('image-box-1'),b=rect('image-box-2'),r=rect('c-research'),u=rect('c-use');
                   const header=['poster-school','poster-class','poster-students'].every(id=>before.values[id]===after.values[id]);
-                  return {header,images:JSON.stringify(before.images)===JSON.stringify(after.images),main:m.width/m.height,secondary:a.width/a.height,count:b.width?3:2,researchLeft:r.left<rect('c-problem').left,useAbove:u.top<m.top,processBelow:rect('c-feedback').top>r.bottom||kind!=='web'};
+                  return {header,images:JSON.stringify(before.images)===JSON.stringify(after.images),main:m.width/m.height,secondary:a.width/a.height,count:b.width?3:2,researchLeft:r.left<rect('c-problem').left,useAbove:u.top<m.top,processBelow:rect('c-feedback').top>r.bottom||kind!=='web',appRow:kind!=='app'||(Math.abs(m.top-a.top)<1&&Math.abs(a.top-b.top)<1&&Math.abs(m.width-a.width)<1&&Math.abs(a.width-b.width)<1&&Math.abs(m.height-b.height)<1&&Math.abs((a.left-m.right)-(b.left-a.right))<1&&u.bottom<=m.top&&rect('c-target').bottom<=m.top&&rect('c-question').top>=m.bottom&&rect('c-feedback').top>=m.bottom&&r.top>=rect('c-value').bottom&&Math.abs(rect('c-solution').top-rect('c-problem').top)<1&&Math.abs(u.top-rect('c-target').top)<1&&Math.abs(r.bottom-rect('c-requirements').bottom)<1)};
                 }""",kind)
                 assert state['header'] and state['images'] and state['count']==count,state
                 assert abs(state['main']-ratio)<.04 and abs(state['secondary']-ratio)<.04,state
-                assert state['researchLeft']==(kind=='web') and state['useAbove']==(kind=='web') and state['processBelow'],state
+                assert state['researchLeft']==(kind in ['web','app']) and state['useAbove']==(kind in ['web','app']) and state['processBelow'] and state['appRow'],state
                 page.locator('#poster').screenshot(path=str(out/f'poster-{kind}-{lang}.png'))
                 page.pdf(path=str(out/f'poster-{kind}-{lang}.pdf'),prefer_css_page_size=True,print_background=True)
                 with fitz.open(out/f'poster-{kind}-{lang}.pdf') as doc:
