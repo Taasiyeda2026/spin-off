@@ -1,6 +1,8 @@
 """Browser acceptance against a synthetic HTTP fixture. No real Supabase calls."""
 import base64
 import json
+import hashlib
+from pathlib import Path
 import os
 from urllib.parse import urlsplit
 
@@ -119,7 +121,7 @@ def new_context(browser):
 
 def open_page(context):
     page = context.new_page()
-    page.on("pageerror", lambda error: errors.append(str(error)))
+    page.on("pageerror", lambda error: (errors.append(str(error)),print("PAGE ERROR:",str(error),flush=True)))
     page.on("console", lambda message: print("Browser error:", message.text, flush=True) if message.type == "error" else None)
     page.goto(url)
     return page
@@ -150,6 +152,8 @@ with sync_playwright() as playwright:
     expect(student.get_by_text("נשמר", exact=True)).to_be_visible()
     assert poster["state"]["participants"] == ["Student A", "Student B"]
     student.locator('[data-tab="design"]').click()
+    text_colors={'project-color':'#112233','description-color':'#223344','q-color':'#334455','t-color':'#445566'}
+    for id,color in text_colors.items(): student.locator('#'+id+'-hex').fill(color)
     student.locator('[data-tab="content"]').click()
     student.locator("#panel-poster-project").fill("Language switch fixture")
     student.evaluate("window.__editorLanguageMarker = true")
@@ -212,8 +216,14 @@ with sync_playwright() as playwright:
     expect(second.locator("#poster-project")).to_have_value("Fixture Project")
     expect(second.locator("#poster-students")).to_have_value("Student A, Student B")
     expect(second.locator("#img-main")).to_be_visible()
-    expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
+    expect(second.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/versions/" + hashlib.sha256(Path("poster-backgrounds/webp/bg3.webp").read_bytes()).hexdigest() + ".webp")
     assert second.evaluate("async () => await backgroundReady")
+
+    for id,color in text_colors.items(): expect(second.locator('#'+id)).to_have_value(color)
+    assert poster['state']['design']['projectColor']=='#112233'
+    assert poster['state']['design']['descriptionColor']=='#223344'
+    assert poster['state']['design']['qColor']=='#334455'
+    assert poster['state']['design']['tColor']=='#445566'
 
     conflict = True
     second.locator("#poster-project").fill("Local update")
@@ -286,7 +296,7 @@ with sync_playwright() as playwright:
         expect(viewer.locator("#solution-type")).to_have_value("smart")
         expect(viewer.locator("#poster-students")).to_have_value("Student A, Student B")
         expect(viewer.locator("#img-main")).to_be_visible()
-        expect(viewer.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg3.webp")
+        expect(viewer.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/versions/" + hashlib.sha256(Path("poster-backgrounds/webp/bg3.webp").read_bytes()).hexdigest() + ".webp")
     arabic = open_page(new_context(browser))
     arabic.locator("#poster-editor-language").click()
     expect(arabic.locator("#poster-access")).to_have_attribute("lang", "ar")

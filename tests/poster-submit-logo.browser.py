@@ -201,6 +201,9 @@ with sync_playwright() as pw:
     reopened=resume(context(browser),'222224');reopened.locator('[data-tab=content]').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
+    assert reopened.locator('#poster').get_attribute('lang') == 'ar'
+    reopened.locator('#poster-editor-language').click()
+    assert reopened.locator('#poster').get_attribute('lang') == 'he'
     reopened.locator('#poster-editor-language').click()
     expect(reopened.locator('#panel-poster-school')).to_have_value('مدرسة معدّلة للاختبار')
     expect(reopened.locator('#panel-poster-class')).to_have_value('الصف الخامس ب')
@@ -274,7 +277,8 @@ with sync_playwright() as pw:
     expect(again.locator('#solution-description-heading')).to_have_text(before)
     expect(again.locator('#solution-description-heading')).to_be_visible()
     expect(again.locator('#c-slogan .bq')).to_be_hidden()
-    assert again.locator('#solution-description-heading').evaluate('(el)=>el.scrollHeight<=el.clientHeight')
+    description_metrics=again.locator('#solution-description-heading').evaluate('(el)=>({scroll:el.scrollHeight,client:el.clientHeight,width:el.clientWidth,text:el.textContent})')
+    assert description_metrics['scroll']<=description_metrics['client'],description_metrics
     pdf=fitz.open(stream=again.pdf(prefer_css_page_size=True),filetype='pdf')
     assert len(pdf)==1
     assert 'كيف نعرض' not in pdf[0].get_text()
@@ -318,7 +322,8 @@ with sync_playwright() as pw:
     legacy.locator('#poster-editor-language').click()
     legacy.locator('#panel-problem').fill('An unrelated edit')
     legacy.locator('#poster-submit').click()
-    expect(legacy.locator('#poster-submit-status')).to_contain_text('بنجاح')
+    assert legacy.locator('#poster').get_attribute('lang')=='he'
+    expect(legacy.locator('#poster-submit-status')).to_contain_text('בהצלחה')
     for key,value in legacy_values.items():
         assert posters[ids[2]]['state']['values'][key]==value
     legacy.locator('#panel-slogan').fill('م'*86)

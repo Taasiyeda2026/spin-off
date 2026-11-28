@@ -10,6 +10,7 @@ on:
       - 'tests/poster-*'
       - 'supabase/**'
       - '.github/workflows/poster-gallery-checks.yml'
+      - 'scripts/build-poster-backgrounds.py'
   push:
     branches: [main]
     paths:
@@ -21,6 +22,7 @@ on:
       - 'tests/poster-*'
       - 'supabase/**'
       - '.github/workflows/poster-gallery-checks.yml'
+      - 'scripts/build-poster-backgrounds.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,15 +35,17 @@ jobs:
         run: |
           sudo systemctl start postgresql
           sudo -u postgres createdb poster_test
-          sudo -u postgres psql -v ON_ERROR_STOP=1 -d poster_test -f tests/poster-cloud-fixture.sql -f supabase/migrations/20261125130000_cloud_posters.sql -f supabase/migrations/20261125142634_poster_allow_empty_participants_on_creation.sql -f tests/poster-cloud.acceptance.sql -f tests/poster-manager.acceptance.sql -f tests/poster-submit-logo.acceptance.sql
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -d poster_test -f tests/poster-cloud-fixture.sql -f supabase/migrations/20261125130000_cloud_posters.sql -f supabase/migrations/20261125142634_poster_allow_empty_participants_on_creation.sql -f tests/poster-cloud.acceptance.sql -f tests/poster-manager.acceptance.sql -f tests/poster-submit-logo.acceptance.sql -f tests/poster-global-manager.acceptance.sql -f tests/poster-season.acceptance.sql
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node --experimental-strip-types --test tests/poster-media.test.mjs
+      - run: node --experimental-strip-types --test tests/poster-media.test.mjs tests/poster-entry-code-policy.test.mjs tests/poster-staff.test.mjs
   browser:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -49,6 +53,10 @@ jobs:
         run: |
           python -m pip install playwright==1.56.0 Pillow==11.3.0 PyMuPDF==1.26.6
           google-chrome --version
+      - name: Build automatic gallery
+        run: |
+          python tests/poster-background-build.test.py
+          python scripts/build-poster-backgrounds.py
       - name: Check generated assets
         run: |
           python - <<'PY'
@@ -58,8 +66,8 @@ jobs:
           root = Path('poster-backgrounds')
           catalog = (root/'catalog.js').read_text()
           entries = json.loads(catalog.removeprefix('window.posterBackgroundCatalog = ').strip().removesuffix(';'))
-          sources = [p for p in root.iterdir() if p.is_file() and p.suffix.lower() in ('.png','.jpg','.jpeg')]
-          assert {e['id'] for e in entries} == {p.stem for p in sources}
+          sources = list((root/'webp').glob('*.webp'))
+          assert {e['id'] for e in entries if not e['retired']} == {p.stem for p in sources}
           for e in entries:
               for field in ('image','thumb'):
                   with Image.open(e[field]) as image:
@@ -76,9 +84,15 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 20); do if curl -fsS http://127.0.0.1:8000/poster.html >/dev/null; then break; fi; sleep 1; done
           failures=0
-          for suite in tests/poster-drafts.browser.py tests/poster-cloud.browser.py tests/poster-submit-logo.browser.py; do
+          for suite in tests/poster-drafts.browser.py tests/poster-cloud.browser.py tests/poster-submit-logo.browser.py tests/poster-layout-design.browser.py; do
             echo "::group::$suite"
             python "$suite" || failures=1
             echo '::endgroup::'
           done
           exit "$failures"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: poster-acceptance
+          path: test-results/poster-acceptance

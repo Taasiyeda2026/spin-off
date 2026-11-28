@@ -1,5 +1,7 @@
 import base64
 import json
+import hashlib
+from pathlib import Path
 import os
 import re
 import fitz
@@ -81,7 +83,7 @@ with sync_playwright() as playwright:
     assert page.evaluate("boxOpacityActual()") == 30
     assert page.evaluate("Object.isFrozen(SZ)")
     assert page.locator('#research svg.research-answer-icon').count() == 2
-    assert page.evaluate("(()=>{const ids=['c-problem','c-target','c-research','c-findings','c-question','c-requirements'];return ids.every((id,i)=>!i||LAYOUT[id].top>LAYOUT[ids[i-1]].top)})()")
+    assert page.evaluate("(()=>{const ids=['c-problem','c-target','c-question','img-pair','c-research','c-findings','c-requirements'];return ids.every((id,i)=>!i||LAYOUT[id].top>LAYOUT[ids[i-1]].top)})()")
     short_width=page.evaluate("G('poster-project').value='א';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
     long_width=page.evaluate("G('poster-project').value='מערכת ניסיונית';measureGlow('title');parseFloat(G('p-hdr').style.getPropertyValue('--glow-w'))")
     assert long_width > short_width > 0
@@ -120,7 +122,7 @@ with sync_playwright() as playwright:
     expect(page.locator("#border-color")).to_have_value("#ff0000")
     expect(page.locator("#img-main")).to_have_attribute("src", re.compile("^data:image/png"))
     assert page.locator("#pcf input").evaluate_all("(inputs) => inputs.map(input => input.value)") == ["שם א", "", "שם ב"]
-    expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/webp/bg2.webp")
+    expect(page.locator("#approved-bg-image")).to_have_attribute("src", "poster-backgrounds/versions/" + hashlib.sha256(Path("poster-backgrounds/webp/bg2.webp").read_bytes()).hexdigest() + ".webp")
     assert page.evaluate("async () => await backgroundReady")
     expect(page.locator('[data-background-id="bg2"]')).to_have_attribute("aria-pressed", "true")
     assert page.evaluate("SZ.h === 30 && glowState.title === 'light' && boxOpacityActual() === 30 && G('arrow-color').value === '#ff0000'")
