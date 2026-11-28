@@ -34,8 +34,20 @@ with sync_playwright() as pw:
                 assert a['x']>=0 and a['y']>=0 and a['x']+a['w']<=794 and a['y']+a['h']<=1123,a
                 for b in rects[i+1:]:
                     assert not (a['x']<b['x']+b['w'] and b['x']<a['x']+a['w'] and a['y']<b['y']+b['h'] and b['y']<a['y']+a['h']),(a,b)
-            assert page.locator('#main-image-box').evaluate('(e)=>e.offsetLeft+e.offsetWidth<=387')
-            assert page.locator('#img-pair').evaluate('(e)=>e.offsetLeft>=407')
+            if kind=='app':
+                screens=page.evaluate("""() => ['main-image-box','image-box-1','image-box-2'].map(id=>{
+                  const r=G(id).getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};
+                })""")
+                a,b,c=screens
+                assert max(s['y'] for s in screens)-min(s['y'] for s in screens)<1,screens
+                assert max(s['w'] for s in screens)-min(s['w'] for s in screens)<1,screens
+                assert max(s['h'] for s in screens)-min(s['h'] for s in screens)<1,screens
+                assert all(abs(s['w']/s['h']-9/16)<.02 for s in screens),screens
+                assert b['x']>a['x']+a['w'] and c['x']>b['x']+b['w'],screens
+                assert abs((b['x']-a['x']-a['w'])-(c['x']-b['x']-b['w']))<1,screens
+            else:
+                assert page.locator('#main-image-box').evaluate('(e)=>e.offsetLeft+e.offsetWidth<=387')
+                assert page.locator('#img-pair').evaluate('(e)=>e.offsetLeft>=407')
             assert page.locator('#c-slogan').evaluate('(e)=>e.offsetTop>=1036 && e.offsetWidth===734')
         ids=page.locator('#poster-background-gallery button[data-background-id]').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
         assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:[(1,int(p)) if p.isdigit() else (0,p.lower()) for p in re.split(r'(\d+)',id)])

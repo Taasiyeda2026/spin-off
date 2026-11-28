@@ -642,9 +642,11 @@ function updatePosterImageLayout(){
  const fit=(width,height)=>ratio?{width:Math.min(width,height*ratio),height:Math.min(height,width/ratio)}:{width,height};
  for(const [id,pair] of [['main-image-box',false],['img-pair',true]]){
   const single=pair&&kind==='web';
-  const original=imageSlots[id],size=fit(pair&&!single?(original.width-10)/2:original.width,original.height);
-  const width=pair&&!single?size.width*2+10:size.width,height=size.height;
-  if(pair){G('image-box-2').style.display=single?'none':'';G(id).style.gridTemplateColumns=single?'1fr':'1fr 1fr';}
+  const original=imageSlots[id];
+  const pairGap=pair&&kind==='app'?Math.max(10,original.width-2*original.height*9/16):10;
+  const size=fit(pair&&!single?(original.width-pairGap)/2:original.width,original.height);
+  const width=pair&&!single?size.width*2+pairGap:size.width,height=size.height;
+  if(pair){G('image-box-2').style.display=single?'none':'';G(id).style.gridTemplateColumns=single?'1fr':'1fr 1fr';G(id).style.gap=pairGap+'px';G(id).style.direction=kind==='app'?'ltr':'';}
   Object.assign(G(id).style,{left:(original.left+(original.width-width)/2)+'px',top:(original.top+(original.height-height)/2)+'px',width:width+'px',height:height+'px'});
  }
 }
@@ -673,7 +675,39 @@ function placeColumn(boxes,top,bottom){
  }
  return {placed,gap:gaps[0]||0};
 }
+// App layout: two aligned question rows, three equally sized phone screens,
+ // then two balanced columns. Existing image nodes and saved IDs stay intact.
+function reflowAppPoster(contentTop,contentBottom){
+ const left=LAYOUT['c-solution'],right=LAYOUT['c-problem'],bottom=Math.round(contentBottom),start=Math.round(contentTop);
+ const gap=12,row1=85,row2=95,processH=266,researchH=86;
+ const lowerH=processH+gap+researchH;
+ const imageTop=start+row1+gap+row2+gap;
+ const lowerTop=bottom-lowerH;
+ const imageH=Math.max(1,Math.min(280,lowerTop-gap-imageTop));
+ const imageW=imageH*9/16;
+ const fullW=right.left+right.width-left.left;
+ // Three screens with equal outer and inner horizontal spacing.
+ const screenGap=(fullW-3*imageW)/4;
+ const screenTop=imageTop+(lowerTop-gap-imageTop-imageH)/2;
+ const place=(id,x,y,w,h)=>Object.assign(G(id).style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+ place('c-solution',left.left,start,left.width,row1);
+ place('c-problem',right.left,start,right.width,row1);
+ place('c-use',left.left,start+row1+gap,left.width,row2);
+ place('c-target',right.left,start+row1+gap,right.width,row2);
+ imageSlots['main-image-box']={left:left.left+screenGap,top:screenTop,width:imageW,height:imageH};
+ imageSlots['img-pair']={left:left.left+2*screenGap+imageW,top:screenTop,width:2*imageW+screenGap,height:imageH};
+ const fb=LAYOUT['c-feedback'],inset=8,boxH=66,between=(processH-2*inset-3*boxH)/2;
+ place('process-surface',fb.left,lowerTop,fb.width,processH);
+ ['c-feedback','c-improvement','c-value'].forEach((id,i)=>place(id,fb.left,lowerTop+inset+i*(boxH+between),fb.width,boxH));
+ place('c-research',left.left,bottom-researchH,left.width,researchH);
+ const lowerRight=placeColumn(['c-question','c-findings','c-requirements'].map(id=>({id,h:LAYOUT[id].height})),lowerTop,bottom);
+ lowerRight.placed.forEach(item=>place(item.id,right.left,item.top,right.width,item.h));
+ const slogan=LAYOUT['c-slogan'];place('c-slogan',slogan.left,slogan.top,slogan.width,slogan.height);
+ updatePosterImageLayout();
+ positionFlowArrows();
+}
 function reflowPosterBody(contentTop,contentBottom){
+ if(G('solution-type').value==='app'){reflowAppPoster(contentTop,contentBottom);return;}
  const col=LAYOUT['c-solution'],extra=Math.max(0,(contentBottom-contentTop)-(contentBottom-Math.min(LAYOUT['c-problem'].top,LAYOUT['c-solution'].top)));
  const mainBase=LAYOUT['main-image-box'].height,pairBase=LAYOUT['img-pair'].height;
  const mainGrow=Math.min(mainBase*.18,extra*.45),pairGrow=Math.min(pairBase*.18,extra*.4);
