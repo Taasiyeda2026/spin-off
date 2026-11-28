@@ -77,7 +77,7 @@ with sync_playwright() as playwright:
       setGlow('title', 'light');
     }""")
     assert page.locator('[onclick*="chSz"]').count() == 0
-    for selector, size, weight in [('#poster-project','30px','700'),('#c-problem .bq','14px','500'),('#problem','12px','300'),('#feedback','11px','400'),('#c-feedback .bq','13px','500'),('#solution-description-heading','13px','400'),('#poster-school','13px','400'),('#poster-students','12px','300'),('#slogan-output','15px','500')]:
+    for selector, size, weight in [('#poster-project','30px','700'),('#c-problem .bq','14px','700'),('#problem','12px','300'),('#feedback','11px','400'),('#c-feedback .bq','13px','700'),('#solution-description-heading','13px','400'),('#poster-school','13px','400'),('#poster-students','12px','300'),('#slogan-output','15px','700')]:
         assert page.locator(selector).evaluate('(el)=>[getComputedStyle(el).fontSize,getComputedStyle(el).fontWeight]') == [size,weight], selector
     assert page.evaluate("getComputedStyle(G('arrow-feedback-improvement').querySelector('.head')).borderTopColor") == 'rgb(255, 0, 0)'
     assert page.evaluate("boxOpacityActual()") == 30

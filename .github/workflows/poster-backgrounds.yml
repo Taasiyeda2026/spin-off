@@ -59,9 +59,10 @@ jobs:
           POSTER_TEST_URL: https://taasiyeda2026.github.io/spin-off/poster.html?release=${{ github.sha }}
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"
+          python tests/poster-header.browser.py
           python tests/poster-layout-design.browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: production-poster-acceptance
-          path: test-results/poster-acceptance
+          path: test-results
