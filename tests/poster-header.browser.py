@@ -47,6 +47,13 @@ with sync_playwright() as pw:
             assert page.evaluate("Object.fromEntries(Object.keys(LAYOUT).map(id=>[id,[G(id).offsetLeft,G(id).offsetTop,G(id).offsetWidth,G(id).offsetHeight]]))")==fixed
             assert page.locator('#poster-project').input_value()==title
             assert page.locator('#short-desc').input_value()==desc[:105 if lang=='he' else 85]
+            assert page.evaluate("""() => {
+              const names=G('poster-students'),original=names.value;
+              names.value=Array(8).fill('Synthetic participant with a long family name').join(', ');syncNamesToPanel();
+              const host=G('p-hdr'),h=host.getBoundingClientRect(),t=G('poster-project').getBoundingClientRect(),scale=h.width/host.offsetWidth;
+              const aligned=Math.abs(parseFloat(host.style.getPropertyValue('--glow-y'))-(t.top+t.height/2-h.top)/scale)<1;
+              names.value=original;syncNamesToPanel();return aligned;
+            }"""),'Title glow did not follow participant wrapping'
             process=page.evaluate("""() => {
               const ids=['c-feedback','c-improvement','c-value'];
               const rows=ids.map(id=>{const box=G(id),text=box.querySelector('textarea');text.value='W'.repeat(60);updateCounterFor(text);return {x:box.offsetLeft,w:box.offsetWidth,h:box.offsetHeight,center:box.offsetLeft+box.offsetWidth/2,clipped:text.scrollHeight>text.clientHeight+1,weight:getComputedStyle(text).fontWeight,align:getComputedStyle(text).textAlign,counter:getComputedStyle(box.querySelector('.counter')).display};});
