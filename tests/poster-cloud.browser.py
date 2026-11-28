@@ -220,8 +220,6 @@ with sync_playwright() as playwright:
     conflict = True
     second.locator("#poster-project").fill("Local update")
     expect(second.get_by_role("button", name="פתיחת גרסת הענן")).to_be_visible()
-    second.on('console', lambda msg: print('Reconcile console:', msg.text, flush=True))
-    second.evaluate("""() => {for(const obj of [posterDrafts,posterEditor])for(const key of Object.keys(obj)){if(!['read','write','flush'].includes(key))continue;const orig=obj[key];obj[key]=async(...args)=>{console.log('begin',key);try{return await orig(...args)}finally{console.log('end',key)}}}}""")
     dialogs = []
     def accept_conflict_dialog(dialog):
         dialogs.append(dialog.message)
@@ -229,7 +227,6 @@ with sync_playwright() as playwright:
     second.on("dialog", accept_conflict_dialog)
     with second.expect_response(lambda response: urlsplit(response.url).path == "/rest/v1/rpc/spacetech_poster" and response.request.post_data_json.get("p_action") == "load") as cloud_response:
         click(second, "פתיחת גרסת הענן")
-        print("Reconcile dialogs:", dialogs, "status:", second.locator(".poster-cloud-toolbar").inner_text(), flush=True)
     second.remove_listener("dialog", accept_conflict_dialog)
     assert any("לפתוח את גרסת הענן" in message for message in dialogs), dialogs
     assert cloud_response.value.json()["state"]["values"]["poster-project"] == "Remote update"

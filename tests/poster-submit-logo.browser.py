@@ -322,7 +322,8 @@ with sync_playwright() as pw:
     legacy.locator('#poster-editor-language').click()
     legacy.locator('#panel-problem').fill('An unrelated edit')
     legacy.locator('#poster-submit').click()
-    expect(legacy.locator('#poster-submit-status')).to_contain_text('بنجاح')
+    assert legacy.locator('#poster').get_attribute('lang')=='he'
+    expect(legacy.locator('#poster-submit-status')).to_contain_text('בהצלחה')
     for key,value in legacy_values.items():
         assert posters[ids[2]]['state']['values'][key]==value
     legacy.locator('#panel-slogan').fill('م'*86)

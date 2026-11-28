@@ -37,7 +37,7 @@ with sync_playwright() as pw:
             assert page.locator('#main-image-box').evaluate('(e)=>e.offsetLeft+e.offsetWidth<=387')
             assert page.locator('#img-pair').evaluate('(e)=>e.offsetLeft>=407')
             assert page.locator('#c-slogan').evaluate('(e)=>e.offsetTop>=1036 && e.offsetWidth===734')
-        ids=page.locator('#poster-background-gallery button').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
+        ids=page.locator('#poster-background-gallery button[data-background-id]').evaluate_all('(els)=>els.map(e=>e.dataset.backgroundId)')
         assert ids==sorted([p.stem for p in Path('poster-backgrounds/webp').glob('*.webp')],key=lambda id:int(id[2:]))
         for id in ids:
             page.locator(f'[data-background-id={id}]').click()
@@ -63,8 +63,8 @@ with sync_playwright() as pw:
     page.evaluate("""draft=>{const e=approvedBackgrounds.find(e=>e.id===draft.design.bgId);e.retired=true;window.__entry=e;}""",pinned)
     page.evaluate('draft=>posterEditor.open({draft})',pinned)
     assert page.evaluate('selectedBackgroundVersion')==pinned['design']['bgVersion']
-    expect(page.locator('[data-background-id=bg2]')).to_have_attribute('aria-pressed','true')
-    page.evaluate('window.__entry.retired=false')
+    expect(page.locator('[data-saved-background-id=bg2]')).to_have_attribute('aria-pressed','true')
+    page.evaluate('window.__entry.retired=false;renderBackgroundGallery()')
     page.set_viewport_size({'width':390,'height':844});page.evaluate('fitPreview()')
     assert page.locator('#poster').bounding_box()['width']<=390
     page.screenshot(path=str(out/'poster-mobile.png'),full_page=True)

@@ -508,7 +508,7 @@ function selectPosterBackground(id, persist = false, version = null) {
   const img = G('approved-bg-image');
 
   G('poster').classList.toggle('approved-background', Boolean(entry));
-  qs('#poster-background-gallery button').forEach(btn => {const item=approvedBackgrounds.find(e=>e.id===btn.dataset.backgroundId);const current=item?.id===selectedBackgroundId;btn.setAttribute('aria-pressed',String(current));const preview=backgroundVersion(item,current?selectedBackgroundVersion:null);if(preview)btn.querySelector('img').src=preview.thumb;});
+  qs('#poster-background-gallery button').forEach(btn => {const saved=btn.dataset.savedBackgroundId;const item=approvedBackgrounds.find(e=>e.id===(saved||btn.dataset.backgroundId));const version=saved?btn.dataset.backgroundVersion:item?.version;const current=item?.id===selectedBackgroundId&&version===selectedBackgroundVersion;btn.setAttribute('aria-pressed',String(current));if(saved)btn.hidden=!current;});
   G('poster-background-status').textContent = '';
   if (!entry) {
     img.removeAttribute('src');
@@ -532,7 +532,7 @@ function renderBackgroundGallery() {
   const gallery = G('poster-background-gallery');
   gallery.replaceChildren();
   G('poster-background-label').textContent = BG_ARABIC() ? 'اختيار خلفية الملصق' : 'בחירת רקע לפוסטר';
-  approvedBackgrounds.filter(entry=>!entry.retired||entry.id===selectedBackgroundId).forEach((entry, i) => {
+  approvedBackgrounds.filter(entry=>!entry.retired).forEach((entry, i) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.backgroundId = entry.id;
@@ -540,7 +540,7 @@ function renderBackgroundGallery() {
     btn.title = label;
     btn.setAttribute('aria-label', label);
     const thumb = document.createElement('img');
-    thumb.src = backgroundVersion(entry,entry.id===selectedBackgroundId?selectedBackgroundVersion:null)?.thumb || entry.thumb;
+    thumb.src = entry.thumb;
     thumb.alt = '';
     thumb.loading = 'lazy';
     thumb.decoding = 'async';
@@ -550,6 +550,15 @@ function renderBackgroundGallery() {
     btn.addEventListener('click', () => selectPosterBackground(entry.id, true));
     gallery.append(btn);
   });
+  const selected=approvedBackgrounds.find(e=>e.id===selectedBackgroundId);
+  if(selected&&(selected.retired||selectedBackgroundVersion!==selected.version)){
+    const saved=backgroundVersion(selected,selectedBackgroundVersion);
+    if(saved){
+      const btn=document.createElement('button');btn.type='button';btn.dataset.savedBackgroundId=selected.id;btn.dataset.backgroundVersion=saved.version;
+      const img=document.createElement('img');img.src=saved.thumb;img.alt='';const label=document.createElement('span');label.textContent=BG_ARABIC()?'الخلفية المحفوظة':'הרקע השמור';btn.append(img,label);
+      btn.addEventListener('click',()=>selectPosterBackground(selected.id,true,saved.version));gallery.append(btn);
+    }
+  }
   selectPosterBackground(selectedBackgroundId,false,selectedBackgroundVersion);
 }
 
